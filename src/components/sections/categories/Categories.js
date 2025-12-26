@@ -36,26 +36,28 @@ function Categories() {
             </div>
 
             <div className="categories-container">
-                <Swiper
-                    onSwiper={(swiper) => (swiperRef.current = swiper)}
-                    modules={[Pagination, Navigation, Autoplay]}
-                    pagination={{ clickable: true }}
-                    autoplay={{ delay: 3000, disableOnInteraction: false }}
-                    loop={true}
-                    spaceBetween={20}
-                    slidesPerView={1}
-                    breakpoints={{
-                        320: { slidesPerView: 1, spaceBetween: 10 },
-                        640: { slidesPerView: 2, spaceBetween: 20 },
-                        1024: { slidesPerView: 4, spaceBetween: 30 }
-                    }}
-                >
-                    {categories.map(category => (
-                        <SwiperSlide key={category.id}>
-                            <CategoryCard {...category} />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                <div className="swiper-slides">
+                    <Swiper
+                        onSwiper={(swiper) => (swiperRef.current = swiper)}
+                        modules={[Navigation, Autoplay]}
+                        autoplay={{ delay: 5000, disableOnInteraction: false }}
+                        loop={true}
+                        spaceBetween={20}
+                        slidesPerView={4}
+                        breakpoints={{
+                            320: { slidesPerView: 1, spaceBetween: 10 },
+                            640: { slidesPerView: 2, spaceBetween: 20 },
+                            1024: { slidesPerView: 4, spaceBetween: 30 }
+                        }}
+                    >
+                        {categories.map(category => (
+                            <SwiperSlide key={category.id}>
+                                <CategoryCard {...category} />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+
+                </div>
 
                 {/* Explore Button */}
                 <div className="category-btn-div">
