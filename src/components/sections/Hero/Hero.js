@@ -48,11 +48,12 @@ const heroSlides = [
 
 function Hero() {
     return (
-        <section className="hero-section">
+        <section className="heroSwiper">
             <Swiper
                 modules={[Pagination, Autoplay]}
                 pagination={{ clickable: true }}
-                autoplay={{ delay: 5000, disableOnInteraction: false}}
+                autoplay={{ delay: 6000, disableOnInteraction: false}}
+                speed={1400}
                 spaceBetween={50}
                 slidesPerView={1}
                 loop={true}
@@ -60,15 +61,20 @@ function Hero() {
 
             {heroSlides.map(slide => (
                 <SwiperSlide key={slide.id}>
+
                     <div className="hero-slide">
-                        <div className="hero-text">
-                            <h2>{slide.title}</h2>
-                            <p>{slide.text}</p>
-                            <Link to={slide.btnLink} className="hero-btn">{slide.btnText}</Link>
+                        <div className="hero-section">
+                            <div className="hero-text">
+                                <h2>{slide.title}</h2>
+                                <p>{slide.text}</p>
+                                <Link to={slide.btnLink} className="hero-btn">{slide.btnText}</Link>
+                            </div>
+                            <div className="hero-img">
+                                <img src={slide.image} alt={slide.alt} />
+                            </div>
+
                         </div>
-                        <div className="hero-img">
-                            <img src={slide.image} alt={slide.alt} />
-                        </div>
+                        
                     </div>
                 </SwiperSlide>
             ))}
