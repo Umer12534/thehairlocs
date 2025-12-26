@@ -1,10 +1,11 @@
 import React from 'react'
+import HeroSection from '../HeroSection/HeroSection'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css'
 import 'swiper/css/pagination'
 import './Hero.css'
-import { Link } from 'react-router-dom'
+
 
 const heroSlides = [
     {
@@ -46,9 +47,9 @@ const heroSlides = [
         }
 ]
 
-function Hero() {
-    return (
-        <section className="heroSwiper">
+const Hero = () => {
+  return (
+          <section className="heroSwiper">
             <Swiper
                 modules={[Pagination, Autoplay]}
                 pagination={{ clickable: true }}
@@ -58,29 +59,14 @@ function Hero() {
                 slidesPerView={1}
                 loop={true}
             >
-
-            {heroSlides.map(slide => (
+              {heroSlides.map(slide=>(
                 <SwiperSlide key={slide.id}>
-
-                    <div className="hero-slide">
-                        <div className="hero-section">
-                            <div className="hero-text">
-                                <h2>{slide.title}</h2>
-                                <p>{slide.text}</p>
-                                <Link to={slide.btnLink} className="hero-btn">{slide.btnText}</Link>
-                            </div>
-                            <div className="hero-img">
-                                <img src={slide.image} alt={slide.alt} />
-                            </div>
-
-                        </div>
-                        
-                    </div>
+                    <HeroSection {...slide}/>
                 </SwiperSlide>
-            ))}
+              ))}
             </Swiper>
         </section>
-    )
+  )
 }
 
 export default Hero
