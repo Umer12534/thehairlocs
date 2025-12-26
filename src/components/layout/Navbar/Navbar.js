@@ -4,6 +4,7 @@ import { NavLink, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faUser, faMagnifyingGlass, faBagShopping, faBars, faXmark, faHouse, faTags, faCartShopping } from "@fortawesome/free-solid-svg-icons"
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons"
+import CartSiderbar from '../CartSidebar/CartSidebar'
 
 
 const sale = ("We are running a sale - Get 20% off on all products!")
@@ -35,11 +36,11 @@ export default function Navbar(){
                     <div className="nav-container">
                         {/* <!-- Hamburger Toggle --> */}
                         <div className="nav-toggle">
-                            <FontAwesomeIcon icon={faBars}  className='Nav-Toggle-Btn'/>  {/* onClick={Togglenav} */}
+                            <FontAwesomeIcon icon={faBars} onClick={Togglenav} className='Nav-Toggle-Btn'/>
                         </div>
                         {/* <!-- Left Tabs --> */}
                         <ul className={`nav-tabs ${navOpen? "active" : ""}`}>
-                            <li className="nav-close" > {/* onClick={Togglenav} */}
+                            <li className="nav-close" onClick={Togglenav}>
                                 <FontAwesomeIcon icon={faXmark} />
                             </li>
                             <li>
@@ -62,7 +63,7 @@ export default function Navbar(){
                         {/* <!-- Logo --> */}
                         <div className="logo-container">
                             <Link to="/" className='NavLink'>
-                                <img src="/logo192.png" alt="logo" className="logo" />
+                                <img src="logo192.png" alt="logo" className="logo" />
                             </Link>
                         </div>
 
@@ -75,7 +76,9 @@ export default function Navbar(){
                                 <FontAwesomeIcon icon={faUser} />
                             </Link>
                             <Link to = "/" className='cart-link NavLink' >
-                                <FontAwesomeIcon icon={faBagShopping} />        {/* onClick={() => {setIsCartOpen(true)}} */}
+                                <FontAwesomeIcon icon={faBagShopping} onClick={() => {
+                                    setIsCartOpen(true)
+                                }}/>
                                 <span className="cart-count"></span>
                             </Link>    
                         </div>
@@ -102,10 +105,14 @@ export default function Navbar(){
                 </Link>
 
                 <button className="nav-item cart-btn" >
-                    <FontAwesomeIcon icon={faCartShopping} className='iCon' />
+                    <FontAwesomeIcon icon={faCartShopping} className='iCon' onClick={() => { setIsCartOpen(true) }}/>
                     <span>Cart</span>
                 </button>
             </div>
+            <CartSiderbar 
+            isCartOpen={isCartOpen}
+            closeCart={()=> setIsCartOpen(false)}
+            />
         </>
     );
 }

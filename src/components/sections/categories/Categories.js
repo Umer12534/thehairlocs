@@ -40,7 +40,7 @@ function Categories() {
                     <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         modules={[Navigation, Autoplay]}
-                        autoplay={{ delay: 5000, disableOnInteraction: false }}
+                        autoplay={{ delay: 500000, disableOnInteraction: false }}
                         loop={true}
                         spaceBetween={20}
                         slidesPerView={4}

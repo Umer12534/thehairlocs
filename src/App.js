@@ -8,6 +8,7 @@ import Product from './pages/Products';
 import Sale from './pages/Sale';
 import ProductDetails from './pages/ProductDetails';
 import Footer from './components/layout/Footer/Footer';
+import WhatsappIcon from './components/ui/whatsappChat/WhatsappIcon';
 // import ProductDetails './pages/ProductDetails';
 
 
@@ -20,12 +21,13 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/Products" element={<Product />} />
+          <Route path="/Product" element={<Product />} />
           <Route path="/sale" element={<Sale />} />
           <Route path='/ProductDetails' element={<ProductDetails />} />
 
         </Routes>
         <Footer/>
+      <WhatsappIcon />
       </Router>
     </>
   );

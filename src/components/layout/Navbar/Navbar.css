@@ -344,7 +344,7 @@ nav {
 }   
 
 @media (max-width: 320px) {
-    .sale-banner {
+    .sale-banner p{
         padding: 2px;
         font-size: 8px;
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import ProductCard from '../../ui/ProductCard/ProductCard'
 import { Link } from 'react-router-dom';
-import { products } from '../../../data/Products';
+import { featuredCardproducts } from '../../../data/Products';
 import './FeaturedProducts.css'
 
 const FeaturedProducts = () => {
@@ -14,7 +14,7 @@ const FeaturedProducts = () => {
                     </div>
 
                     <div className="product-grid">
-                        {products.map(product => (
+                        {featuredCardproducts.map(product => (
                             <ProductCard
                                 key={product.id}
                                 {...product} // passes image, name, price, oldPrice, likes as props
