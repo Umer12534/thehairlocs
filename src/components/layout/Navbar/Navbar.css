@@ -1,0 +1,394 @@
+.StickyTop{
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+/* Main navigation container */
+nav {
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+/* Navigation layout */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    margin: 0 auto;
+}
+
+/* Logo container */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33.33%;
+}
+
+.logo {
+    height: 95px;
+    width: auto;
+    transition: height 0.3s ease;
+}
+
+/* Navigation links */
+.nav-tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    list-style: none;
+    width: 40%;
+}
+
+.nav-tabs .NavLink {
+    text-decoration: none;
+    color: black;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+.NavLink:hover {
+    color: #fac6ae;
+}
+
+/* Active navigation link */
+.Active {
+    color: #f2a68c !important;
+    font-weight: bold;
+    border-bottom: 2px solid;
+}
+
+/* Navigation icons */
+.nav-icons {
+    display: flex;
+    width: 40%;
+    gap: 7px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.nav-icons .NavLink {
+    color: black;
+    text-decoration: none;
+    border-radius: 50%;
+    padding: 8px 1px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    height: 40px;
+    font-size: larger;
+}
+
+.nav-icons .NavLink:hover {
+    color: #fac6ae;
+    background-color: rgba(250, 198, 174, 0.1);
+}
+
+/* Cart counter */
+.cart-link {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: 25%;
+    right: 1%;
+    background-color: #fac6ae;
+    color: #000;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/*MOBILE NAVIGATION*/
+
+/* Side menu close button */
+.nav-tabs .nav-close {
+    display: none;
+    padding: 0 8px;
+    font-size: 20px;
+}
+
+/* Mobile menu toggle button */
+.nav-toggle {
+    font-size: 30px;
+    width: 40%;
+    display: none;
+}
+
+
+
+/*MOBILE BOTTOM NAVIGATION BAR*/
+
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2000;
+    padding: 5px 0;
+    display: none; /* Hidden by default */
+}
+
+.mobile-bottom-nav .nav-item {
+    text-decoration: none;
+    color: #444;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: 0.2s;
+}
+
+.mobile-bottom-nav .nav-item .iCon {
+    font-size: 20px;
+}
+.mobile-bottom-nav .nav-item .whatsapp {
+    font-weight: bolder;
+    font-size: x-large;
+}
+.mobile-bottom-nav .nav-item.cart-btn{
+    border: none;
+    background-color: transparent;
+}
+.mobile-bottom-nav .nav-item:hover {
+    color: #fac6ae;
+}
+
+@media (max-width: 768px) {
+   /* Navigation container adjustments */
+    nav {
+        padding: 10px 0;
+    }
+    .nav-container {
+        position: relative;
+        height: 50px;
+        padding: 0 15px;
+        flex-direction: row;
+    }
+
+    /* Icons container - LEFT SIDE */
+    .nav-icons {
+        display: flex;
+        width: auto;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        order: 1; /* Move to left side */
+    }
+
+    .nav-icons a {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    /* Hamburger menu toggle - RIGHT SIDE */
+    .nav-toggle {
+        display: flex;
+        width: auto;
+        justify-content: flex-end;
+        align-items: center;
+        cursor: pointer;
+        order: 3; /* Move to right side */
+        margin-left: auto;
+    }
+
+    .nav-toggle .Nav-Toggle-Btn {
+        font-size: 24px;
+        color: #000;
+        transition: color 0.3s ease;
+        padding: 8px;
+    }
+
+    .nav-toggle .Nav-Toggle-Btn:hover {
+        color: #fac6ae;
+    }
+
+    /* Logo container - centered */
+    .logo-container {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        justify-content: center;
+        order: 2; /* Keep in middle */
+    }
+
+    .logo {
+        height: 60px;
+    }
+
+    /* Mobile navigation menu adjustments */
+    .nav-tabs .nav-close {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        font-size: 22px;
+        z-index: 1001;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+        gap: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        top: 0;
+        left: -60%; /* Changed from left to right */
+        right: auto; /* Reset left */
+        height: 100vh;
+        position: fixed;
+        width: 60%;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Shadow on left side */
+        transition: 0.4s ease;
+        z-index: 1000;
+    }
+
+    .nav-tabs.active {
+      left: 0; /* Changed from left to right */
+    }
+
+    .nav-tabs a {
+        display: flex;
+        border-bottom: 1px solid #7d7d7d63;
+        font-weight: normal;
+    }
+
+
+
+    /* Cart sidebar adjustments for mobile */
+    .cart-sidebar {
+        width: 90%;
+        max-width: 400px;
+        right: -100%;
+    }
+
+    .cart-sidebar.active {
+        right: 0;
+    }
+
+    /* Cart counter adjustments */
+    .cart-count {
+        top: 25%;
+        right: 10%;
+        width: 6px;
+        height: 6px;
+        font-size: 10px;
+    }
+}
+/* Small mobile (max-width: 430px) */
+@media (max-width: 430px) {
+  /* Navigation adjustments for very small screens */
+    nav {
+        padding: 10px;
+    }
+    .nav-container {
+        padding: 0;
+    }
+
+    .nav-icons a:nth-child(2),
+    .nav-icons a:last-child {
+        display: none;
+    }
+    .nav-icons {
+        gap: 5px;
+    }
+
+    .nav-icons a {
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+
+    .nav-toggle i {
+        font-size: 25px;
+    }
+
+    .logo {
+        height: 60px;
+        margin-top: 5px;
+    }
+    /* Show mobile bottom navigation */
+    .mobile-bottom-nav {
+        display: flex;
+    }
+
+    body {
+        padding-bottom: 60px;
+    }
+}   
+
+@media (max-width: 320px) {
+    .sale-banner {
+        padding: 2px;
+        font-size: 8px;
+    }
+
+    .nav-container {
+        height: 50px;
+    }
+
+    nav {
+        padding: 5px;
+    }
+
+    .nav-icons a {
+        font-size: 17px;
+    }
+
+    .nav-toggle i {
+        font-size: 23px;
+        padding: 8px;
+    }
+
+    .logo {
+        height: 50px;
+    }
+}
+
+/* SALE BANNER */
+.sale-banner {
+    font-family: "Roboto", sans-serif;
+    background-color: #fac6ae;
+    color: black;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.sale-banner p {
+    background: inherit;
+}
+@media (max-width: 768px) {
+    /* Adjust sale banner for mobile */
+    .sale-banner {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
