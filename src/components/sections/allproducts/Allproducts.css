@@ -1,0 +1,17 @@
+.product-page{
+    margin-top: 10px;
+    display: flex;
+    justify-content: start;
+    width: 100%;
+
+}
+.filtersidebar{
+    width: 25%;
+}
+.allproductsection{
+    width: 75%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 0 10px;
+}

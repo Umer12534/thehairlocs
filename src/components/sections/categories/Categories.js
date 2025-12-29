@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination, Navigation, Autoplay } from 'swiper/modules'
+import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
@@ -40,7 +40,7 @@ function Categories() {
                     <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         modules={[Navigation, Autoplay]}
-                        autoplay={{ delay: 500000, disableOnInteraction: false }}
+                        autoplay={{ delay: 5000, disableOnInteraction: false }}
                         loop={true}
                         spaceBetween={20}
                         slidesPerView={4}

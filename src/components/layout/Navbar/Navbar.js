@@ -75,7 +75,7 @@ export default function Navbar(){
                             <Link to = "/" className='NavLink'>
                                 <FontAwesomeIcon icon={faUser} />
                             </Link>
-                            <Link to = "/" className='cart-link NavLink' >
+                            <Link className='cart-link NavLink' >
                                 <FontAwesomeIcon icon={faBagShopping} onClick={() => {
                                     setIsCartOpen(true)
                                 }}/>
