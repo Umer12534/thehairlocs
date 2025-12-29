@@ -122,12 +122,21 @@
 /* Footer copyright */
 .footer-copyright {
   width: 100%;
-  border-top: 2px solid black;
-  padding: 20px;
+  
+  padding: 10px 20px;
   text-align: center;
   font-size: 14px;
   color: #333;
   background-color: transparent;
+}
+.footerCopyright-text{
+  padding: 10px 10px;
+  border-top: 2px solid black;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
 
 /* Hover effects */

@@ -96,7 +96,9 @@ function Footer(){
           </div>
         </div>
         <div className="footer-copyright">
-          @Copyrights reserved - 2025, This website is developed by UMER
+          <span className='footerCopyright-text'>
+            @Copyrights reserved - 2025, This website is developed by UMER
+          </span>
         </div>
       </div>
     </div>
