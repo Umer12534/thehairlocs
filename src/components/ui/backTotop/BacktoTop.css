@@ -1,0 +1,46 @@
+.to-top-icon {
+  position: fixed;
+  bottom: 70px;
+  right: 13px;
+  height: 40px;
+  width: 40px;
+  background-color: #f6c7b682;
+  backdrop-filter: blur(2px);
+  color: black;
+  border-radius: 50%;
+  border: none;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 100;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.3);
+  z-index: 2000;
+}
+/* @media (max-width: 430px) {
+    .to-top-icon.active {
+        display: flex;
+    } 
+} */
+
+
+/* position: fixed;
+  bottom: 70px;
+  right: 8px;
+  height: 40px;
+  width: 40px;
+  background-color: #f6c7b682;
+  color: black;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 100;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.3);
+  display: none;
+  z-index: 2000; */
