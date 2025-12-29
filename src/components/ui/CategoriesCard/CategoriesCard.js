@@ -12,7 +12,8 @@ function CategoryCard({ image, name, total }) {
             <div className="slide-text">
                 <p>{name}</p>
                 <p>
-                    <FontAwesomeIcon icon={faBoxOpen} className='boxicon'> {total}</FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faBoxOpen} className='boxicon'></FontAwesomeIcon>
+                    {total}
                 </p>
             </div>
         </div>

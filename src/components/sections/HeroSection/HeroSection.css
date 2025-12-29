@@ -219,6 +219,35 @@
   .swiper-pagination-bullet-active {
     width: 25px !important;
   }
+   .hero-img {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1;
+  }
+
+  /* 🔥 Overlay for text visibility */
+  .hero-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45); /* adjust darkness here */
+    z-index: 2;
+  }
+
+  .hero-img img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Ensure text stays ABOVE overlay */
+  .hero-text {
+    position: relative;
+    z-index: 3;
+  }
 }
 
 /* Small Mobile (below 480px) */

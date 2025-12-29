@@ -7,11 +7,8 @@ import {
   faGripLines
 } from "@fortawesome/free-solid-svg-icons"
 
-function FilterBar() {
-
-  const toggleFilter = () => {
-    console.log("Filter button clicked");
-  };
+function FilterBar({toggleSidebar}) {
+  
 
   return (
     <>
@@ -37,7 +34,7 @@ function FilterBar() {
           </select>
         </div>
 
-        <div className="fliter-btn" onClick={toggleFilter}>
+        <div className="fliter-btn" onClick={toggleSidebar}>
           Fliter
         </div>
       </div>

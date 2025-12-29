@@ -1,9 +1,9 @@
-import { useState } from "react";
+import React, { useState }  from 'react';
 import './FilterSidebar.css'
-import { FontAwesomeLayers } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
-function FilterSidebar() {
+function FilterSidebar({toggleSidebar}) {
   // --- STATE FOR FILTERS ---
   const [categories, setCategories] = useState({
     moisturizers: false,
@@ -27,10 +27,6 @@ function FilterSidebar() {
     straight: false,
   });
 
-  // --- TOGGLE SIDEBAR ---
-  const toggleFilter = () => {
-    console.log("Toggle Filter Sidebar");
-  };
 
   // --- HANDLE CHANGES ---
   const handleCategoryChange = (e) => {
@@ -86,8 +82,9 @@ function FilterSidebar() {
 
   return (
     <aside className="sidebar">
+
       <h3>
-        Filters <FontAwesomeLayers icon = {faXmark} onClick={toggleFilter} className="filterbarclosebtn"/>
+        Filters <FontAwesomeIcon icon = {faXmark} onClick={toggleSidebar} className="filterbarclosebtn"/>
       </h3>
 
       {/* --- Category --- */}
