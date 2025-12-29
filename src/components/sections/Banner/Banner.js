@@ -26,7 +26,7 @@ function Banner(){
             loop={true}
         >
             {Bannerimg.map(bannerimg => (
-                <SwiperSlide key={bannerimg.id}>
+                <SwiperSlide key={bannerimg.id} className='bannerswiperslide'>
                     <div className="banner-image">
                         <img src={bannerimg.image} alt="Banner" />
                     </div>
