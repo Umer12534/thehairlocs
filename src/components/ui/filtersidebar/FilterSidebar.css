@@ -1,0 +1,104 @@
+/* Sidebar */
+.sidebar {
+  background-color: #f9f9f9;
+  padding: 10px 25px 25px 25px;
+  width: 100%;
+  height: fit-content;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar h3 {
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #333;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+.sidebar h3 .filterbarclosebtn {
+  display: none;
+}
+
+.filter-group {
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-group h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.price-inputs {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.price-inputs input {
+  width: 48%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 1px;
+  font-size: 14px;
+}
+
+.filter-options label {
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.filter-options input {
+  accent-color: #f2a68c;
+}
+
+.filter-option {
+  display: flex;
+  gap: 10px;
+  justify-content: start;
+  align-items: center;
+}
+.applyFilterBtn {
+  width: 100%;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  color: black;
+  border: 1px solid #dadada;
+  background-color: #fac6ae;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+.clearFilterBtn {
+  margin-top: 10px;
+  width: 100%;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  color: #333;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+.applyFilterBtn:hover {
+  color: white;
+  background-color: #f2a68c;
+}
+.clear-filters:hover {
+  background: white;
+}
