@@ -7,6 +7,7 @@ import { faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import CartSiderbar from '../CartSidebar/CartSidebar'
 
 
+
 const sale = ("We are running a sale - Get 20% off on all products!")
 const SaleBaner = () => {
     return (
@@ -27,16 +28,24 @@ export default function Navbar(){
     function Togglenav(){
         setnavOpen(!navOpen);
     }
+
+    
     return (
         <>
+            {navOpen && (
+                <div className="overlay" onClick={Togglenav}></div>
+            )}
             <div className="StickyTop">
                 <SaleBaner />
                  {/* <!-- navegation bar --> */}
-                <nav>
+                <div className="nav-bar">
                     <div className="nav-container">
                         {/* <!-- Hamburger Toggle --> */}
                         <div className="nav-toggle">
-                            <FontAwesomeIcon icon={faBars} onClick={Togglenav} className='Nav-Toggle-Btn'/>
+                            <FontAwesomeIcon icon={faBars} onClick={()=>{
+                                Togglenav();
+                                
+                            }} className='Nav-Toggle-Btn'/>
                         </div>
                         {/* <!-- Left Tabs --> */}
                         <ul className={`nav-tabs ${navOpen? "active" : ""}`}>
@@ -83,7 +92,7 @@ export default function Navbar(){
                             </Link>    
                         </div>
                     </div>
-                </nav>
+                </div>                        
             </div>
             
             {/* <!-- Bottom Mobile Navigation --> */}
