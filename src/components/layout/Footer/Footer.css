@@ -219,10 +219,9 @@
     height: 110px;
     margin-top: 15px;
   }
-   .footer-copyright {
+.footerCopyright-text {
     border-top: 1px solid black;
-  }
-    
+}
 }
 @media (max-width: 320px) {
     .footer-copyright {
