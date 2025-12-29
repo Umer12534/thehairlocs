@@ -9,6 +9,7 @@ import Sale from './pages/Sale';
 import ProductDetails from './pages/ProductDetails';
 import Footer from './components/layout/Footer/Footer';
 import WhatsappIcon from './components/ui/whatsappChat/WhatsappIcon';
+import BacktoTop from './components/ui/backTotop/BacktoTop';
 // import ProductDetails './pages/ProductDetails';
 
 
@@ -28,6 +29,7 @@ function App() {
         </Routes>
         <Footer/>
       <WhatsappIcon />
+      <BacktoTop />
       </Router>
     </>
   );

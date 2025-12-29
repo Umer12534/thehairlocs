@@ -10,7 +10,8 @@ function Footer(){
     return (
     <>
     {/* <!-- footer --> */}
-    <div className="footer-container">
+    <footer>
+          <div className="footer-container">
       <div className="body-fit">
         <div className="footer-top">
           <div className="footer-card">
@@ -102,6 +103,7 @@ function Footer(){
         </div>
       </div>
     </div>
+    </footer>
     </>
     )
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+// import { useState } from 'react';
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
@@ -6,6 +6,8 @@ import "./WhatsappIcon.css"
 
 
 function WhatsappIcon(){
+  // const [isVisible, setIsvisible] = useState(true)
+
   return (
     <div>
       <click/>
