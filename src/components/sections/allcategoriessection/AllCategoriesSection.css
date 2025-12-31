@@ -1,7 +1,7 @@
 .new-categories {
   position: relative;
   padding: 20px 0;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -9,10 +9,6 @@
   width: 100%;
   height: fit-content;
   overflow: hidden;
-}
-
-.new-categories h2 {
-  margin-bottom: 20px;
 }
 
 /* Navigation Buttons */

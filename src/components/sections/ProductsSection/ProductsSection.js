@@ -1,18 +1,13 @@
 import React from 'react'
 import ProductCard from '../../ui/ProductCard/ProductCard'
 import { Link } from 'react-router-dom';
-import { featuredCardproducts } from '../../../data/Products';
-import './FeaturedProducts.css'
+import './ProductsSection.css'
 
-const FeaturedProducts = () => {
+const ProductsSection = ({featuredCardproducts = []}) => {
     return (
         <>
         <section className="product-container">
                 <div className="products">
-                    <div className="title-section">
-                        <h2>Featured Products</h2>
-                    </div>
-
                     <div className="product-grid">
                         {featuredCardproducts.map(product => (
                             <ProductCard
@@ -31,4 +26,4 @@ const FeaturedProducts = () => {
     )
 }
 
-export default FeaturedProducts
+export default ProductsSection

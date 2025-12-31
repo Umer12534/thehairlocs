@@ -10,14 +10,13 @@ import CategoryCard from '../../ui/CategoriesCard/CategoriesCard'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-import './Categories.css'
+import './AllCategoriesSection.css'
 
-function Categories() {
+function AllCategoriesSection() {
     const swiperRef = useRef(null)
 
     return (
         <section className="new-categories">
-            <h2>All Categories</h2>
 
             {/* Custom Navigation */}
             <div className="custom-nav">
@@ -58,16 +57,9 @@ function Categories() {
                     </Swiper>
 
                 </div>
-
-                {/* Explore Button */}
-                <div className="category-btn-div">
-                    <Link to="/categories" className="category-btn">
-                        EXPLORE ALL CATEGORIES
-                    </Link>
-                </div>
             </div>
         </section>
     )
 }
 
-export default Categories
+export default AllCategoriesSection

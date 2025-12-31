@@ -1,18 +1,26 @@
-import Categories from '../components/sections/categories/Categories'
+import AllCategoriesSection from '../components/sections/allcategoriessection/AllCategoriesSection'
 import Hero from '../components/sections/Hero/Hero'
-import FeaturedProducts from '../components/sections/FeaturedProducts/FeaturedProducts'
+import ProductsSection from '../components/sections/ProductsSection/ProductsSection'
 import Banner from '../components/sections/Banner/Banner';
 import Explore from '../components/sections/Explore/Explore';
 import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
+import { featuredCardproducts } from '../data/Products';
+import './Home.css'
 
 function Home() {
   return (
     <main>
       <Hero />
       <ScrollingBar/>
-      <Categories />
+      <div className="title-section">
+          <h2>All Categories</h2>
+      </div>
+      <AllCategoriesSection/>
       <Explore />
-      <FeaturedProducts />
+      <div className="title-section">
+          <h2>Featured Products</h2>
+      </div>
+      <ProductsSection featuredCardproducts = {featuredCardproducts}/>
       <Banner/>
       <ScrollingBar/>
     </main>
