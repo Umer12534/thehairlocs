@@ -10,6 +10,7 @@ import ProductDetails from './pages/ProductDetails';
 import Footer from './components/layout/Footer/Footer';
 import WhatsappIcon from './components/ui/whatsappChat/WhatsappIcon';
 import BacktoTop from './components/ui/backTotop/BacktoTop';
+import About from './pages/About'
 // import ProductDetails './pages/ProductDetails';
 
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/Product" element={<Product />} />
           <Route path="/sale" element={<Sale />} />
           <Route path='/ProductDetails' element={<ProductDetails />} />
+          <Route path='/About' element={<About />} />
 
         </Routes>
         <Footer/>

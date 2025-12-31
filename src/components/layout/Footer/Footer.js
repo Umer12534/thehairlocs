@@ -34,13 +34,13 @@ function Footer(){
                     <Link to={"/About"} className='Link'>About</Link>
                 </li>
                 <li>
-                    <Link to={"./Contact"} className='Link'>Contact</Link>    
+                    <Link to={"/Contact"} className='Link'>Contact</Link>    
                 </li>
                 <li>
-                    <Link to={"./Products"} className='Link'>Products</Link>
+                    <Link to={"/Products"} className='Link'>Products</Link>
                 </li>
                 <li>
-                    <Link to={"./Categories"} className='Link'>Categories</Link>
+                    <Link to={"/Categories"} className='Link'>Categories</Link>
                 </li>
             </ul>
           </div>
@@ -48,16 +48,16 @@ function Footer(){
             <ul>
                 <li><h3>Help</h3></li>     
                 <li>
-                    <Link to={"./F.A.Qs"} className='Link'>F.A.Qs</Link>
+                    <Link to={"/F.A.Qs"} className='Link'>F.A.Qs</Link>
                 </li>
                 <li>
-                    <Link to={"./Privacy-Policy"} className='Link'>Privacy Policy</Link>
+                    <Link to={"/Privacy-Policy"} className='Link'>Privacy Policy</Link>
                 </li>
                 <li>
-                    <Link to={"./Shipping-Policy"} className='Link'>Shipping Policy</Link>
+                    <Link to={"/Shipping-Policy"} className='Link'>Shipping Policy</Link>
                 </li>
                 <li>
-                    <Link to={"./Refund-Policy"} className='Link'>Refund Policy</Link>
+                    <Link to={"/Refund-Policy"} className='Link'>Refund Policy</Link>
                 </li>
             </ul>
           </div>

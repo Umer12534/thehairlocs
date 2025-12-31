@@ -9,9 +9,7 @@ function Products() {
       title="All Products"
       des="Discover our premium collection of hair care products"
       image="/assets/images/products/allProductsheader.jpg" />
-    
     <Allproducts/>
-    
     </>
   )
 }
