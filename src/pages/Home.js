@@ -4,24 +4,23 @@ import ProductsSection from '../components/sections/ProductsSection/ProductsSect
 import Banner from '../components/sections/Banner/Banner';
 import Explore from '../components/sections/Explore/Explore';
 import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
-import { featuredCardproducts } from '../data/Products';
-import './Home.css'
+// import { featuredCardproducts } from '../data/Products';
+import Heading from '../components/ui/heading/Heading';
+import Button from '../components/ui/button/Button'
 
 function Home() {
   return (
     <main>
       <Hero />
       <ScrollingBar/>
-      <div className="title-section">
-          <h2>All Categories</h2>
-      </div>
+      <Heading heading_text="All Categories" position='center'/>
       <AllCategoriesSection/>
+      <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center'/>
       <Explore />
-      <div className="title-section">
-          <h2>Featured Products</h2>
-      </div>
-      <ProductsSection featuredCardproducts = {featuredCardproducts}/>
-      <Banner/>
+      <Heading heading_text="Featured Products"/>
+      <ProductsSection ProductsType = "featured"/>
+      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center'/>
+      <Banner />
       <ScrollingBar/>
     </main>
   )

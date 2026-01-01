@@ -19,33 +19,6 @@
   gap: 20px;
 }
 
-.product-btn-div {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px 20px;
-}
-
- .Product-btn{
-  display: inline-block;
-  padding: 14px 40px;
-  background-color: #fac6ae;
-  color: #333;
-  text-decoration: none;
-  border-radius: 2px;
-  font-weight: 600;
-  font-size: 16px;
-  text-align: center;
-  transition: all 0.3s ease;
-  min-width: 250px;
-  box-sizing: border-box;
-}
-.Product-btn:hover {
-  color: white;
-  background-color: #f2a68c;
-}
-
 @media (max-width: 1200px) {
   .product-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -83,18 +56,6 @@
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-  }
-
-  .product-btn-div {
-    padding: 30px 10px 15px;
-  }
-
-.Product-btn {
-    padding: 12px 30px;
-    font-size: 14px;
-    min-width: 200px;
-    width: 100%;
-    max-width: 300px;
   }
 }
 

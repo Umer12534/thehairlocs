@@ -5,6 +5,7 @@ import {products} from '../../../data/Products'
 import ProductCard from '../../ui/ProductCard/ProductCard'
 import Pagination from '@mui/material/Pagination';
 import FilterBar from '../../ui/filterbar/FilterBar'
+import ProductsSection from '../ProductsSection/ProductsSection'
 
 function Allproducts(){
     const [isSidebarActive, setIsSidebarActive] = useState(false);
@@ -21,14 +22,16 @@ function Allproducts(){
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>
                 <FilterSidebar  toggleSidebar = {toggleSidebar}/>
             </div>
-            <div className="allproductsection">
+
+            <ProductsSection/>
+            {/* <div className="allproductsection">
                 {products.map(product => (
                     <ProductCard
                         key={product.id}
                         {...product}
                     />
                 ))}
-            </div>
+            </div> */}
         </div>
         {/* Pagination */}
         <div className="pagination-wrapper">

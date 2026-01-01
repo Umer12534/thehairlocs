@@ -1,0 +1,17 @@
+.heading{
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: #333;
+}
+.heading.left{
+    justify-content: start;
+}
+.heading.right{
+    justify-content: end;
+}
+.heading.center{
+    justify-content: center;
+}

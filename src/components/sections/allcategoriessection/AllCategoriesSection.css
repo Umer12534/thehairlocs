@@ -1,7 +1,6 @@
 .new-categories {
   position: relative;
   padding: 20px 0;
-  margin: 0 0 20px 0;
   display: flex;
   justify-content: center;
   flex-direction: column;

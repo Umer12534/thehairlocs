@@ -1,11 +1,13 @@
 import React from 'react'
+import Pageheader from '../components/ui/pageheader/Pageheader'
 
-const Sale = () => {
-  return (
-    <div>
-      <h1>Sale</h1>
-    </div>
-  )
+function Sale(){
+
+  return(
+  <>
+    <Pageheader title="Sale" des= "Up to 50% off on premium hair locs products" image= "/assets/images/sale/saleheader.jpg"/>
+  </>
+  );
 }
 
 export default Sale

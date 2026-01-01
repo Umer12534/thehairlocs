@@ -2,25 +2,35 @@ import React from 'react'
 import ProductCard from '../../ui/ProductCard/ProductCard'
 import { Link } from 'react-router-dom';
 import './ProductsSection.css'
+import { products } from '../../../data/Products';
 
-const ProductsSection = ({featuredCardproducts = []}) => {
+const ProductsSection = ({ ProductsType= null, category= null }) => {
+    const filteredProducts = products.filter(product => {
+        if(ProductsType && ProductsType.toLowerCase() === "featured"){
+            return product.isFeatured 
+        }
+        if (category) {
+            return product.category.toLowerCase() === category.toLowerCase()
+        }
+        return true // if no type or category, show all products
+    })
     return (
         <>
         <section className="product-container">
-                <div className="products">
-                    <div className="product-grid">
-                        {featuredCardproducts.map(product => (
+            <div className="products">
+                <div className="product-grid">
+                    {filteredProducts.length > 0 ? (
+                        filteredProducts.map(product => (
                             <ProductCard
                                 key={product.id}
                                 {...product} // passes image, name, price, oldPrice, likes as props
                             />
-                        ))}
-                    </div>
-                    
-                    <div className="product-btn-div">
-                        <Link to={"/Categories"} className="Product-btn" >EXPLORE ALL PRODUCTS </Link>
-                    </div>
+                        ))
+                    ) : (
+                        <p>No products found.</p> 
+                    )}
                 </div>
+            </div>
         </section>
         </>
     )
