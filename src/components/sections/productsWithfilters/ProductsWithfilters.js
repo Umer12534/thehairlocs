@@ -1,13 +1,13 @@
 import FilterSidebar from '../../ui/filtersidebar/FilterSidebar'
 import { useState } from 'react'
-import './Allproducts.css'
+import './ProductsWithfilters.css'
 import {products} from '../../../data/Products'
 import ProductCard from '../../ui/ProductCard/ProductCard'
 import Pagination from '@mui/material/Pagination';
 import FilterBar from '../../ui/filterbar/FilterBar'
 import ProductsSection from '../ProductsSection/ProductsSection'
 
-function Allproducts(){
+function ProductsWithfilters(badgeType=null){
     const [isSidebarActive, setIsSidebarActive] = useState(false);
     
     const toggleSidebar = () => {
@@ -23,15 +23,7 @@ function Allproducts(){
                 <FilterSidebar  toggleSidebar = {toggleSidebar}/>
             </div>
 
-            <ProductsSection/>
-            {/* <div className="allproductsection">
-                {products.map(product => (
-                    <ProductCard
-                        key={product.id}
-                        {...product}
-                    />
-                ))}
-            </div> */}
+            <ProductsSection badgeType={badgeType}/>
         </div>
         {/* Pagination */}
         <div className="pagination-wrapper">
@@ -42,4 +34,4 @@ function Allproducts(){
 }
 
 
-export default Allproducts
+export default ProductsWithfilters
