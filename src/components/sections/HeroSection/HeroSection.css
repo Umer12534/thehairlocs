@@ -13,6 +13,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .hero-section {
@@ -273,6 +276,14 @@
     padding: 10px 24px;
     font-size: 13px;
   }
+  .newsletter-form input {
+    font-size: 12px;
+    padding-left: 14px;
+  }
+  .newsletter-form button {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
 }
 
 /* Large Desktop (1200px+) */
@@ -281,4 +292,34 @@
     max-width: 1400px;
     margin: 0 auto;
   }
+}
+
+.newsletter-form {
+  display: flex;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 15px 0 15px 20px;
+  border: 2px solid #ddd;
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  font-size: 16px;
+}
+.newsletter-form button {
+  background-color: #f2a68c;
+  color: black;
+  border: 2px solid #f2a68c;
+  padding: 15px 30px;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.newsletter-form button:hover {
+  color: white;
+  background-color: rgb(232, 154, 126);
+  transform: scale(1.02);
 }
