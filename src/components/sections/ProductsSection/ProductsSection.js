@@ -5,21 +5,28 @@ import './ProductsSection.css'
 import { products } from '../../../data/Products';
 
 const ProductsSection = ({ ProductsType= null, category= null, badgeType= null }) => {
+    console.log('Props received:', { ProductsType, category, badgeType });
+    console.log('Total products:', products.length);
     const filteredProducts = products.filter(product => {
-        // if (badgeType != null){
-        //     return product.badgeType === badgeType
-        // }
-
-        // Featured filter
-        if(ProductsType && ProductsType.toLowerCase() === "featured"){
-            return product.isFeatured 
-        }
-        if (category) {
-            return product.category.toLowerCase() === category.toLowerCase()
+        // Filter by badge type first (e.g., "sale")
+        if (badgeType != null) {
+            return product.badgeType === badgeType;
         }
         
-        return true // if no type or category, show all products
+        
+        // Featured filter
+        if(ProductsType && ProductsType.toLowerCase() === "featured"){
+            return product.isFeatured;
+        }
+        
+        // Category filter
+        if (category) {
+            return product.category.toLowerCase() === category.toLowerCase();
+        }
+        
+        return true; // if no type or category, show all products
     })
+    
     return (
         <>
         <section className="product-container">
@@ -33,7 +40,11 @@ const ProductsSection = ({ ProductsType= null, category= null, badgeType= null }
                             />
                         ))
                     ) : (
-                        <p>No products found.</p> 
+                        <div className="">
+                            <p>No products found.</p> 
+                            <p>Debug info: Total products in data: {products.length}</p>
+                            <p>Filters applied: badgeType={badgeType}, ProductsType={ProductsType}, category={category}</p>
+                        </div>
                     )}
                 </div>
             </div>
