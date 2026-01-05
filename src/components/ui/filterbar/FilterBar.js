@@ -21,7 +21,7 @@ function FilterBar({toggleSidebar}) {
         </div>
 
         <div className="product-count">
-          Showing <span>24</span> products
+          <span>24</span> products
         </div>
 
         <div className="sort-options">
