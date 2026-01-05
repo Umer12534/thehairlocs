@@ -13,7 +13,7 @@ const heroSlides = [
         title: 'Mastering the Art of Locs and Natural Hair Care',
         text: `Whether you're just beginning your loc journey or seeking advanced techniques, our expert guides and premium products will support your natural beauty.`,
         btnText: 'EXPLORE ALL PRODUCTS',
-        btnLink: '/category',
+        btnLink: '/Categories',
         image: "/assets/images/hero/hero1.jpg",
         alt: 'Natural hair care products'
     },
@@ -23,7 +23,7 @@ const heroSlides = [
         text: `Discover our curated collection of organic and natural hair care
             solutions designed specifically for locs and textured hair.`,
         btnText: 'SHOP NOW',
-        btnLink: '/category',
+        btnLink: '/Categories',
         image: "/assets/images/hero/hero2.jpg",
         alt: 'Natural hair products'
     },
@@ -32,7 +32,7 @@ const heroSlides = [
         title: 'Expert Guides & Tutorials',
         text: `Learn from professional stylists with our step-by-step tutorials and comprehensive hair care guides.`,
         btnText: 'LEARN MORE',
-        btnLink: '/category',
+        btnLink: '/Categories',
         image: "/assets/images/hero/hero3.jpg",
         alt: 'Hair care tutorial'
     },
@@ -41,7 +41,7 @@ const heroSlides = [
         title: 'Community & Support',
         text: `Join our growing community of natural hair enthusiasts sharing tips, experiences, and inspiration.`,
         btnText: 'JOIN COMMUNITY',
-        btnLink: '/category',
+        btnLink: '/Categories',
         image: "/assets/images/hero/hero4.jpg",
         alt: 'Hair care community'
         }
