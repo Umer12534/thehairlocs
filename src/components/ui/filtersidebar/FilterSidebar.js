@@ -1,9 +1,36 @@
 import React, { useState }  from 'react';
 import './FilterSidebar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faXmark } from '@fortawesome/free-solid-svg-icons';
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+
+
+function RangeSlider({ price, setPrice }) {
+  const handleChange = (event, newValue) => {
+    setPrice({
+      min: newValue[0],
+      max: newValue[1],
+    });
+  };
+
+  return (
+    <Box sx={{ width: "100%", px: 1 }}>
+      <Slider
+        value={[price.min, price.max]}  // directly use price from props
+        onChange={handleChange}
+        valueLabelDisplay="auto"
+        min={0}
+        max={10000}
+      />
+    </Box>
+  );
+}
+
+
 
 function FilterSidebar({toggleSidebar}) {
+
   // --- STATE FOR FILTERS ---
   const [categories, setCategories] = useState({
     moisturizers: false,
@@ -14,6 +41,7 @@ function FilterSidebar({toggleSidebar}) {
   });
 
   const [price, setPrice] = useState({ min: 0, max: 5000 });
+
   const [availability, setAvailability] = useState({
     inStock: true,
     outOfStock: false,
@@ -27,16 +55,10 @@ function FilterSidebar({toggleSidebar}) {
     straight: false,
   });
 
-
   // --- HANDLE CHANGES ---
   const handleCategoryChange = (e) => {
     const { name, checked } = e.target;
     setCategories((prev) => ({ ...prev, [name]: checked }));
-  };
-
-  const handlePriceChange = (e) => {
-    const { name, value } = e.target;
-    setPrice((prev) => ({ ...prev, [name]: Number(value) }));
   };
 
   const handleAvailabilityChange = (e) => {
@@ -87,9 +109,13 @@ function FilterSidebar({toggleSidebar}) {
         Filters <FontAwesomeIcon icon = {faXmark} onClick={toggleSidebar} className="filterbarclosebtn"/>
       </h3>
 
-      {/* --- Category --- */}
-      <div className="filter-group">
-        <h4>Category</h4>
+      {/* Categories */}
+      <details className="filter-group" open>
+        <summary>
+          <span>Category</span>
+          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+        </summary>
+        
         <div className="filter-options">
           {Object.keys(categories).map((key) => (
             <div className="filter-option" key={key}>
@@ -106,35 +132,54 @@ function FilterSidebar({toggleSidebar}) {
             </div>
           ))}
         </div>
-      </div>
+        
+      </details>
 
-      {/* --- Price Range --- */}
-      <div className="filter-group">
-        <h4>Price Range</h4>
-        <div className="price-inputs">
-          <input
-            type="number"
-            id="min-price"
-            name="min"
-            placeholder="Min"
-            value={price.min}
-            onChange={handlePriceChange}
-          />
-          <div> to </div>
-          <input
-            type="number"
-            id="max-price"
-            name="max"
-            placeholder="Max"
-            value={price.max}
-            onChange={handlePriceChange}
-          />
+      {/* Price range */}
+      <details className="filter-group">
+        <summary>
+          <span>Price Range</span>
+          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+        </summary>
+
+        <RangeSlider price={price} setPrice={setPrice} />
+
+        <div className="price-values">
+          <label htmlFor="min">
+            <span>Rs: </span>
+            <input
+              type="number"
+              name="min"
+              id="min-price"
+              value={price.min}
+              onChange={(e) => setPrice({ ...price, min: Number(e.target.value) })}
+            />
+          </label>
+
+          <label htmlFor="max">
+            <span>Rs:</span>
+            <input
+              type="number"
+              name="max"
+              id="max-price"
+              value={price.max}
+              onChange={(e) => setPrice({ ...price, max: Number(e.target.value) })}
+            />
+          </label>
+
+
         </div>
-      </div>
+      </details>
+  
+
 
       {/* --- Availability --- */}
-      <div className="filter-group">
-        <h4>Availability</h4>
+      <details className='filter-group'>
+        <summary>
+          <span>Availability</span>  
+          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+        </summary>
+
         <div className="filter-options">
           <div className="filter-option">
             <input
@@ -157,11 +202,16 @@ function FilterSidebar({toggleSidebar}) {
             <label htmlFor="out-stock">Out of Stock</label>
           </div>
         </div>
-      </div>
+      </details>
+
 
       {/* --- Hair Type --- */}
-      <div className="filter-group">
-        <h3>Hair Type</h3>
+      <details  className="filter-group">
+        <summary>
+          <span>Hair Type</span>
+          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+        </summary>
+    
         <div className="filter-options">
           {Object.keys(hairType).map((key) => (
             <div className="filter-option" key={key}>
@@ -178,7 +228,8 @@ function FilterSidebar({toggleSidebar}) {
             </div>
           ))}
         </div>
-      </div>
+      </details>
+
 
       <div className="filter-btn">
         <button className="applyFilterBtn" onClick={applyFilters}>

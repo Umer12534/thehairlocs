@@ -1,7 +1,7 @@
 /* Sidebar */
 .sidebar {
   background-color: #f9f9f9;
-  padding: 10px 25px 25px 25px;
+  padding: 10px 5px 25px 25px;
   width: 100%;
   height: fit-content;
   border-radius: 4px;
@@ -24,8 +24,7 @@
 }
 
 .filter-group {
-  padding-bottom: 20px;
-  margin-bottom: 25px;
+  padding: 10px 5px;
   border-bottom: 1px solid #eee;
 }
 
@@ -35,22 +34,53 @@
   color: #555;
 }
 
-.price-inputs {
+details{
+  list-style: none;
+  cursor: pointer;
+}
+
+details summary .angleDown{
+  display: inline-block;
+  transition: transform 0.5s ease; 
+  transform: rotate(0deg);
+}
+
+details[open] summary .angleDown {
+  transform: rotate(180deg);
+}
+
+summary{
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price-values{
   display: flex;
   justify-content: space-evenly;
   gap: 10px;
-  align-items: center;
-  text-align: center;
+  
+}
+.price-values label{
+  display: flex;
+  gap: 5px;
+  border: 1px solid rgb(96, 96, 96);
+  border-radius: 3px;
+  padding: 5px;
 }
 
-.price-inputs input {
-  width: 48%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 1px;
+.price-values input{
+  border: none;
+  background-color: transparent;
+  width: 100%;
   font-size: 14px;
+  padding: 2px;
 }
 
+.filter-options{
+  padding: 20px 0;
+}
 .filter-options label {
   font-size: 15px;
   cursor: pointer;
