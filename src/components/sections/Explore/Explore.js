@@ -12,7 +12,7 @@ const exploreSlides = [
     title: 'Get 15% Off Your First Visit Expert Locs & Natural Hair Care Tailored Just for You!',
     text: '“Naturally You. Beautifully Locd.”',
     btnText: 'EXPLORE ALL PRODUCTS',
-    btnLink: '/category',
+    btnLink: '/Categories',
     image: '/assets/images/explore/products1.png',
     alt: 'Product 1',
     reverse: true
@@ -22,7 +22,7 @@ const exploreSlides = [
     title: 'Get 15% Off Your First Visit Expert Locs & Natural Hair Care Tailored Just for You!',
     text: '“Naturally You. Beautifully Loc’d.”',
     btnText: 'EXPLORE ALL PRODUCTS',
-    btnLink: '/category',
+    btnLink: '/Categories',
     image: '/assets/images/explore/products1.png',
     alt: 'Product 2',
     reverse: true
@@ -32,7 +32,7 @@ const exploreSlides = [
     title: 'Get 15% Off Your First Visit Expert Locs & Natural Hair Care Tailored Just for You!',
     text: '“Naturally You. Beautifully Loc’d.”',
     btnText: 'EXPLORE ALL PRODUCTS',
-    btnLink: '/category',
+    btnLink: '/Categories',
     image: '/assets/images/explore/products1.png',
     alt: 'Product 3',
     reverse: true
@@ -42,7 +42,7 @@ const exploreSlides = [
     title: 'Get 15% Off Your First Visit Expert Locs & Natural Hair Care Tailored Just for You!',
     text: '“Naturally You. Beautifully Loc’d.”',
     btnText: 'EXPLORE ALL PRODUCTS',
-    btnLink: '/category',
+    btnLink: '/Categories',
     image: '/assets/images/explore/products1.png',
     alt: 'Product 4',
     reverse: true
