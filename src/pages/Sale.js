@@ -4,31 +4,52 @@ import ProductsSection from '../components/sections/ProductsSection/ProductsSect
 import FilterBar from '../components/ui/filterbar/FilterBar';
 import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import Pagination from '@mui/material/Pagination';
+import { products } from '../data/Products';
+import Stack from '@mui/material/Stack';
 import './Global.css'
 
 function Sale(){
-
+  const [page, setPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 8; 
+  const [isLayout, setLayout] = useState(3);
   const [isSidebarActive, setIsSidebarActive] = useState(false);
   
+  const saleProductsCount = products.filter(
+    product => product.badgeType === "sale"
+  ).length;
+
+  const totalPages = Math.ceil(
+    saleProductsCount / PRODUCTS_PER_PAGE
+  );
+
   const toggleSidebar = () => {
       setIsSidebarActive(prev => !prev);
+  }
+  const layoutSwitch=(layoutgrid)=>{
+    setLayout(layoutgrid)
   }
   
   return(
   <>
     <Pageheader title="Sale" des= "Up to 50% off on premium hair locs products" image= "/assets/images/sale/saleheader.jpg"/>
-    <FilterBar toggleSidebar = {toggleSidebar}/>
+    <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch}/>
     
     <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>
                 <FilterSidebar  toggleSidebar = {toggleSidebar}/>
             </div>
 
-            <ProductsSection badgeType="sale"/>
+            <ProductsSection badgeType="sale" layout={isLayout} page={page} productsPerPage={PRODUCTS_PER_PAGE}/>
         </div>
         {/* Pagination */}
         <div className="pagination-wrapper">
-            <Pagination count={5} variant="outlined" shape="rounded" />
+          <Pagination
+            count={totalPages}          // temporary (will fix dynamically)
+            page={page}
+            onChange={(e, value) => setPage(value)}
+            variant="outlined"
+            shape="rounded"
+          />
     </div>
   </>
   );

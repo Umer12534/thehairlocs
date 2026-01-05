@@ -9,14 +9,27 @@
   padding: 20px;
   width: 100%;
   height: auto;
-  max-width: 1400px;
   margin: 0 auto;
   box-sizing: border-box;
 }
-.product-grid {
+.product-grid{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+.product-grid-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.product-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.product-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.product-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 @media (max-width: 1200px) {
@@ -24,21 +37,25 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
   }
-}
 
-/* Tablets */
-@media (max-width: 992px) {
-  .products {
-    padding: 20px 15px;
+  .product-grid-1 {
+  grid-template-columns: repeat(1, 1fr);
   }
 
-  .product-grid {
+  .product-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-grid-3 {
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
   }
 
-  
+  .product-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
+
+
 
 /* large phones */
 @media (max-width: 768px) {
@@ -46,7 +63,23 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
   }
+  .product-grid-1 {
+  grid-template-columns: repeat(1, 1fr);
+  }
+
+  .product-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .product-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
+
 /* Small phones */
 @media (max-width: 576px) {
   .products {
@@ -57,6 +90,14 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
+  .product-grid-1 {
+  grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .product-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
 }
 
 /* Very small phones */
@@ -66,6 +107,10 @@
     gap: 15px;
     max-width: 300px;
     margin: 0 auto;
+  }
+
+  .product-grid-1 {
+  grid-template-columns: repeat(1, 1fr);
   }
 
 }

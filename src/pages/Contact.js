@@ -1,6 +1,8 @@
 import React from 'react'
 import HeroSection from '../components/sections/HeroSection/HeroSection'
-
+import ContactForm from '../components/sections/contactForm/ContactForm'
+import ContactInfo from '../components/sections/contactInfo/ContactInfo'
+import MapSection from '../components/sections/mapSection/MapSection'
 function Contact(){
   return(
     <>
@@ -12,6 +14,18 @@ function Contact(){
       bgimage="/assets/images/explore/explore-bg.png"
       alt/>
       
+      <div className="contact-content">
+        <div className="container">
+          <div className="contact-grid">
+            
+              <ContactForm />
+              <ContactInfo />
+            
+          </div>
+        </div>
+
+        <MapSection/>
+      </div>
     </>
   )
 }

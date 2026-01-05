@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import './ProductsSection.css'
 import { products } from '../../../data/Products';
 
-const ProductsSection = ({ ProductsType= null, category= null, badgeType= null }) => {
-    console.log('Props received:', { ProductsType, category, badgeType });
-    console.log('Total products:', products.length);
+const ProductsSection = ({ ProductsType= null, category= null, badgeType= null, layout= 3, page, productsPerPage}) => {
     const filteredProducts = products.filter(product => {
+
         // Filter by badge type first (e.g., "sale")
         if (badgeType != null) {
             return product.badgeType === badgeType;
@@ -26,14 +25,25 @@ const ProductsSection = ({ ProductsType= null, category= null, badgeType= null }
         
         return true; // if no type or category, show all products
     })
-    
+
+    const startIndex = (page - 1) * productsPerPage;
+    const paginatedProducts = filteredProducts.slice(
+        startIndex,
+        startIndex + productsPerPage
+    );
+    const hasPagination = page && productsPerPage;
+    const productsToRender = hasPagination
+    ? paginatedProducts
+    : filteredProducts;
+
     return (
         <>
         <section className="product-container">
             <div className="products">
-                <div className="product-grid">
-                    {filteredProducts.length > 0 ? (
-                        filteredProducts.map(product => (
+                <div className={`product-grid product-grid-${layout}`}>
+                    
+                    {productsToRender.length > 0 ? (
+                        productsToRender.map(product => (
                             <ProductCard
                                 key={product.id}
                                 {...product} // passes image, name, price, oldPrice, likes as props

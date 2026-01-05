@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./FilterBar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -7,17 +7,34 @@ import {
   faGripLines
 } from "@fortawesome/free-solid-svg-icons"
 
-function FilterBar({toggleSidebar}) {
-  
+function FilterBar({toggleSidebar, layoutSwitch}) {
+  const [activeLayout, setActiveLayout] = useState(3);
 
+  const handleLayoutChange = (layout)=>{
+    setActiveLayout(layout);
+    layoutSwitch(layout);
+  }
   return (
     <>
       {/* Filter Bar */}
       <div className="filter-bar">
         <div className="layout-switch">
-            <FontAwesomeIcon icon={faGrip} className="layout-icon"/>
-            <FontAwesomeIcon icon={faGripVertical} className="layout-icon"/>
-            <FontAwesomeIcon icon={faGripLines} className="layout-icon"/>
+            <FontAwesomeIcon icon={faGrip} 
+            className={`layout-icon ${activeLayout === 3 ? "layout-active" : ""}`} 
+            onClick={() => {handleLayoutChange(3)}}/>
+            
+            <FontAwesomeIcon icon={faGripVertical} 
+              className={`layout-icon ${activeLayout === 2 ? "layout-active" : ""}`}
+              onClick={() => handleLayoutChange(2)}/>
+            
+            <FontAwesomeIcon icon={faGripLines} 
+              className={`layout-icon ${activeLayout === 4 ? "layout-active" : ""}`}
+              onClick={() => handleLayoutChange(4)}/>
+
+            <FontAwesomeIcon icon={faGripLines} 
+              className={`layout-icon ${activeLayout === 1 ? "layout-active" : ""}`}
+              onClick={() => handleLayoutChange(1)}/>
+            
         </div>
 
         <div className="product-count">
