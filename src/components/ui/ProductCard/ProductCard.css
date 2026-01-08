@@ -55,10 +55,24 @@
 /* ---------- ACTIONS ---------- */
 .product-card__actions {
   display: flex;
+  position: absolute;
+  right: 10px;
+  bottom: 90px;
   gap: 8px;
 }
 
-.product-card__like,
+.product-card__like{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background-color: #fac6ae;
+  border-radius: 20px;
+  padding: 0 15px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
 .product-card__add-btn {
   display: flex;
   align-items: center;

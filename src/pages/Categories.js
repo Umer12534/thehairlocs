@@ -20,7 +20,7 @@ const Categories = () => {
     <Pageheader  
       title="Categories"
       des="Discover our premium collection of hair care products"
-      image="/assets/images/products/allProductsheader.jpg" />
+      image="/assets/images/categories/hero.jpg" />
     <FilterTabs categories = {categories}/>
 
 

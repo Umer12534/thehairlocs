@@ -44,10 +44,13 @@ const ProductsSection = ({ ProductsType= null, category= null, badgeType= null, 
                     
                     {productsToRender.length > 0 ? (
                         productsToRender.map(product => (
-                            <ProductCard
+                            
+                                <ProductCard
                                 key={product.id}
                                 {...product} // passes image, name, price, oldPrice, likes as props
                             />
+                            
+                            
                         ))
                     ) : (
                         <div className="">

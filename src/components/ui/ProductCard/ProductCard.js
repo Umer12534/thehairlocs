@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import "./ProductCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { products } from "../../../data/Products";
 
 function ProductCard({
+  id,
   image,
   name,
   salePrice,
@@ -15,6 +17,8 @@ function ProductCard({
   category,
 }) {
   return (
+    <>
+
     <div className="product-card">
       
       {/* Badge */}
@@ -24,45 +28,51 @@ function ProductCard({
         </span>
       )}
 
-      {/* Image */}
-      <div className="product-card__image-wrapper">
-        <Link to="/product-detail">
-          <img src={image} alt={name} className="product-card__image" />
-        </Link>
+      <Link to={`/Product/${id}`}>
 
-        {/* Overlay */}
-        <div className="product-card__overlay">
-          {category && (
-            <span className="product-card__category">{category}</span>
-          )}
-
-          <div className="product-card__actions">
-            {likes && (
-              <div className="product-card__like">
-                <span>{likes}</span>
-                <FontAwesomeIcon icon={faHeart} />
-              </div>
+        {/* Image */}
+        <div className="product-card__image-wrapper">
+          <img src={image[0]} alt={name} className="product-card__image" />
+          {/* Overlay */}
+          <div className="product-card__overlay">
+            {category && (
+              <span className="product-card__category">{category}</span>
             )}
 
-            <button className="product-card__add-btn">
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
+            
           </div>
         </div>
+      </Link>
+
+      <div className="product-card__actions">
+        {likes && (
+          <div className="product-card__like">
+            <span>{likes}</span>
+            <FontAwesomeIcon icon={faHeart} />
+          </div>
+        )}
+        <button className="product-card__add-btn">
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
       </div>
 
-      {/* Content */}
-      <div className="product-card__content">
-        <p className="product-card__name">{name}</p>
+        {/* Content */}
+        <div className="product-card__content">
+          <p className="product-card__name">{name}</p>
 
-        <div className="product-card__price">
-          <span className="price--sale">PKR {salePrice}</span>
-          {originalPrice && (
-            <span className="price--original">PKR{originalPrice}</span>
-          )}
+          <div className="product-card__price">
+
+            <span className="price--sale">PKR {salePrice ? salePrice : originalPrice}</span>
+            
+            {salePrice&& (
+              <span className="price--original">PKR {originalPrice}</span>
+            )
+            }
+          </div>
         </div>
-      </div>
+      
     </div>
+    </>
   );
 }
 

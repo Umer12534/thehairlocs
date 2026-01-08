@@ -7,8 +7,10 @@ import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
 // import { featuredCardproducts } from '../data/Products';
 import Heading from '../components/ui/heading/Heading';
 import Button from '../components/ui/button/Button'
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate()
   return (
     <main>
       <Hero />
@@ -19,7 +21,7 @@ function Home() {
       <Explore />
       <Heading heading_text="Featured Products"/>
       <ProductsSection ProductsType = "featured"/>
-      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center'/>
+      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/product")}/>
       <Banner />
       <ScrollingBar/>
     </main>

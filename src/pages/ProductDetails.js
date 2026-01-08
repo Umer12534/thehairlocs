@@ -1,148 +1,176 @@
-// import React from 'react'
+import React, { useState } from "react";
+import "./ProductDetails.css";
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+import { useParams } from "react-router-dom";
+import { products } from "../data/Products";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlug, faPlus } from "@fortawesome/free-solid-svg-icons";
+import Button from '../components/ui/button/Button';
 
-// function ProductDetails(){
+function ProductDetails() {
+    const { id } = useParams();
+    const [quantity, setQuantity] = useState(1);
+    const [activeImage, setActiveImage] = useState(1);
 
-//   return(
-//     <>
-//      {/* <!-- product --> */}
-//     <div class="product-wrapper">
+    const product = products.find(
+        (item) => item.id === Number(id)
+    );
+    if (!product) {
+        return <h2>Product not found</h2>;
+    }
 
-//       {/* <!-- radio buttons --> */}
-//       <input type="radio" name="gallery" id="img1" checked>
-//       <input type="radio" name="gallery" id="img2">
-//       <input type="radio" name="gallery" id="img3">
+    return (
+        <>
+        {/* Product */}
+        <div className="product-wrapper">
 
-//       {/* <!-- left — images --> */}
-//       <div class="left">
+            {/* Left — Images */}
+            <div className="image-left">
 
-//           {/* <!-- main image --> */}
-//           <div class="main-img">
-//             <img src="/assets/images/sale-product (1).jpg" alt="">
-//           </div>
+                {/* Main Image */}
+                <div className="main-img">
+                    <img
+                    src = {product.image[activeImage]}
+                    // src={`/assets/images/sale-product (${activeImage}).jpg`}
+                    alt="Product"
+                    />
+                </div>
 
-//           {/* <!-- thumbnails --> */}
-//           <div class="thumbs">
-//             <label for="img1" class="t1"><img src="/assets/images/sale-product (1).jpg"></label>
-//             <label for="img2" class="t2"><img src="/assets/images/sale-product (2).jpg"></label>
-//             <label for="img3" class="t3"><img src="/assets/images/sale-product (3).jpg"></label>
-//           </div>
+                {/* Thumbnails */}
+                <div className="thumbs">
+                    {[0, 1, 2].map((img) => (
+                    <button
+                        key={img}
+                        className={`thumb ${activeImage === img ? "active" : ""}`}
+                        onClick={() => setActiveImage(img)}
+                    >
+                        <img
+                        src={product.image[img]}
+                        alt={`Thumbnail ${img}`}
+                        />
+                    </button>
+                    ))}
+                </div>
+            </div>
 
-//       </div>
+            {/* Right — Product Info */}
+            <div className="right">
+            <h1>{product.name}</h1>
 
-//       {/* <!-- right — product info --> */}
-//       <div class="right">
-//         <h1>Premium Hair Loc Extensions</h1>
-//         <div class="stars">★★★★★ (<span>34</span> reviews)</div>
-//         <div class="price">Rs. 2,999</div>
+            <Stack spacing={1}>
+                <Rating name="half-rating-read" value={product.rating} precision={0.5} readOnly />
+            </Stack>
 
-//         <p class="desc">
-//           High-quality handmade loc extensions designed to give your hair a natural, fuller, voluminous look.
-//         </p>
+            {product.salePrice && (
+                <div className="price">Rs. {product.salePrice}</div>
+            )}
 
-//         {/* <!-- quantity --> */}
-//          <div class="selection-box">
-//           <div class="size-box">
-//             <label>Size</label>
-//             <div class="size">
-//               <button class="active">10ml</button>
-//               <button>20ml</button>
-//               <button>30ml</button>
-//             </div>
-//           </div>
-//            <div class="quantity-box">
-//              <label>Quantity</label>
-//              <div class="qty-box">
-//                <button><i class="fa-solid fa-minus"></i></button>
-//                <span>1</span>
-//                <button><i class="fa-solid fa-plus"></i></button>
-//              </div>
-//            </div>
-//          </div>
-        
-//         <button class="btn-cart">Add to Cart</button>
-//       </div>
+            <div className={`price ${product.salePrice ? "oldPrice" : ""}`}>
+                Rs. {product.originalPrice}
+            </div>
 
-//     </div>
-//     {/* Questions */}
-//     <div class="questions">
-//       <details>
-//         <summary>
-//           Product Description
-//           <span class="arrow"><i class="fa-solid fa-angle-down"></i></span>
-//         </summary>
-//         <p>
-//           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Recusandae ex suscipit soluta maiores, accusantium magnam delectus eligendi officia corrupti ab voluptates a reiciendis tempora debitis fugit harum dolores hic dolorem?
-//         </p>
-//       </details>
-    
-//       <details>
-//         <summary>
-//           Return Policy
-//           <span class="arrow"><i class="fa-solid fa-angle-down"></i></span>
-//         </summary>
-//         <p>
-//           We offer a 30-day return policy for unused and unopened products.
-//           Please contact our support team for return instructions.
-//         </p>
-//       </details>
-    
-//       <details>
-//         <summary>
-//           Shipping Information
-//           <span class="arrow"><i class="fa-solid fa-angle-down"></i></span>
-//         </summary>
-//         <p>
-//           Orders are processed within 1–2 business days and delivered within
-//           5–7 working days depending on your location.
-//         </p>
-//       </details>
-    
-//       <details>
-//         <summary>
-//           Care Instructions
-//           <span class="arrow"><i class="fa-solid fa-angle-down"></i></span>
-//         </summary>
-//         <p>
-//           Store in a cool, dry place. Avoid direct sunlight and moisture to
-//           maintain product quality.
-//         </p>
-//       </details>
-    
-//     </div>
-//     {/* <!-- related products --> */}
-//     <section class="related-section">
-//       <h2>Related Products</h2>
 
-//       <div class="related-container">
+            <p className="desc">
+                High-quality handmade loc extensions designed to give your hair a
+                natural, fuller, voluminous look.
+            </p>
 
-//         <div class="related-card">
-//           <div class="image-div">
-//             <img src="/assets/images/sale-product (5).jpg">
-//           </div>
-//           <h3>Soft Loc Extensions</h3>
-//           <p>Rs. 2,499</p>
-//         </div>
+            {/* Selection */}
+            <div className="selection-box">
 
-//         <div class="related-card">
-//           <div class="image-div">
-//             <img src="/assets/images/sale-product (5).jpg">
-//           </div>
-//           <h3>Curly Loc Extensions</h3>
-//           <p>Rs. 3,199</p>
-//         </div>
+                {/* Size */}
+                <div className="size-box">
+                <label>Size</label>
+                <div className="size">
+                    <Button children="10ml" size="sm" margianbuttom = {0} />
+                    <Button children="20ml" size="sm" margianbuttom = {0}/>
+                    <Button children="30ml" size="sm" margianbuttom = {0}/>
+                </div>
+                </div>
 
-//         <div class="related-card">
-//           <div class="image-div">
-//             <img src="/assets/images/sale-product (5).jpg">
-//           </div>
-//           <h3>Premium Natural Locs</h3>
-//           <p>Rs. 2,899</p>
-//         </div>
+                {/* Quantity */}
+                <div className="quantity-box">
+                <label>Quantity</label>
+                <div className="qty-box">
+                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))}>
+                        <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+                    </button>
+                    <span>{quantity}</span>
+                    <button onClick={() => setQuantity(q => q + 1)}>
+                        <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
 
-//       </div>
-//     </section>
-//     </>
-//   )
-// }
+                    </button>
+                </div>
+                </div>
+            </div>
 
-// export default ProductDetails
+            <Button children="Add to Cart" size="lg" fullWidth />
+            </div>
+        </div>
+
+        {/* Questions */}
+        <div className="questions">
+            <details>
+            <summary>
+                Product Description <span className="arrow">⌄</span>
+            </summary>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
+                ex suscipit soluta maiores accusantium.
+            </p>
+            </details>
+
+            <details>
+            <summary>
+                Return Policy <span className="arrow">⌄</span>
+            </summary>
+            <p>
+                We offer a 30-day return policy for unused and unopened products.
+            </p>
+            </details>
+
+            <details>
+            <summary>
+                Shipping Information <span className="arrow">⌄</span>
+            </summary>
+            <p>
+                Orders are processed within 1–2 business days and delivered in 5–7
+                working days.
+            </p>
+            </details>
+
+            <details>
+            <summary>
+                Care Instructions <span className="arrow">⌄</span>
+            </summary>
+            <p>
+                Store in a cool, dry place. Avoid direct sunlight and moisture.
+            </p>
+            </details>
+        </div>
+
+        {/* Related Products */}
+        <section className="related-section">
+            <h2>Related Products</h2>
+
+            <div className="related-container">
+            {[1, 2, 3].map((item) => (
+                <div key={item} className="related-card">
+                <div className="image-div">
+                    <img
+                    src="/assets/images/sale-product (5).jpg"
+                    alt="Related product"
+                    />
+                </div>
+                <h3>Premium Loc Extensions</h3>
+                <p>Rs. 2,999</p>
+                </div>
+            ))}
+            </div>
+        </section>
+        </>
+    );
+}
+
+export default ProductDetails;
