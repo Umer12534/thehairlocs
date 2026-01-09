@@ -89,7 +89,7 @@
 }
 
 .price {
-  font-size: 24px;
+  font-size: 20px;
   margin: 10px 0;
   font-weight: 600;
 }
@@ -130,19 +130,6 @@
   gap: 10px;
 }
 
-.size button {
-  padding: 10px 14px;
-  border: 1px solid #999;
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.size button.active {
-  background-color: #fef3ea;
-  border-color: #f2a68c;
-}
 
 /* ===============================
    Quantity

@@ -28,33 +28,34 @@ function ProductCard({
         </span>
       )}
 
-      <Link to={`/Product/${id}`}>
-
-        {/* Image */}
-        <div className="product-card__image-wrapper">
-          <img src={image[0]} alt={name} className="product-card__image" />
-          {/* Overlay */}
-          <div className="product-card__overlay">
-            {category && (
-              <span className="product-card__category">{category}</span>
-            )}
-
-            
+      <div className="productCard-div">
+        <Link to={`/Product/${id}`}>
+          {/* Image */}
+          <div className="product-card__image-wrapper">
+            <img src={image[0]} alt={name} className="product-card__image" />
+            {/* Overlay */}
+            <div className="product-card__overlay">
+              {category && (
+                <span className="product-card__category">{category}</span>
+              )}
+              
+            </div>
           </div>
+        </Link>
+
+        <div className="product-card__actions">
+          {likes && (
+            <div className="product-card__like">
+              <span>{likes}</span>
+              <FontAwesomeIcon icon={faHeart} />
+            </div>
+          )}
+          <button className="product-card__add-btn">
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
         </div>
-      </Link>
-
-      <div className="product-card__actions">
-        {likes && (
-          <div className="product-card__like">
-            <span>{likes}</span>
-            <FontAwesomeIcon icon={faHeart} />
-          </div>
-        )}
-        <button className="product-card__add-btn">
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
       </div>
+
 
         {/* Content */}
         <div className="product-card__content">

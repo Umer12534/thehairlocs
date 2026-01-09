@@ -26,7 +26,7 @@ function Products() {
   return (
     <>
     <Pageheader title="All Products" des="Discover our premium collection of hair care products" image="/assets/images/products/allProductsheader.jpg"/>
-      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch}/>
+      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {products}/>
 
       <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>

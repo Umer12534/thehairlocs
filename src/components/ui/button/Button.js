@@ -15,10 +15,11 @@ const Button = ({
   fullWidth = false,
   position = "center",
   className = "",
-  margianbuttom=50
+  marginbottom=50,
+  margintop= 15
 }) => {
   return (
-    <div className={`btn-div ${position}`} style={{marginBottom: margianbuttom}}>
+    <div className={`btn-div ${position}`} style={{marginBottom: marginbottom, marginTop: margintop}}>
       <button
         type={type}
         onClick={onClick}

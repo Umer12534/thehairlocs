@@ -2,7 +2,6 @@
   display: flex;
   width: 100%;
   align-items: center;
-  margin-top: 15px;
 }
 .btn-div.center{
   justify-content: center;
@@ -28,6 +27,9 @@
 }
 
 /* Sizes */
+.btn-xsm{
+  padding: 3px 5px;
+}
 .btn-sm {
   padding: 6px 12px;
   font-size: 14px;
@@ -66,12 +68,12 @@
 
 .btn-outline {
   background-color: transparent;
-  border: 1px solid #2563eb;
-  color: #2563eb;
+  border: 1px solid #333;
+  color: black;
 }
 
 .btn-outline:hover {
-  background-color: #2563eb;
+  background-color: #f2a68c;
   color: #fff;
 }
 

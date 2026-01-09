@@ -11,29 +11,32 @@ import Footer from './components/layout/Footer/Footer';
 import WhatsappIcon from './components/ui/whatsappChat/WhatsappIcon';
 import BacktoTop from './components/ui/backTotop/BacktoTop';
 import About from './pages/About'
-// import ProductDetails './pages/ProductDetails';
+import { CartProvider } from './contaxt/CartContaxt';
+import Checkout from './pages/Checkout';
 
 
 function App() {
   return (
     <>
-    <Router>
-        <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/Product" element={<Product />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/sale" element={<Sale />} />
-          <Route path='/ProductDetails' element={<ProductDetails />} />
-          <Route path='/About' element={<About />} />
+    <CartProvider>
+      <Router>
+          <Navbar/>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/Product" element={<Product />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/sale" element={<Sale />} />
+            <Route path='/About' element={<About />} />
+            <Route path='/checkout' element={<Checkout />} />
 
-        </Routes>
-        <Footer/>
-      <WhatsappIcon />
-      <BacktoTop />
+          </Routes>
+          <Footer/>
+        <WhatsappIcon />
+        <BacktoTop />
       </Router>
+    </CartProvider>
     </>
   );
 }

@@ -7,7 +7,7 @@ import {
   faGripLines
 } from "@fortawesome/free-solid-svg-icons"
 
-function FilterBar({toggleSidebar, layoutSwitch}) {
+function FilterBar({toggleSidebar, layoutSwitch, products =[]}) {
   const [activeLayout, setActiveLayout] = useState(3);
 
   const handleLayoutChange = (layout)=>{
@@ -38,7 +38,7 @@ function FilterBar({toggleSidebar, layoutSwitch}) {
         </div>
 
         <div className="product-count">
-          <span>24</span> products
+          <span>{products.length || 0}</span> products
         </div>
 
         <div className="sort-options">

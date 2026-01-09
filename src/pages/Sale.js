@@ -32,11 +32,13 @@ function Sale(){
   return(
   <>
     <Pageheader title="Sale" des= "Up to 50% off on premium hair locs products" image= "/assets/images/sale/saleheader.jpg"/>
-    <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch}/>
+    <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products={products.filter(
+    product => product.badgeType === "sale"
+  )}/>
     
     <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>
-                <FilterSidebar  toggleSidebar = {toggleSidebar}/>
+                <FilterSidebar  toggleSidebar = {toggleSidebar} />
             </div>
 
             <ProductsSection badgeType="sale" layout={isLayout} page={page} productsPerPage={PRODUCTS_PER_PAGE}/>

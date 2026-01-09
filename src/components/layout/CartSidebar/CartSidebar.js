@@ -2,116 +2,154 @@ import React from 'react'
 import './CartSidebar.css'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faPlus, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect } from 'react'
-
-const cartItems = [
-  {
-    id: 1,
-    image: "/assets/images/categories/CATEGORY1.png",
-    title: "Hair Locs Moisture Cream",
-    price: "Rs. 2,500",
-    qty: 1,
-    size: "100ml"
-
-  },
-  {
-    id: 2,
-    image: "/assets/images/categories/CATEGORY2.png",
-    title: "Loc Growth Oil",
-    price: "Rs. 3,000",
-    qty: 2,
-    size: "50ml"
-  }
-];
+import Button from '../../ui/button/Button'
+import { useCart } from '../../../contaxt/CartContaxt'
 
 function CartItem({
-    image,
-    title,
-    price,
-    qty,
-    size
+  id,
+  image,
+  title,
+  price,
+  qty,
+  size,
+  onRemove,
+  onUpdateQuantity
 }){
-    return(
-        <>
-        <div className="item">
-            <div className="item-container">
-                <img src={image} alt='title' />
-                <div className="item-info">
-                    <h4>{title}</h4>
-                    <div className="product-detail">
-                        <p>{price}</p>
-                        <p>Size: {size}</p>
-                    </div>
-                        <div className="qty-controls">
-                            <button>-</button>
-                            <span>{qty}</span>
-                            <button>+</button>
-                        </div>
+  const handleQuantityChange = (newQty) => {
+    onUpdateQuantity(id, size, newQty);
+  }
 
+  const handleRemove = () => {
+    onRemove(id, size);
+  }
 
-                </div>
-            </div>
-            <button className="remove-item"> 
-                <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-            </button>          
-        </div>
-        </>
-    )
-    
-}
-
-function CartSiderbar( {isCartOpen, closeCart} ){
-
-    useEffect(() => {
-        if(isCartOpen)
-            document.body.style.overflow = 'hidden';
-        else
-            document.body.style.overflow = 'auto';
-        return () =>{
-            document.body.style.overflow = 'auto';
-        };
-    }, [isCartOpen])
-
-    return (
+  return(
     <>
-        {/* Overlay */}
-        {isCartOpen && (
-            <div className="overlay" onClick={closeCart}></div>
-        )}
-        <div className={` cart-sidebar ${isCartOpen? 'active':''}`}>
-            {/* Header */}
-            <div className="cart-header">
-                <div className="cart-header-text">Your Cart</div>
-                <div className="close-btn"  onClick={closeCart}>
-                <FontAwesomeIcon icon={faXmark} />
+      <div className="item">
+        <div className="item-container">
+          <img src={image} alt={title} />
+          <div className="item-info">
+            <h4>{title}</h4>
+            <div className="product-detail">
+              <p>{price}</p>
+              {size && (
+                <div className="size-div">
+                  <p>Size: {size}</p>
                 </div>
-            </div>
-            {/* body */}
-            
-            <div className="cart-items">
-                {cartItems.map((item)=>(
-                    <CartItem 
-                    key={item.id}
-                    {...item}
-                    />
-                    
-                ))}
-
+              )}
             </div>
 
-            {/* Footer */}
-            <div className="cart-footer">
-                <div className="cart-des">
-                    <p><span>Total: </span><span> 5000 PKR</span></p>
-                    <p>Tex and Shipping not included</p>
-                </div>
-                <Link to="/" className='checkout-btn'>
-                Proceed to Checkout
-                </Link>
+            <div className="qty-controls">
+              <button onClick={() => handleQuantityChange(qty - 1)}>
+                <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+              </button>
+              <span>{qty}</span>
+              <button onClick={() => handleQuantityChange(qty + 1)}>
+                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+              </button>
             </div>
+          </div>
         </div>
+        <button className="remove-item" onClick={handleRemove}> 
+          <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+        </button>          
+      </div>
     </>
-    )
+  )
 }
+
+
+function CartSiderbar({ isCartOpen, closeCart }){
+  const { 
+    cartItems, 
+    removeFromCart, 
+    updateQuantity, 
+    calculateTotal,
+    clearCart 
+  } = useCart();
+
+  useEffect(() => {
+    if(isCartOpen)
+      document.body.style.overflow = 'hidden';
+    else
+      document.body.style.overflow = 'auto';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isCartOpen])
+
+  const total = calculateTotal();
+
+  return (
+    <>
+      {/* Overlay */}
+      {isCartOpen && (
+        <div className="overlay" onClick={closeCart}></div>
+      )}
+      <div className={` cart-sidebar ${isCartOpen ? 'active' : ''}`}>
+        {/* Header */}
+        <div className="cart-header">
+          <div className="cart-header-text">
+            Your Cart ({cartItems.length} items)
+          </div>
+          <div className="close-btn" onClick={closeCart}>
+            <FontAwesomeIcon icon={faXmark} />
+          </div>
+        </div>
+        
+        {/* body */}
+        <div className="cart-items">
+          {cartItems.length === 0 ? (
+            <div className="empty-cart">
+              <p>Your cart is empty</p>
+              <Link to="/product" onClick={closeCart}>
+                <Button children="Continue Shopping" variant="primary" />
+              </Link>
+            </div>
+          ) : (
+            <>
+              {cartItems.map((item) => (
+                <CartItem 
+                  key={`${item.id}-${item.size}`}
+                  {...item}
+                  onRemove={removeFromCart}
+                  onUpdateQuantity={updateQuantity}
+                />
+              ))}
+              
+              {/* Clear Cart Button */}
+              <div className="cart-actions">
+                <button 
+                  className="clear-cart-btn"
+                  onClick={clearCart}
+                >
+                  Clear Cart
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Footer */}
+        {cartItems.length > 0 && (
+          <div className="cart-footer">
+            <div className="cart-des">
+              <p>
+                <span>Total: </span>
+                <span>Rs. 6-00</span>
+              </p>
+              <p>Tax and Shipping not included</p>
+            </div>
+            <Link to="/checkout" className='checkout-btn' onClick={closeCart}>
+              Proceed to Checkout
+            </Link>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
 export default CartSiderbar

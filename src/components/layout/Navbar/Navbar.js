@@ -72,7 +72,7 @@ export default function Navbar(){
                         {/* <!-- Logo --> */}
                         <div className="logo-container">
                             <Link to="/" className='NavLink'>
-                                <img src="logo192.png" alt="logo" className="logo" />
+                                <img src="./logo192.png" alt="logo" className="logo" />
                             </Link>
                         </div>
 
@@ -84,12 +84,12 @@ export default function Navbar(){
                             <Link to = "/" className='NavLink'>
                                 <FontAwesomeIcon icon={faUser} />
                             </Link>
-                            <Link className='cart-link NavLink' >
+                            <div className="cart-link NavLink">
                                 <FontAwesomeIcon icon={faBagShopping} onClick={() => {
                                     setIsCartOpen(true)
                                 }}/>
                                 <span className="cart-count"></span>
-                            </Link>    
+                            </div>
                         </div>
                     </div>
                 </div>                        

@@ -139,7 +139,7 @@
   height: 70px;
   border-radius: 6px;
   margin-right: 15px;
-  object-fit: cover;
+  object-fit: contain;
 }
 .item{
     display: flex;
@@ -157,7 +157,9 @@
 }
 
 .item-info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .item-info h4 {
@@ -179,18 +181,24 @@
     align-items: center;
     margin-bottom: 5px;
 }
+.size-div{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+}
 /* Quantity controls */
 
 .qty-controls {
   display: flex;
-  width: fit-content;
-  gap: 10px;
+  width: 7rem;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid #525252;
 }
 
 .qty-controls button {
-  position: sticky;
+  
   border: none;
   background-color: transparent;
   padding: 4px 10px;
@@ -200,6 +208,65 @@
 
 .qty-controls button:hover {
   background-color: rgba(250, 198, 174, 0.1);
+}
+
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-cart p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.cart-actions {
+  padding: 15px;
+  border-top: 1px solid #eee;
+}
+
+.clear-cart-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-cart-btn:hover {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.price-section {
+  margin: 15px 0;
+}
+
+.sale-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #e53935;
+}
+
+.current-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.old-price {
+  font-size: 18px;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 10px;
 }
 
 @media (max-width: 768px) {
