@@ -1,0 +1,22 @@
+/* Contact page */
+.contact-content {
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 0 0 0;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  gap: 50px;
+}
+.container{
+  padding: 0 30px 40px 30px;
+}
+@media (max-width: 450px) {
+    .contact-grid{
+        grid-template-columns: repeat(1, 1fr);
+
+    }
+    
+}

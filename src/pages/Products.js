@@ -5,6 +5,7 @@ import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection';
 import Pagination from '@mui/material/Pagination';
 import { products } from '../data/Products';
+import OverLay from '../components/ui/overlay/OverLay'
 import './Global.css'
 
 function Products() {

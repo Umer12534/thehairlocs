@@ -3,6 +3,7 @@ import HeroSection from '../components/sections/HeroSection/HeroSection'
 import ContactForm from '../components/sections/contactForm/ContactForm'
 import ContactInfo from '../components/sections/contactInfo/ContactInfo'
 import MapSection from '../components/sections/mapSection/MapSection'
+import './Contact.css'
 function Contact(){
   return(
     <>

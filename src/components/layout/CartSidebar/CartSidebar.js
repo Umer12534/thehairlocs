@@ -84,18 +84,11 @@ function CartSiderbar({ isCartOpen, closeCart }){
 
   return (
     <>
-      {/* Overlay */}
-      {isCartOpen && (
-        <div className="overlay" onClick={closeCart}></div>
-      )}
       <div className={` cart-sidebar ${isCartOpen ? 'active' : ''}`}>
         {/* Header */}
         <div className="cart-header">
           <div className="cart-header-text">
             Your Cart ({cartItems.length} items)
-          </div>
-          <div className="close-btn" onClick={closeCart}>
-            <FontAwesomeIcon icon={faXmark} />
           </div>
         </div>
         

@@ -1,65 +1,136 @@
-/* Contact Info */
+/* ================= Contact Info ================= */
+
 .contact-info {
   background-color: #fef3ea;
   padding: 40px;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 100%;
-  height: fit-content;
-  animation: floatingcard 3s ease-in-out 0s infinite;
+  max-width: 600px;
+  margin: auto;
+  animation: floatingcard 3s ease-in-out infinite;
 }
+
+/* Floating animation */
 @keyframes floatingcard {
-  0%,
-  100% {
-    transform: translateY(0px);
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
+
 .contact-info h2 {
   font-size: 32px;
   margin-bottom: 30px;
   color: #333;
+  text-align: center;
 }
 
+/* Info item */
 .info-item {
   display: flex;
-  text-align: start;
   align-items: center;
-  justify-content: start;
-  margin-bottom: 30px;
-  border-radius: 8px;
-  padding: 5px 5px 5px 20px;
+  gap: 20px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  padding: 12px 16px;
   transition: all 0.3s ease;
 }
 
 .info-item:hover {
-  background: rgba(245, 171, 136, 0.283);
-  transform: translateX(10px);
+  background: rgba(245, 171, 136, 0.25);
+  transform: translateX(8px);
 }
+
+/* Icon */
 .info-icon {
   background-color: #fac6ae;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
   flex-shrink: 0;
 }
 
 .info-icon .icon {
-  font-size: 20px;
+  font-size: 18px;
   color: #333;
 }
 
+/* Text */
 .info-text h3 {
-  font-size: 20px;
-  /* margin-bottom: 5px; */
+  font-size: 18px;
+  margin-bottom: 4px;
   color: #333;
 }
 
 .info-text p {
+  font-size: 14px;
   color: #666;
+  line-height: 1.6;
+}
+
+/* ================= Tablet (≤ 768px) ================= */
+@media (max-width: 768px) {
+  .contact-info {
+    padding: 30px 24px;
+  }
+
+  .contact-info h2 {
+    font-size: 28px;
+  }
+
+  .info-item {
+    gap: 16px;
+    padding: 10px 14px;
+  }
+
+  .info-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .info-text h3 {
+    font-size: 17px;
+  }
+}
+
+/* ================= Mobile (≤ 480px) ================= */
+@media (max-width: 480px) {
+  .contact-info {
+    padding: 24px 18px;
+    animation: none; /* smoother UX on mobile */
+  }
+
+  .contact-info h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .info-item {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px;
+  }
+
+  .info-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .info-icon .icon {
+    font-size: 16px;
+  }
+
+  .info-text h3 {
+    font-size: 16px;
+  }
+
+  .info-text p {
+    font-size: 13px;
+  }
 }

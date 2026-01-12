@@ -104,133 +104,131 @@ function FilterSidebar({toggleSidebar}) {
 
   return (
     <aside className="sidebar">
+      <div className="filter-heading">
+        <h3>Filters</h3>
+          <FontAwesomeIcon icon = {faXmark} onClick={toggleSidebar} className="filterbarclosebtn"/>
+      </div>
+      <div className="filter-contant">
+        {/* Categories */}
+        <details className="filter-group" open>
+          <summary>
+            <span>Category</span>
+            <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+          </summary>
+          
+          <div className="filter-options">
+            {Object.keys(categories).map((key) => (
+              <div className="filter-option" key={key}>
+                <input
+                  type="checkbox"
+                  id={`category-${key}`}
+                  name={key}
+                  checked={categories[key]}
+                  onChange={handleCategoryChange}
+                />
+                <label htmlFor={`category-${key}`}>
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </label>
+              </div>
+            ))}
+          </div>
+          
+        </details>
 
-      <h3>
-        Filters <FontAwesomeIcon icon = {faXmark} onClick={toggleSidebar} className="filterbarclosebtn"/>
-      </h3>
+        {/* Price range */}
+        <details className="filter-group">
+          <summary>
+            <span>Price Range</span>
+            <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+          </summary>
 
-      {/* Categories */}
-      <details className="filter-group" open>
-        <summary>
-          <span>Category</span>
-          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
-        </summary>
-        
-        <div className="filter-options">
-          {Object.keys(categories).map((key) => (
-            <div className="filter-option" key={key}>
+          <RangeSlider price={price} setPrice={setPrice} />
+
+          <div className="price-values">
+            <label htmlFor="min">
+              <span>Rs: </span>
               <input
-                type="checkbox"
-                id={`category-${key}`}
-                name={key}
-                checked={categories[key]}
-                onChange={handleCategoryChange}
+                type="number"
+                name="min"
+                id="min-price"
+                value={price.min}
+                onChange={(e) => setPrice({ ...price, min: Number(e.target.value) })}
               />
-              <label htmlFor={`category-${key}`}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
-              </label>
-            </div>
-          ))}
-        </div>
-        
-      </details>
+            </label>
 
-      {/* Price range */}
-      <details className="filter-group">
-        <summary>
-          <span>Price Range</span>
-          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
-        </summary>
-
-        <RangeSlider price={price} setPrice={setPrice} />
-
-        <div className="price-values">
-          <label htmlFor="min">
-            <span>Rs: </span>
-            <input
-              type="number"
-              name="min"
-              id="min-price"
-              value={price.min}
-              onChange={(e) => setPrice({ ...price, min: Number(e.target.value) })}
-            />
-          </label>
-
-          <label htmlFor="max">
-            <span>Rs:</span>
-            <input
-              type="number"
-              name="max"
-              id="max-price"
-              value={price.max}
-              onChange={(e) => setPrice({ ...price, max: Number(e.target.value) })}
-            />
-          </label>
+            <label htmlFor="max">
+              <span>Rs:</span>
+              <input
+                type="number"
+                name="max"
+                id="max-price"
+                value={price.max}
+                onChange={(e) => setPrice({ ...price, max: Number(e.target.value) })}
+              />
+            </label>
 
 
-        </div>
-      </details>
-  
-
-
-      {/* --- Availability --- */}
-      <details className='filter-group'>
-        <summary>
-          <span>Availability</span>  
-          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
-        </summary>
-
-        <div className="filter-options">
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="in-stock"
-              name="inStock"
-              checked={availability.inStock}
-              onChange={handleAvailabilityChange}
-            />
-            <label htmlFor="in-stock">In Stock</label>
           </div>
-          <div className="filter-option">
-            <input
-              type="checkbox"
-              id="out-stock"
-              name="outOfStock"
-              checked={availability.outOfStock}
-              onChange={handleAvailabilityChange}
-            />
-            <label htmlFor="out-stock">Out of Stock</label>
-          </div>
-        </div>
-      </details>
-
-
-      {/* --- Hair Type --- */}
-      <details  className="filter-group">
-        <summary>
-          <span>Hair Type</span>
-          <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
-        </summary>
+        </details>
     
-        <div className="filter-options">
-          {Object.keys(hairType).map((key) => (
-            <div className="filter-option" key={key}>
+        {/* --- Availability --- */}
+        <details className='filter-group'>
+          <summary>
+            <span>Availability</span>  
+            <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+          </summary>
+
+          <div className="filter-options">
+            <div className="filter-option">
               <input
                 type="checkbox"
-                id={`type-${key}`}
-                name={key}
-                checked={hairType[key]}
-                onChange={handleHairTypeChange}
+                id="in-stock"
+                name="inStock"
+                checked={availability.inStock}
+                onChange={handleAvailabilityChange}
               />
-              <label htmlFor={`type-${key}`}>
-                {key.charAt(0).toUpperCase() + key.slice(1)} Hair
-              </label>
+              <label htmlFor="in-stock">In Stock</label>
             </div>
-          ))}
-        </div>
-      </details>
+            <div className="filter-option">
+              <input
+                type="checkbox"
+                id="out-stock"
+                name="outOfStock"
+                checked={availability.outOfStock}
+                onChange={handleAvailabilityChange}
+              />
+              <label htmlFor="out-stock">Out of Stock</label>
+            </div>
+          </div>
+        </details>
 
+        {/* --- Hair Type --- */}
+        <details  className="filter-group">
+          <summary>
+            <span>Hair Type</span>
+            <FontAwesomeIcon icon={faAngleDown} className='angleDown'/>
+          </summary>
+      
+          <div className="filter-options">
+            {Object.keys(hairType).map((key) => (
+              <div className="filter-option" key={key}>
+                <input
+                  type="checkbox"
+                  id={`type-${key}`}
+                  name={key}
+                  checked={hairType[key]}
+                  onChange={handleHairTypeChange}
+                />
+                <label htmlFor={`type-${key}`}>
+                  {key.charAt(0).toUpperCase() + key.slice(1)} Hair
+                </label>
+              </div>
+            ))}
+          </div>
+        </details>
+      </div>
 
+      
       <div className="filter-btn">
         <button className="applyFilterBtn" onClick={applyFilters}>
           Apply Filters
