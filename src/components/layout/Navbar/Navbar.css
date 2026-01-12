@@ -287,9 +287,6 @@
         z-index: 2000;
     }
 
-    .nav-tabs.active {
-      left: 0; /* Changed from left to right */
-    }
 
     .nav-tabs a {
         display: flex;
