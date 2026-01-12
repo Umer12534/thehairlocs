@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection';
 import FilterBar from '../components/ui/filterbar/FilterBar';
@@ -9,6 +9,8 @@ import Stack from '@mui/material/Stack';
 import './Global.css'
 
 function Sale(){
+  const [sortedProducts, setSortedProducts] = useState(products);
+  const [sortOption, setSortOption] = useState("");
   const [page, setPage] = useState(1);
   const PRODUCTS_PER_PAGE = 8; 
   const [isLayout, setLayout] = useState(3);
@@ -28,11 +30,37 @@ function Sale(){
   const layoutSwitch=(layoutgrid)=>{
     setLayout(layoutgrid)
   }
+
+  useEffect(() => {
+    // Copy products array
+    let sorted = [...products];
+    // Helper to get the correct price for sorting
+    const getPrice = (product) => product.salePrice ?? product.originalPrice;
+    
+    switch (sortOption) {
+      case "priceLowHigh":
+        sorted.sort((a, b) => getPrice(a) - getPrice(b));
+        break;
+      case "priceHighLow":
+        sorted.sort((a, b) => getPrice(b) - getPrice(a));
+        break;
+      case "nameAZ":
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "nameZA":
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    setSortedProducts(sorted);
+  }, [sortOption]);
   
   return(
   <>
     <Pageheader title="Sale" des= "Up to 50% off on premium hair locs products" image= "/assets/images/sale/saleheader.jpg"/>
-    <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products={products.filter(
+    <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} setSortOption={setSortOption} products={products.filter(
     product => product.badgeType === "sale"
   )}/>
     
@@ -41,7 +69,7 @@ function Sale(){
                 <FilterSidebar  toggleSidebar = {toggleSidebar} />
             </div>
 
-            <ProductsSection badgeType="sale" layout={isLayout} page={page} productsPerPage={PRODUCTS_PER_PAGE}/>
+            <ProductsSection badgeType="sale" layout={isLayout} page={page} productsPerPage={PRODUCTS_PER_PAGE} sortedProducts= {sortedProducts}/>
         </div>
         {/* Pagination */}
         <div className="pagination-wrapper">

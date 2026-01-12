@@ -7,12 +7,15 @@ import {
   faGripLines
 } from "@fortawesome/free-solid-svg-icons"
 
-function FilterBar({toggleSidebar, layoutSwitch, products =[]}) {
+function FilterBar({toggleSidebar, layoutSwitch, products =[], setSortOption}) {
   const [activeLayout, setActiveLayout] = useState(3);
 
   const handleLayoutChange = (layout)=>{
     setActiveLayout(layout);
     layoutSwitch(layout);
+  }
+  const handleSortOption = (sort)=>{
+    setSortOption(sort)
   }
   return (
     <>
@@ -41,13 +44,14 @@ function FilterBar({toggleSidebar, layoutSwitch, products =[]}) {
           <span>{products.length || 0}</span> products
         </div>
 
-        <div className="sort-options">
-          <select id="sort-by">
-            <option value="default">Sort by: Default</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
-            <option value="popularity">Popularity</option>
+        <div className="sort-options-div">
+          <select id="sort-by" className="sort-options" onChange={(e)=>handleSortOption(e.target.value)}>
+            <option 
+            value="default">Sort by: Default</option>
+            <option value="priceLowHigh">Price: Low to High</option>
+            <option value="priceHighLow">Price: High to Low</option>
+            <option value="nameAZ">Name: A to Z</option>
+            <option value="nameZA">Name: Z to A</option>
           </select>
         </div>
 

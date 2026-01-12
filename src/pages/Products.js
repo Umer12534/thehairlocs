@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import FilterBar from '../components/ui/filterbar/FilterBar';
 import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection';
 import Pagination from '@mui/material/Pagination';
 import { products } from '../data/Products';
-import OverLay from '../components/ui/overlay/OverLay'
 import './Global.css'
 
 function Products() {
+  const [sortedProducts, setSortedProducts] = useState(products);
+  const [sortOption, setSortOption] = useState("");
   const [page, setPage] = useState(1);
   const PRODUCTS_PER_PAGE = 8;
   const [isSidebarActive, setIsSidebarActive] = useState(false);
@@ -24,17 +25,46 @@ function Products() {
     const totalPages = Math.ceil(
       products.length / PRODUCTS_PER_PAGE
     );
+
+
+    useEffect(() => {
+      // Copy products array
+      let sorted = [...products];
+      // Helper to get the correct price for sorting
+      const getPrice = (product) => product.salePrice ?? product.originalPrice;
+      
+      switch (sortOption) {
+        case "priceLowHigh":
+          sorted.sort((a, b) => getPrice(a) - getPrice(b));
+          break;
+        case "priceHighLow":
+          sorted.sort((a, b) => getPrice(b) - getPrice(a));
+          break;
+        case "nameAZ":
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case "nameZA":
+          sorted.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        default:
+          break;
+      }
+
+      setSortedProducts(sorted);
+    }, [sortOption]);
+
+  
   return (
     <>
     <Pageheader title="All Products" des="Discover our premium collection of hair care products" image="/assets/images/products/allProductsheader.jpg"/>
-      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {products}/>
+      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {products} setSortOption={setSortOption}/>
 
       <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>
                 <FilterSidebar  toggleSidebar = {toggleSidebar}/>
             </div>
 
-            <ProductsSection layout={isLayout}  page={page} productsPerPage={PRODUCTS_PER_PAGE} />
+            <ProductsSection layout={isLayout}  page={page} productsPerPage={PRODUCTS_PER_PAGE} sortedProducts= {sortedProducts}/>
         </div>
         {/* Pagination */}
         <div className="pagination-wrapper">

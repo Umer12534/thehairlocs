@@ -44,26 +44,29 @@
   gap: 5px;
   width: 70%;
 }
-.sort-options {
+.sort-options-div {
   border-left: 1px solid #7d7d7d63;
-  padding: 20px 25px;
+  padding: 5px 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 15%;
+  align-self: normal;
 }
 .fliter-btn {
   border-left: 1px solid #7d7d7d63;
   display: none;
 }
 
-.sort-options select {
-  border: 0;
+.sort-options-div select {
   background-color: #fff;
   font-size: 15px;
   color: #555;
+  border: none;
   outline: none;
   cursor: pointer;
+  height: 100%;
+  width: 100%;
 }
 
 .products-section {
@@ -84,7 +87,7 @@
     display: none;
 }
 @media (max-width: 800px) {
-  .sort-options select{font-size: 12px;}
+  .sort-options-div select{font-size: 12px;}
   
 }
 @media (max-width: 768px) {
@@ -98,7 +101,7 @@
     align-items: center;
   }
 
-  .sort-options {
+  .sort-options-div {
     border: 0;
     width: 50%;
   }
@@ -130,7 +133,7 @@
       .layout-switch .layout-icon {
         font-size: 20px;
       }
-      .sort-options select {
+      .sort-options-div select {
         padding-left: 0;
         padding-right: 0;
         font-size: 12px;

@@ -6,7 +6,8 @@
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease;
-  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-heading {
@@ -29,7 +30,7 @@
   overflow-y: auto;
   height: 100%;
 }
-.sidebar h3 .filterbarclosebtn {
+.sidebar .filterbarclosebtn {
   display: none;
 }
 
@@ -114,7 +115,8 @@ summary{
   justify-content: center;
   position: sticky;
   bottom: 0;
-  
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
 .applyFilterBtn, .clearFilterBtn {
   width: 50%;
@@ -148,18 +150,11 @@ summary{
 }
 
 @media (max-width: 768px) {
-  .sidebar h3 .filterbarclosebtn {
+  .sidebar .filterbarclosebtn {
     display: flex;
   }
   .sidebar{
     height: 100%;
   }
   
-}
-@media (max-width: 430px) {
-    .sidebar {
-
-    padding-bottom: 60px;
-  }
-
 }
