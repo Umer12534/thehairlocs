@@ -4,7 +4,7 @@ function Pageheader({title, des, image}){
     return (
         <>
         {/* <!-- page header --> */}
-        <div class="page-header" style={{
+        <div className="page-header" style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url(${image})`}}>
             <h1>{title}</h1>
             <p>{des}</p>

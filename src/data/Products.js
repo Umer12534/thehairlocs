@@ -1,5 +1,4 @@
 export const products = [
-  // ================= Hair Oils =================
   {
     id: 1,
     image: [
@@ -12,9 +11,11 @@ export const products = [
     originalPrice: 3400,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["dry", "damaged"],
+    rating: 4.5,
   },
   {
     id: 2,
@@ -28,9 +29,11 @@ export const products = [
     originalPrice: 3100,
     badgeType: "new",
     badgeText: "NEW",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["damaged", "thin"],
+    rating: 4.7,
   },
   {
     id: 3,
@@ -44,9 +47,11 @@ export const products = [
     originalPrice: 2400,
     badgeType: null,
     badgeText: null,
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["dry", "curly"],
+    rating: 4.5,
   },
   {
     id: 4,
@@ -60,10 +65,11 @@ export const products = [
     originalPrice: 3800,
     badgeType: "save",
     badgeText: "SAVE 15%",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: true,
+    inStock: true,
+    hairType: ["hair fall", "scalp"],
     rating: 4.5,
-    likes: 3
   },
   {
     id: 5,
@@ -77,9 +83,11 @@ export const products = [
     originalPrice: 3500,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["damaged", "dry"],
+    rating: 4.6,
   },
   {
     id: 6,
@@ -93,9 +101,11 @@ export const products = [
     originalPrice: 3200,
     badgeType: "new",
     badgeText: "NEW",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: true,
-    rating: 4.4
+    inStock: true,
+    hairType: ["dry", "aging"],
+    rating: 4.4,
   },
   {
     id: 7,
@@ -109,9 +119,11 @@ export const products = [
     originalPrice: 3000,
     badgeType: "save",
     badgeText: "SAVE 12%",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.2
+    inStock: true,
+    hairType: ["thin", "weak"],
+    rating: 4.2,
   },
   {
     id: 8,
@@ -125,9 +137,11 @@ export const products = [
     originalPrice: 3200,
     badgeType: null,
     badgeText: null,
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["hair fall", "growth"],
+    rating: 4.5,
   },
   {
     id: 9,
@@ -141,9 +155,11 @@ export const products = [
     originalPrice: 3300,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["premature graying", "dry"],
+    rating: 4.7,
   },
   {
     id: 10,
@@ -157,12 +173,12 @@ export const products = [
     originalPrice: 3600,
     badgeType: "new",
     badgeText: "NEW",
-    category: "Hair Oils",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["oily", "scalp"],
+    rating: 4.3,
   },
-
-  // ================= Shampoos =================
   {
     id: 11,
     image: [
@@ -177,7 +193,9 @@ export const products = [
     badgeText: "SAVE 20%",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["oily", "scalp"],
+    rating: 4.6,
   },
   {
     id: 12,
@@ -193,7 +211,9 @@ export const products = [
     badgeText: null,
     category: "Shampoos",
     isFeatured: true,
-    rating: 4.4
+    inStock: true,
+    hairType: ["normal", "all"],
+    rating: 4.4,
   },
   {
     id: 13,
@@ -209,7 +229,9 @@ export const products = [
     badgeText: "SALE",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.8
+    inStock: true,
+    hairType: ["dandruff", "scalp"],
+    rating: 4.8,
   },
   {
     id: 14,
@@ -225,7 +247,9 @@ export const products = [
     badgeText: "NEW",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["damaged", "frizzy"],
+    rating: 4.5,
   },
   {
     id: 15,
@@ -241,7 +265,9 @@ export const products = [
     badgeText: null,
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["dry", "damaged"],
+    rating: 4.3,
   },
   {
     id: 16,
@@ -257,7 +283,9 @@ export const products = [
     badgeText: "SALE",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["dry", "sensitive"],
+    rating: 4.7,
   },
   {
     id: 17,
@@ -273,7 +301,9 @@ export const products = [
     badgeText: "NEW",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["oily", "scalp"],
+    rating: 4.4,
   },
   {
     id: 18,
@@ -289,7 +319,9 @@ export const products = [
     badgeText: "SAVE 15%",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["oily", "product buildup"],
+    rating: 4.6,
   },
   {
     id: 19,
@@ -305,7 +337,9 @@ export const products = [
     badgeText: "SALE",
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["thin", "flat"],
+    rating: 4.5,
   },
   {
     id: 20,
@@ -321,10 +355,10 @@ export const products = [
     badgeText: null,
     category: "Shampoos",
     isFeatured: false,
-    rating: 4.2
+    inStock: true,
+    hairType: ["dull", "dry"],
+    rating: 4.2,
   },
-
-  // ================= Conditioners =================
   {
     id: 21,
     image: [
@@ -339,7 +373,9 @@ export const products = [
     badgeText: "SALE",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["dry", "damaged"],
+    rating: 4.7,
   },
   {
     id: 22,
@@ -355,7 +391,9 @@ export const products = [
     badgeText: null,
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["damaged", "dull"],
+    rating: 4.4,
   },
   {
     id: 23,
@@ -371,7 +409,9 @@ export const products = [
     badgeText: "NEW",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.8
+    inStock: true,
+    hairType: ["dry", "frizzy"],
+    rating: 4.8,
   },
   {
     id: 24,
@@ -387,7 +427,9 @@ export const products = [
     badgeText: "SAVE 17%",
     category: "Conditioners",
     isFeatured: true,
-    rating: 4.6
+    inStock: true,
+    hairType: ["damaged", "weak"],
+    rating: 4.6,
   },
   {
     id: 25,
@@ -403,7 +445,9 @@ export const products = [
     badgeText: "SALE",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["frizzy", "unruly"],
+    rating: 4.5,
   },
   {
     id: 26,
@@ -419,7 +463,9 @@ export const products = [
     badgeText: "NEW",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["very dry", "coarse"],
+    rating: 4.3,
   },
   {
     id: 27,
@@ -435,7 +481,9 @@ export const products = [
     badgeText: null,
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["damaged", "color-treated"],
+    rating: 4.7,
   },
   {
     id: 28,
@@ -451,7 +499,9 @@ export const products = [
     badgeText: "SAVE 15%",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["weak", "breaking"],
+    rating: 4.4,
   },
   {
     id: 29,
@@ -467,7 +517,9 @@ export const products = [
     badgeText: "SALE",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["damaged", "dry"],
+    rating: 4.6,
   },
   {
     id: 30,
@@ -483,10 +535,10 @@ export const products = [
     badgeText: "NEW",
     category: "Conditioners",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["sensitive", "dry"],
+    rating: 4.5,
   },
-
-  // ================= Styling =================
   {
     id: 31,
     image: [
@@ -501,7 +553,9 @@ export const products = [
     badgeText: "SAVE 15%",
     category: "Styling",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["curly", "wavy"],
+    rating: 4.3,
   },
   {
     id: 32,
@@ -517,7 +571,9 @@ export const products = [
     badgeText: "SALE",
     category: "Styling",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["heat styled", "damaged"],
+    rating: 4.7,
   },
   {
     id: 33,
@@ -533,7 +589,9 @@ export const products = [
     badgeText: null,
     category: "Styling",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["thin", "flat"],
+    rating: 4.4,
   },
   {
     id: 34,
@@ -549,7 +607,9 @@ export const products = [
     badgeText: "NEW",
     category: "Styling",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["short", "spiky"],
+    rating: 4.6,
   },
   {
     id: 35,
@@ -565,7 +625,9 @@ export const products = [
     badgeText: "SALE",
     category: "Styling",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["dull", "dry"],
+    rating: 4.5,
   },
   {
     id: 36,
@@ -581,7 +643,9 @@ export const products = [
     badgeText: "NEW",
     category: "Styling",
     isFeatured: false,
-    rating: 4.2
+    inStock: true,
+    hairType: ["medium", "thick"],
+    rating: 4.2,
   },
   {
     id: 37,
@@ -597,7 +661,9 @@ export const products = [
     badgeText: null,
     category: "Styling",
     isFeatured: true,
-    rating: 4.8
+    inStock: true,
+    hairType: ["curly", "frizzy"],
+    rating: 4.8,
   },
   {
     id: 38,
@@ -613,7 +679,9 @@ export const products = [
     badgeText: "SAVE 12%",
     category: "Styling",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["frizzy", "unruly"],
+    rating: 4.4,
   },
   {
     id: 39,
@@ -629,7 +697,9 @@ export const products = [
     badgeText: "SALE",
     category: "Styling",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["all", "daily use"],
+    rating: 4.6,
   },
   {
     id: 40,
@@ -645,10 +715,10 @@ export const products = [
     badgeText: "NEW",
     category: "Styling",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["thick", "wavy"],
+    rating: 4.3,
   },
-
-  // ================= CATEGORY 5 =================
   {
     id: 41,
     image: [
@@ -656,14 +726,16 @@ export const products = [
       "/assets/images/products/product5.png",
       "/assets/images/products/product5.png",
     ],
-    name: "CATEGORY 5 Premium Hair Care",
+    name: "Premium Hair Serum",
     salePrice: 2600,
     originalPrice: 3100,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["frizzy", "unruly"],
+    rating: 4.5,
   },
   {
     id: 42,
@@ -672,14 +744,16 @@ export const products = [
       "/assets/images/products/product6.png",
       "/assets/images/products/product6.png",
     ],
-    name: "CATEGORY 5 Daily Essentials",
+    name: "Daily Essentials Serum",
     salePrice: null,
     originalPrice: 2300,
     badgeType: null,
     badgeText: null,
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.2
+    inStock: true,
+    hairType: ["all", "daily use"],
+    rating: 4.2,
   },
   {
     id: 43,
@@ -688,14 +762,16 @@ export const products = [
       "/assets/images/products/product1.png",
       "/assets/images/products/product1.png",
     ],
-    name: "CATEGORY 5 Hair Boost Oil",
+    name: "Hair Growth Boost Serum",
     salePrice: 2700,
     originalPrice: 3200,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["hair fall", "thin"],
+    rating: 4.7,
   },
   {
     id: 44,
@@ -704,14 +780,16 @@ export const products = [
       "/assets/images/products/product2.png",
       "/assets/images/products/product2.png",
     ],
-    name: "CATEGORY 5 Repair Conditioner",
+    name: "Repair & Protect Serum",
     salePrice: 2800,
     originalPrice: 3300,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["damaged", "color-treated"],
+    rating: 4.4,
   },
   {
     id: 45,
@@ -720,14 +798,16 @@ export const products = [
       "/assets/images/products/product3.png",
       "/assets/images/products/product3.png",
     ],
-    name: "CATEGORY 5 Hair Serum",
+    name: "Ultimate Shine Serum",
     salePrice: null,
     originalPrice: 3000,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["dull", "dry"],
+    rating: 4.6,
   },
   {
     id: 46,
@@ -736,14 +816,16 @@ export const products = [
       "/assets/images/products/product4.png",
       "/assets/images/products/product4.png",
     ],
-    name: "CATEGORY 5 Shine Styling Cream",
+    name: "Heat Protectant Serum",
     salePrice: 2500,
     originalPrice: 2900,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["heat styled", "damaged"],
+    rating: 4.3,
   },
   {
     id: 47,
@@ -752,14 +834,16 @@ export const products = [
       "/assets/images/products/product5.png",
       "/assets/images/products/product5.png",
     ],
-    name: "CATEGORY 5 Hair Mask",
+    name: "Deep Conditioning Hair Mask",
     salePrice: 2800,
     originalPrice: 3300,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 5",
+    category: "Hair Masks",
     isFeatured: true,
-    rating: 4.8
+    inStock: true,
+    hairType: ["very dry", "damaged"],
+    rating: 4.8,
   },
   {
     id: 48,
@@ -768,14 +852,16 @@ export const products = [
       "/assets/images/products/product6.png",
       "/assets/images/products/product6.png",
     ],
-    name: "CATEGORY 5 Scalp Care Oil",
+    name: "Scalp Nourishing Treatment",
     salePrice: 2700,
     originalPrice: 3200,
     badgeType: "save",
     badgeText: "SAVE 10%",
-    category: "CATEGORY 5",
+    category: "Hair Treatments",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["scalp", "dandruff"],
+    rating: 4.5,
   },
   {
     id: 49,
@@ -784,14 +870,16 @@ export const products = [
       "/assets/images/products/product1.png",
       "/assets/images/products/product1.png",
     ],
-    name: "CATEGORY 5 Daily Hair Serum",
+    name: "Daily Hydration Serum",
     salePrice: null,
     originalPrice: 2600,
     badgeType: null,
     badgeText: null,
-    category: "CATEGORY 5",
+    category: "Hair Serums",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["dry", "normal"],
+    rating: 4.4,
   },
   {
     id: 50,
@@ -800,17 +888,17 @@ export const products = [
       "/assets/images/products/product2.png",
       "/assets/images/products/product2.png",
     ],
-    name: "CATEGORY 5 Herbal Oil",
+    name: "Herbal Infusion Oil",
     salePrice: 2800,
     originalPrice: 3300,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 5",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["all", "preventive"],
+    rating: 4.6,
   },
-
-  // ================= CATEGORY 6 =================
   {
     id: 51,
     image: [
@@ -818,14 +906,16 @@ export const products = [
       "/assets/images/products/product3.png",
       "/assets/images/products/product3.png",
     ],
-    name: "CATEGORY 6 Advanced Hair Formula",
+    name: "Advanced Hair Repair Formula",
     salePrice: 2800,
     originalPrice: 3400,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 6",
+    category: "Hair Treatments",
     isFeatured: false,
-    rating: 4.7
+    inStock: true,
+    hairType: ["severely damaged", "breaking"],
+    rating: 4.7,
   },
   {
     id: 52,
@@ -834,14 +924,16 @@ export const products = [
       "/assets/images/products/product4.png",
       "/assets/images/products/product4.png",
     ],
-    name: "CATEGORY 6 Repair Treatment",
+    name: "Intensive Repair Treatment",
     salePrice: 3000,
     originalPrice: 3600,
     badgeType: "save",
     badgeText: "SAVE 17%",
-    category: "CATEGORY 6",
+    category: "Hair Treatments",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["chemically treated", "damaged"],
+    rating: 4.4,
   },
   {
     id: 53,
@@ -850,14 +942,16 @@ export const products = [
       "/assets/images/products/product5.png",
       "/assets/images/products/product5.png",
     ],
-    name: "CATEGORY 6 Shine Oil",
+    name: "Luminous Shine Oil",
     salePrice: 2700,
     originalPrice: 3200,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 6",
+    category: "Hair_Oils",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["dull", "lackluster"],
+    rating: 4.6,
   },
   {
     id: 54,
@@ -866,14 +960,16 @@ export const products = [
       "/assets/images/products/product6.png",
       "/assets/images/products/product6.png",
     ],
-    name: "CATEGORY 6 Hair Mask",
+    name: "Nourishing Hair Mask",
     salePrice: 2900,
     originalPrice: 3400,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 6",
+    category: "Hair Masks",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["dry", "brittle"],
+    rating: 4.3,
   },
   {
     id: 55,
@@ -882,14 +978,16 @@ export const products = [
       "/assets/images/products/product1.png",
       "/assets/images/products/product1.png",
     ],
-    name: "CATEGORY 6 Nourishing Serum",
+    name: "Ultimate Nourishing Serum",
     salePrice: 2800,
     originalPrice: 3300,
     badgeType: "save",
     badgeText: "SAVE 15%",
-    category: "CATEGORY 6",
+    category: "Hair Serums",
     isFeatured: true,
-    rating: 4.8
+    inStock: true,
+    hairType: ["very dry", "damaged"],
+    rating: 4.8,
   },
   {
     id: 56,
@@ -898,14 +996,16 @@ export const products = [
       "/assets/images/products/product2.png",
       "/assets/images/products/product2.png",
     ],
-    name: "CATEGORY 6 Curl Enhancer",
+    name: "Curl Definition Cream",
     salePrice: null,
     originalPrice: 2700,
     badgeType: null,
     badgeText: null,
-    category: "CATEGORY 6",
+    category: "Styling",
     isFeatured: false,
-    rating: 4.5
+    inStock: true,
+    hairType: ["curly", "wavy"],
+    rating: 4.5,
   },
   {
     id: 57,
@@ -914,14 +1014,16 @@ export const products = [
       "/assets/images/products/product3.png",
       "/assets/images/products/product3.png",
     ],
-    name: "CATEGORY 6 Herbal Conditioner",
+    name: "Herbal Infusion Conditioner",
     salePrice: 2900,
     originalPrice: 3400,
     badgeType: "sale",
     badgeText: "SALE",
-    category: "CATEGORY 6",
+    category: "Conditioners",
     isFeatured: false,
-    rating: 4.4
+    inStock: true,
+    hairType: ["all", "herbal"],
+    rating: 4.4,
   },
   {
     id: 58,
@@ -930,14 +1032,16 @@ export const products = [
       "/assets/images/products/product4.png",
       "/assets/images/products/product4.png",
     ],
-    name: "CATEGORY 6 Volume Styling Gel",
+    name: "Volume Enhancing Gel",
     salePrice: 2600,
     originalPrice: 3100,
     badgeType: "new",
     badgeText: "NEW",
-    category: "CATEGORY 6",
+    category: "Styling",
     isFeatured: false,
-    rating: 4.6
+    inStock: true,
+    hairType: ["thin", "flat"],
+    rating: 4.6,
   },
   {
     id: 59,
@@ -946,14 +1050,16 @@ export const products = [
       "/assets/images/products/product5.png",
       "/assets/images/products/product5.png",
     ],
-    name: "CATEGORY 6 Hair Repair Cream",
+    name: "Intensive Repair Cream",
     salePrice: 2800,
     originalPrice: 3300,
     badgeType: "save",
     badgeText: "SAVE 12%",
-    category: "CATEGORY 6",
+    category: "Hair Treatments",
     isFeatured: false,
-    rating: 4.3
+    inStock: true,
+    hairType: ["damaged", "weak"],
+    rating: 4.3,
   },
   {
     id: 60,
@@ -962,13 +1068,15 @@ export const products = [
       "/assets/images/products/product6.png",
       "/assets/images/products/product6.png",
     ],
-    name: "CATEGORY 6 Daily Shine Serum",
+    name: "Daily Shine Enhancing Serum",
     salePrice: null,
     originalPrice: 2700,
     badgeType: null,
     badgeText: null,
-    category: "CATEGORY 6",
+    category: "Hair Serums",
     isFeatured: true,
-    rating: 4.7
+    inStock: true,
+    hairType: ["all", "daily use"],
+    rating: 4.7,
   },
 ];

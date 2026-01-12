@@ -9,11 +9,11 @@ const ProductsSection = ({
   layout = 3,
   page = 1,
   productsPerPage = 8,
-  sortedProducts = [],
+  sortedFilteredProducts = [],
 }) => {
 
-  // Apply filters on the sortedProducts passed from parent
-  const filteredProducts = sortedProducts.filter(product => {
+  // Apply filters on the sortedFilteredProducts passed from parent
+  const filteredProducts = sortedFilteredProducts.filter(product => {
     // Filter by badge type (e.g., "sale")
     if (badgeType != null) return product.badgeType === badgeType;
 
@@ -49,7 +49,7 @@ const ProductsSection = ({
           ) : (
             <div className="no-products">
               <p>No products found.</p>
-              <p>Debug info: Total sorted products: {sortedProducts.length}</p>
+              <p>Debug info: Total sorted products: {sortedFilteredProducts.length}</p>
               <p>Filters applied: badgeType={badgeType}, ProductsType={ProductsType}, category={category}</p>
             </div>
           )}

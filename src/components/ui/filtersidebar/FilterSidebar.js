@@ -29,8 +29,10 @@ function RangeSlider({ price, setPrice }) {
 
 
 
-function FilterSidebar({toggleSidebar}) {
 
+function FilterSidebar({toggleSidebar, setFilter}) {
+
+  
   // --- STATE FOR FILTERS ---
   const [categories, setCategories] = useState({
     moisturizers: false,
@@ -80,7 +82,7 @@ function FilterSidebar({toggleSidebar}) {
       hairType,
     };
     console.log("Applied Filters:", filters);
-    // You can pass this object to API or filter product list
+    setFilter(filters);
   };
 
   const clearFilters = () => {
@@ -100,6 +102,13 @@ function FilterSidebar({toggleSidebar}) {
       curly: false,
       straight: false,
     });
+    const filters = {
+      categories,
+      price,
+      availability,
+      hairType,
+    };
+    setFilter(filters);
   };
 
   return (

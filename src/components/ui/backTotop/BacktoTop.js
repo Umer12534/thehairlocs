@@ -32,7 +32,7 @@ function BacktoTop(){
     <>
     {/* <!-- back to top --> */}
     {isVisible && (
-        <button class="to-top-icon" onClick={scrolltotop}>
+        <button className="to-top-icon" onClick={scrolltotop}>
             <FontAwesomeIcon icon={faAngleUp}/>
         </button>
     )}
