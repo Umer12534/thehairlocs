@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Add item to cart
-  const addToCart = (product, selectedSize = '', quantity = 1) => {
+  const addToCart = (product, selectedSize = '20ml', quantity = 1) => {
     setCartItems(prevItems => {
       // Check if item with same id and size already exists
       const existingItemIndex = prevItems.findIndex(

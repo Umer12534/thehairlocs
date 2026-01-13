@@ -72,6 +72,9 @@
     padding: 8px 0;
     transition: all 0.3s ease;
 }
+.NavLink{
+    cursor: pointer;
+}
 
 .NavLink:hover {
     color: #fac6ae;
@@ -109,7 +112,6 @@
 
 .nav-icons .NavLink:hover {
     color: #fac6ae;
-    background-color: rgba(250, 198, 174, 0.1);
 }
 
 /* Cart counter */

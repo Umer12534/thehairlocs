@@ -161,7 +161,7 @@ function Sale(){
     console.log("Applied filters:", filter);
     console.log("Filtered products:", filteredProducts);
     setPage(1);
-  }, [filter]);
+  }, [filter, filteredProducts]);
 
   const totalPages = Math.ceil(
     filteredProducts.filter(product => product.badgeType === "sale").length / PRODUCTS_PER_PAGE

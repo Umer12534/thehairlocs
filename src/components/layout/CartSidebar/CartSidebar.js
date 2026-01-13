@@ -98,7 +98,9 @@ function CartSiderbar({ isCartOpen, closeCart }){
             <div className="empty-cart">
               <p>Your cart is empty</p>
               <Link to="/product" onClick={closeCart}>
-                <Button children="Continue Shopping" variant="primary" />
+                <Button variant="primary">
+                  Continue Shopping
+                </Button>
               </Link>
             </div>
           ) : (

@@ -1,21 +1,61 @@
 .to-top-icon {
   position: fixed;
-  bottom: 70px;
-  right: 13px;
+  bottom: 76px; /* default bottom */
+  right: -60px; /* start off-screen */
   height: 40px;
   width: 40px;
   background-color: #f6c7b682;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
   color: black;
   border-radius: 50%;
   border: none;
-  text-align: center;
+  cursor: pointer;
   font-size: 20px;
   font-weight: 100;
   display: flex;
-  text-decoration: none;
   align-items: center;
   justify-content: center;
-  box-shadow: 2px 2px 10px rgb(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
   z-index: 1000;
+
+  /* transition for sliding and bottom change */
+  transition: right 0.3s ease, opacity 0.3s ease, bottom 0.3s ease;
+  opacity: 0; /* hidden initially */
+}
+
+.to-top-icon.show {
+  right: 25px; /* slide in */
+  opacity: 1;   /* fade in */
+}
+
+.to-top-icon.footer-visible {
+  bottom: 20px; /* move up when footer appears */
+}
+
+.top-icon {
+  transition: transform 0.2s ease;
+}
+
+.to-top-icon:hover .top-icon {
+  transform: scale(1.2);
+}
+
+@media (max-width: 430px) {
+  .to-top-icon{
+    right: 15px;
+  }
+  .to-top-icon.footer-visible {
+    bottom: 75px;
+
+  }
+  
+}
+@media (max-width: 768px) {
+  .to-top-icon{
+    bottom: 70px;
+  }
+  .to-top-icon.show{
+    right: 17px;
+  }
+  
 }

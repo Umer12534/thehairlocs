@@ -87,7 +87,9 @@
   border: none;
   cursor: pointer;
 }
-
+.product-card__add-btn svg{
+  color: black;
+}
 .product-card__add-btn {
   width: 34px;
   height: 34px;
@@ -128,7 +130,7 @@
 .product-card__content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 15px 10px;
 }
 

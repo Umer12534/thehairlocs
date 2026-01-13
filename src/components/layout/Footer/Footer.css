@@ -13,7 +13,7 @@
 }
 
 .footer-card {
-  width: 200px;
+  /* width: 200px; */
   height: 100%;
   overflow: hidden;
   padding-top: 50px;
@@ -66,9 +66,12 @@
   display: flex;
   justify-content: center;
   height: 50px;
-  width: 300px;
+  width: 300px;  
 }
-
+/* .subscribe-section:focus-within{
+  border: 1px solid #f1ccbf;
+  border-radius: px;
+} */
 .subscribe-section input {
   height: 100%;
   width: 80%;
@@ -78,6 +81,7 @@
   padding: 10px;
   font-size: large;
   border-radius: 0;
+  outline: none;
 }
 
 .subscribe-section .Link {

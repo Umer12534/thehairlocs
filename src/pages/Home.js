@@ -8,6 +8,7 @@ import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
 import Heading from '../components/ui/heading/Heading';
 import Button from '../components/ui/button/Button'
 import { useNavigate } from 'react-router-dom';
+import { products } from '../data/Products';
 
 function Home() {
   const navigate = useNavigate()
@@ -18,9 +19,9 @@ function Home() {
       <Heading heading_text="All Categories" position='center'/>
       <AllCategoriesSection/>
       <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center'/>
-      <Explore />
+      <Explore /> 
       <Heading heading_text="Featured Products"/>
-      <ProductsSection ProductsType = "featured"/>
+      <ProductsSection ProductsType = "featured" sortedFilteredProducts={products}/>
       <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/product")}/>
       <Banner />
       <ScrollingBar/>

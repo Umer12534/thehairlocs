@@ -7,18 +7,26 @@ function CartNotification({ product, onClose, onViewCart }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Auto-close after 4 seconds
+    // Auto-close after 3 seconds
     const timer = setTimeout(() => {
       setIsVisible(false);
-      setTimeout(() => onClose(), 300); // Wait for animation to complete
-    }, 4000);
+      setTimeout(() => onClose(), 300);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(() => onClose(), 300); // Wait for animation to complete
+    setTimeout(() => onClose(), 300);
+  };
+
+  const handleViewCart = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+      onViewCart();
+    }, 300);
   };
 
   return (
@@ -33,23 +41,16 @@ function CartNotification({ product, onClose, onViewCart }) {
         </div>
         
         <div className="notification-body">
-          <img 
-            src={product.image} 
-            alt={product.title} 
-            className="product-image"
-          />
-          <div className="product-info">
-            <h4>{product.title}</h4>
-            <p className="product-price">{product.price}</p>
-            {product.size && (
-              <p className="product-size">Size: {product.size}</p>
-            )}
-            <p className="product-quantity">Quantity: {product.qty}</p>
+          <div className="product-img">
+            <img 
+              src={product.image} 
+              alt={product.title} 
+              className="product-image"
+            />
           </div>
-        </div>
-        
-        <div className="notification-footer">
-          <button className="view-cart-btn" onClick={handleClose}>
+          
+          <p className="product-title">{product.title}</p>
+          <button className="view-cart-btn" onClick={handleViewCart}>
             View Cart
           </button>
         </div>

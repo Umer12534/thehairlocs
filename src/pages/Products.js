@@ -77,6 +77,7 @@ function Products() {
       }
 
       setSortedProducts(sorted);
+
     }, [sortOption]);
 
     // filter the products  
@@ -157,7 +158,7 @@ function Products() {
       console.log("Applied filters:", filter);
       console.log("Filtered products:", filtered);
       setPage(1);
-    }, [filter]);
+    }, [filter, sortedProducts]);
 
     const totalPages = Math.ceil(
       filteredProducts.length / PRODUCTS_PER_PAGE
@@ -166,7 +167,7 @@ function Products() {
   return (
     <>
     <Pageheader title="All Products" des="Discover our premium collection of hair care products" image="/assets/images/products/allProductsheader.jpg"/>
-      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {filteredProducts} setSortOption={setSortOption}/>
+      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {filteredProducts} setSortOption={setSortOption} setFilter={setFilter}/>
 
       <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>

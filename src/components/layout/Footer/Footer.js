@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faFacebookF, faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons'
+import Button from '../../ui/button/Button'
 
 
 function Footer(){
@@ -86,13 +87,13 @@ function Footer(){
           </div>
           <div className="social-icons">
             <Link to={"/"} className='social-icons-btn Link'>
-                <FontAwesomeIcon icon={faFacebookF}/>
+                <FontAwesomeIcon icon={faFacebookF} size='lg'/>
             </Link>
             <Link to={"/"} className='social-icons-btn Link'>
-                <FontAwesomeIcon icon={faWhatsapp}/>
+                <FontAwesomeIcon icon={faWhatsapp} size='lg'/>
             </Link>
             <Link to={"/"} className='social-icons-btn Link'>
-                <FontAwesomeIcon icon={faInstagram}/>
+                <FontAwesomeIcon icon={faInstagram} size='lg'/>
             </Link>
           </div>
         </div>

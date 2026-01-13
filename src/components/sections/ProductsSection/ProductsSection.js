@@ -37,31 +37,35 @@ const ProductsSection = ({
   const productsToRender = paginatedProducts;
   const productNotFound = productsToRender.length === 0;
   return (
-     <section className="product-container">
-    <div className="products">
-      <div className={`product-grid product-grid-${layout}`}>
-        {productsToRender.length > 0 &&
-          productsToRender.map(product => (
-            <ProductCard
-              key={product.id}
-              {...product}
-            />
-          ))
-        }
-      </div>
-    </div>
+    <>
+      <section className="product-container">
+        <div className="products">
+          <div className={`product-grid product-grid-${layout}`}>
+            {productsToRender.length > 0 &&
+              productsToRender.map(product => (
+                <ProductCard
+                  key={product.id}
+                  {...product}
+                />
+              ))
+            }
+          </div>
+        </div>
 
-    {productNotFound && (
-      <div className="no-products">
-        <img
-          src="./assets/images/products/product_not_found.png"
-          alt="Product not found"
-          className="no-products-img"
-        />
-        <p>No products found</p>
-      </div>
-    )}
-  </section>
+        {productNotFound && (
+          <div className="no-products">
+            <img
+              src="./assets/images/products/product_not_found.png"
+              alt="Product not found"
+              className="no-products-img"
+            />
+            <p>No products found</p>
+          </div>
+        )}
+      </section>
+      
+    </>
+
   );
 };
 

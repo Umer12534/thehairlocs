@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ProductCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { products } from "../../../data/Products";
+import { useCart } from "../../../contaxt/CartContaxt";
+import Overlay from "../overlay/OverLay";
+import CartSiderbar from "../../layout/CartSidebar/CartSidebar";
 
 function ProductCard({
   id,
@@ -15,7 +18,30 @@ function ProductCard({
   badgeType,
   badgeText,
   category,
+  openCartSidebar,
 }) {
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { addToCart } = useCart();
+
+  const handleQuickAdd = () => {
+    addToCart(
+      {
+        id,
+        image,
+        name,
+        salePrice,
+        originalPrice,
+      },
+      "20ml", // default size
+      1
+    );
+
+    if (openCartSidebar) {
+      openCartSidebar(); // OPEN CART
+    }
+  };
+  
   return (
     <>
 
@@ -50,7 +76,11 @@ function ProductCard({
               <FontAwesomeIcon icon={faHeart} />
             </div>
           )}
-          <button className="product-card__add-btn">
+          <button className="product-card__add-btn" 
+            onClick={() => {
+              handleQuickAdd()
+              setIsCartOpen(true)
+            }}>
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
@@ -73,6 +103,14 @@ function ProductCard({
         </div>
       
     </div>
+
+    {/* Cart Sidebar */}
+      <Overlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} position="right" >
+        <CartSiderbar
+        isCartOpen={isCartOpen}
+        closeCart={() => setIsCartOpen(false)}
+        />  
+      </Overlay>
     </>
   );
 }

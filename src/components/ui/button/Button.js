@@ -1,5 +1,6 @@
 import React from "react";
 import "./Button.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 const Button = ({
@@ -38,13 +39,15 @@ const Button = ({
         ) : (
           <>
             {icon && iconPosition === "left" && (
-              <span className="btn-icon left">{icon}</span>
+              <FontAwesomeIcon icon={icon} className="btn-icon left" ></FontAwesomeIcon>
+              // <span className="btn-icon left">{icon}</span>
             )}
 
             <span className="btn-text">{children}</span>
 
             {icon && iconPosition === "right" && (
-              <span className="btn-icon right">{icon}</span>
+              <FontAwesomeIcon icon={icon} className="btn-icon right" ></FontAwesomeIcon>
+              // <span className="btn-icon right">{icon}</span>
             )}
           </>
         )}
