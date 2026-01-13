@@ -1,6 +1,7 @@
 import React from 'react';
 import ProductCard from '../../ui/ProductCard/ProductCard';
 import './ProductsSection.css';
+import { products } from '../../../data/Products';
 
 const ProductsSection = ({
   ProductsType = null,
@@ -34,28 +35,33 @@ const ProductsSection = ({
   );
 
   const productsToRender = paginatedProducts;
-
+  const productNotFound = productsToRender.length === 0;
   return (
-    <section className="product-container">
-      <div className="products">
-        <div className={`product-grid product-grid-${layout}`}>
-          {productsToRender.length > 0 ? (
-            productsToRender.map(product => (
-              <ProductCard
-                key={product.id}
-                {...product} // passes name, images, price, salePrice, likes, etc.
-              />
-            ))
-          ) : (
-            <div className="no-products">
-              <p>No products found.</p>
-              <p>Debug info: Total sorted products: {sortedFilteredProducts.length}</p>
-              <p>Filters applied: badgeType={badgeType}, ProductsType={ProductsType}, category={category}</p>
-            </div>
-          )}
-        </div>
+     <section className="product-container">
+    <div className="products">
+      <div className={`product-grid product-grid-${layout}`}>
+        {productsToRender.length > 0 &&
+          productsToRender.map(product => (
+            <ProductCard
+              key={product.id}
+              {...product}
+            />
+          ))
+        }
       </div>
-    </section>
+    </div>
+
+    {productNotFound && (
+      <div className="no-products">
+        <img
+          src="./assets/images/products/product_not_found.png"
+          alt="Product not found"
+          className="no-products-img"
+        />
+        <p>No products found</p>
+      </div>
+    )}
+  </section>
   );
 };
 

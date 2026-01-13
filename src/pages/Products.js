@@ -14,10 +14,11 @@ function Products() {
   const [filter, setFilter] = useState({
     categories: {
       moisturizers: false,
-      oils: false,
+      hair_oils: false,
       shampoos: false,
       conditioners: false,
       styling: false,
+      Hair_Serums: false,
     },
     price: {
       min: null,
@@ -165,7 +166,7 @@ function Products() {
   return (
     <>
     <Pageheader title="All Products" des="Discover our premium collection of hair care products" image="/assets/images/products/allProductsheader.jpg"/>
-      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {products} setSortOption={setSortOption}/>
+      <FilterBar toggleSidebar = {toggleSidebar} layoutSwitch= {layoutSwitch} products= {filteredProducts} setSortOption={setSortOption}/>
 
       <div className="page-content-filterbar-sidebar">
             <div className={`filtersidebar ${isSidebarActive ? 'active' : ''}`}>

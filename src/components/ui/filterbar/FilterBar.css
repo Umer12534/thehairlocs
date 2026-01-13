@@ -123,9 +123,9 @@
 }
 
 @media (max-width: 380px) {
-    .layout-switch .layout-icon:nth-child(2) {
+    /* .layout-switch .layout-icon:nth-child(2) {
         display: none;
-      }
+      } */
     .layout-switch {
         padding-left: 0;
         padding-right: 0;

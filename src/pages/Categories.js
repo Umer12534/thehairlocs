@@ -8,10 +8,12 @@ import Heading from '../components/ui/heading/Heading'
 
 const categories = [
     { name: "All Categories", sectionId: "all" },
-    { name: "Hair Oils", sectionId: "hair-oils" },
-    { name: "Shampoos", sectionId: "shampoos" },
-    { name: "Conditioners", sectionId: "conditioners" },
-    { name: "Styling", sectionId: "styling" },
+    { name: "Hair_oils", sectionId: "Hair_oils" },
+    { name: "Moisturizers", sectionId: "Moisturizers" },
+    { name: "Shampoos", sectionId: "Shampoos" },
+    { name: "Conditioners", sectionId: "Conditioners" },
+    { name: "Styling", sectionId: "Styling" },
+    { name: "Hair_Serums", sectionId: "styling" },
 ];
 
 const Categories = () => {
@@ -34,32 +36,46 @@ const Categories = () => {
           </>
           ) : null}
 
-        {cat.name === "Hair Oils"? (
+        {cat.name === "Hair_oils"? (
           <>
 
           <Heading heading_text= {cat.name} position= 'left' />
-          <ProductsSection category={cat.name}/>
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
           </>
           ) : null}
 
-        {cat.name === "Shampoos"? (
+        {cat.name === "Moisturizers"? (
           <>
           <Heading heading_text= {cat.name} position= 'left' />
-          <ProductsSection category={cat.name} />
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
+          </>
+          ) : null}
+
+        {cat.name === "Shampoos" ? (
+          <>
+          <Heading heading_text= {cat.name} position= 'left' />
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
           </>
           ) : null}
 
         {cat.name === "Conditioners" ? (
           <>
           <Heading heading_text= {cat.name} position= 'left' />
-          <ProductsSection category={cat.name}/>
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
           </>
           ) : null}
 
         {cat.name === "Styling" ? (
           <>
           <Heading heading_text= {cat.name} position= 'left' />
-          <ProductsSection category={cat.name}/>
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
+          </>
+          ) : null}
+
+        {cat.name === "Hair_Serums" ? (
+          <>
+          <Heading heading_text= {cat.name} position= 'left' />
+          <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>
           </>
           ) : null}
       </section>

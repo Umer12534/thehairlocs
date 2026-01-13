@@ -32,6 +32,41 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
+/* product not found */
+.no-products {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.no-products-img {
+  max-width: 520px;
+  width: 100%;
+  height: auto;
+}
+
+.no-products p {
+  font-size: 16px;
+  color: #777;
+}
+.no-products-img {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 1200px) {
   .product-grid {
     grid-template-columns: repeat(4, 1fr);
@@ -80,7 +115,7 @@
   }
 }
 
-/* Small phones */
+
 @media (max-width: 576px) {
   .products {
     padding: 15px 10px;
@@ -91,26 +126,29 @@
     gap: 12px;
   }
   .product-grid-1 {
-  grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    margin: 0 auto;
+    max-width: 350px;
   }
   
   .product-grid-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-
 }
 
 /* Very small phones */
 @media (max-width: 400px) {
   .product-grid {
     grid-template-columns: 1fr;
-    gap: 15px;
     max-width: 300px;
     margin: 0 auto;
   }
 
   .product-grid-1 {
   grid-template-columns: repeat(1, 1fr);
+  }
+  .product-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
   }
 
 }
