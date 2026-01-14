@@ -14,11 +14,11 @@ function Products() {
   const [filter, setFilter] = useState({
     categories: {
       moisturizers: false,
-      hair_oils: false,
+      Oils: false,
       shampoos: false,
       conditioners: false,
       styling: false,
-      Hair_Serums: false,
+      Serums: false,
     },
     price: {
       min: null,

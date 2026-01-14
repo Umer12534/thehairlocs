@@ -8,12 +8,12 @@ import Heading from '../components/ui/heading/Heading'
 
 const categories = [
     { name: "All Categories", sectionId: "all" },
-    { name: "Hair_oils", sectionId: "Hair_oils" },
+    { name: "Oils", sectionId: "Oils" },
     { name: "Moisturizers", sectionId: "Moisturizers" },
     { name: "Shampoos", sectionId: "Shampoos" },
     { name: "Conditioners", sectionId: "Conditioners" },
     { name: "Styling", sectionId: "Styling" },
-    { name: "Hair_Serums", sectionId: "styling" },
+    { name: "Serums", sectionId: "Serums" },
 ];
 
 const Categories = () => {
@@ -23,8 +23,8 @@ const Categories = () => {
       title="Categories"
       des="Discover our premium collection of hair care products"
       image="/assets/images/categories/hero.jpg" />
-    <FilterTabs categories = {categories}/>
 
+    <FilterTabs categories = {categories}/>
 
     {categories.map((cat, index)=>(
       <section key={index} id={cat.sectionId} style={{scrollMarginTop: '150px'}}>
@@ -36,7 +36,7 @@ const Categories = () => {
           </>
           ) : null}
 
-        {cat.name === "Hair_oils"? (
+        {cat.name === "Oils"? (
           <>
 
           <Heading heading_text= {cat.name} position= 'left' />
@@ -72,7 +72,7 @@ const Categories = () => {
           </>
           ) : null}
 
-        {cat.name === "Hair_Serums" ? (
+        {cat.name === "Serums" ? (
           <>
           <Heading heading_text= {cat.name} position= 'left' />
           <ProductsSection category={cat.name} sortedFilteredProducts={products} layout={4}/>

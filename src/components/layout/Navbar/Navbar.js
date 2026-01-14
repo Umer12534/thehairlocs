@@ -76,7 +76,7 @@ export default function Navbar() {
                 <span className="cart-count"></span>
               </div>
             </div>
-
+            
           </div>
         </div>
       </div>

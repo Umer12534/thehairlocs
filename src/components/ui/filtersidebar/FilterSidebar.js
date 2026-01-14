@@ -36,11 +36,11 @@ function FilterSidebar({toggleSidebar, setFilter}) {
   // --- STATE FOR FILTERS ---
   const [categories, setCategories] = useState({
     moisturizers: false,
-    hair_oils: false,
+    Oils: false,
     shampoos: false,
     conditioners: false,
     styling: false,
-    Hair_Serums: false,
+    Serums: false,
   });
 
   const [price, setPrice] = useState({ min: 0, max: 5000 });

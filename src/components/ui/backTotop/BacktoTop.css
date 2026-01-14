@@ -26,6 +26,7 @@
 .to-top-icon.show {
   right: 25px; /* slide in */
   opacity: 1;   /* fade in */
+  transition: all 0.3s ease;
 }
 
 .to-top-icon.footer-visible {
@@ -34,6 +35,10 @@
 
 .top-icon {
   transition: transform 0.2s ease;
+}
+.to-top-icon:hover{
+  transform: translateY(-5px);
+  background-color: #f6c7b6e7;
 }
 
 .to-top-icon:hover .top-icon {

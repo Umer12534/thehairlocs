@@ -1,44 +1,90 @@
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faFacebook, faFacebookF, faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const NavTabs = ({ navOpen, onClose }) => {
   return (
     <ul className={`nav-tabs ${navOpen ? "active" : ""}`}>
-      <li className="nav-close" onClick={onClose}>
-        <FontAwesomeIcon icon={faXmark} />
-      </li>
 
+      <div className="nav-header">
+        <li>
+          Menu 
+        </li>
+        {/* Close Button */}
+        <li className="nav-close" onClick={onClose}>
+          <FontAwesomeIcon icon={faXmark} />
+        </li>
+      </div>
+      
+
+      {/* Home */}
       <li>
-        <NavLink to="/" className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}>
+        <NavLink
+          to="/"
+          className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
+          onClick={onClose}
+        >
           Home
         </NavLink>
       </li>
 
+      {/* Product */}
       <li>
-        <NavLink to="/product" className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}>
+        <NavLink
+          to="/product"
+          className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
+          onClick={onClose}
+        >
           Product
         </NavLink>
       </li>
 
+      {/* Categories */}
       <li>
-        <NavLink to="/Categories" className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}>
+        <NavLink
+          to="/categories"
+          className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
+
+          onClick={onClose}
+        >
           Categories
         </NavLink>
       </li>
 
+      {/* Sale */}
       <li>
-        <NavLink to="/Sale" className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}>
+        <NavLink
+          to="/sale"
+          className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
+          onClick={onClose}
+        >
           Sale
         </NavLink>
       </li>
 
+      {/* Contact */}
       <li>
-        <NavLink to="/Contact" className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}>
+        <NavLink
+          to="/contact"
+          className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
+          onClick={onClose}
+        >
           Contact
         </NavLink>
       </li>
+
+      {/* Side Icons */}
+      <div className="side-nav-icon">
+        <FontAwesomeIcon icon={faWhatsapp} size="lg" />
+        <FontAwesomeIcon icon={faInstagram} size="lg" />
+        <FontAwesomeIcon icon={faFacebook} size="lg" />
+        {/* <FontAwesomeIcon icon={faUser} size="lg" /> */}
+      </div>
+
+
     </ul>
+
   );
 };
 
