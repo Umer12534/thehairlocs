@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './OverLay.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faX, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const Overlay = ({ isOpen, onClose, children, position = 'center' }) => {
   useEffect(() => {
@@ -24,7 +24,8 @@ const Overlay = ({ isOpen, onClose, children, position = 'center' }) => {
     right: 'overlay-content-right',
     top: 'overlay-content-top',
     bottom: 'overlay-content-bottom',
-    center: 'overlay-content-center'
+    center: 'overlay-content-center',
+    search: 'overlay-content-search' // New position
   };
 
   return ReactDOM.createPortal(
@@ -40,11 +41,9 @@ const Overlay = ({ isOpen, onClose, children, position = 'center' }) => {
           onClick={onClose}
           aria-label="Close"
         >
-          <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+          <FontAwesomeIcon icon={faXmark} />
         </button>
-
         {children}
-        
       </div>
     </div>,
     document.getElementById('overlay-root')

@@ -15,9 +15,18 @@
   border: none;
   background-color: #666;
 }
+@media (max-width: 768px) {
+  .map-container iframe{
+    height: 20rem;
+  }
+  
+}
 @media (max-width: 430px) {
     .map-section {
         padding: 0 10px;
+    }
+    .map-container iframe{
+      height: 15rem;
     }
     
 }

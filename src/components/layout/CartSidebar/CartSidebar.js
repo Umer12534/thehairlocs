@@ -70,16 +70,6 @@ function CartSiderbar({ isCartOpen, closeCart }){
     clearCart 
   } = useCart();
 
-  useEffect(() => {
-    if(isCartOpen)
-      document.body.style.overflow = 'hidden';
-    else
-      document.body.style.overflow = 'auto';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isCartOpen])
-
   const total = calculateTotal();
 
   return (

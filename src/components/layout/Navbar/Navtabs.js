@@ -9,7 +9,9 @@ const NavTabs = ({ navOpen, onClose }) => {
 
       <div className="nav-header">
         <li>
-          Menu 
+          <h2>
+            Menu 
+          </h2>
         </li>
         {/* Close Button */}
         <li className="nav-close" onClick={onClose}>

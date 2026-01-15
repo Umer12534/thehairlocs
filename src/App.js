@@ -13,6 +13,7 @@ import BacktoTop from './components/ui/backTotop/BacktoTop';
 import About from './pages/About'
 import { CartProvider } from './contaxt/CartContaxt';
 import Checkout from './pages/Checkout';
+import PrivacyPolicy from './pages/privacyPolicy/PrivacyPolicy';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path="/sale" element={<Sale />} />
             <Route path='/About' element={<About />} />
             <Route path='/checkout' element={<Checkout />} />
+            <Route path='/Privacy-Policy' element={<PrivacyPolicy />} />
 
           </Routes>
           <Footer/>

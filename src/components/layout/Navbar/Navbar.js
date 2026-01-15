@@ -13,6 +13,7 @@ import CartSiderbar from "../CartSidebar/CartSidebar";
 import Overlay from "../../ui/overlay/OverLay";
 import NavTabs from "./Navtabs";
 import BottomMobileNav from "./BottomMobileNav";
+import SearchBar from "../../ui/searchBar/SearchBar";
 
 const sale = "We are running a sale - Get 20% off on all products!";
 
@@ -25,6 +26,12 @@ const SaleBanner = () => (
 export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const searchHandler=()=>{
+
+
+  }
 
   return (
     <>
@@ -60,9 +67,14 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="nav-icons">
-              <Link to="/" className="NavLink">
+
+              <button
+                className="NavLink search-btn"
+                onClick={() => setIsSearchOpen(true)}
+                aria-label="Open search"
+              >
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </Link>
+              </button>
 
               <Link to="/" className="NavLink">
                 <FontAwesomeIcon icon={faUser} />
@@ -81,6 +93,10 @@ export default function Navbar() {
         </div>
       </div>
 
+      <Overlay position="search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} children={SearchBar}>
+        <SearchBar isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}/>
+      </Overlay>
+
       {/* Bottom Mobile Navigation */}
       <BottomMobileNav onCartOpen={() => setIsCartOpen(true)} />
 
@@ -91,7 +107,14 @@ export default function Navbar() {
         closeCart={() => setIsCartOpen(false)}
         />  
       </Overlay>
-      
+      {isSearchOpen && (
+        <SearchBar
+          autoFocus
+          onSearch={(value) => console.log("Searching:", value)}
+          className="navbar-search"
+          onClose={() => setIsSearchOpen(false)}
+        />
+      )}
     </>
   );
 }

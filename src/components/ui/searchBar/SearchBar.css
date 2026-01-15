@@ -1,0 +1,52 @@
+/* OUTER CONTAINER */
+.searchbar-container {
+  width: 100%;                 
+  max-width: 850px;            
+  height: 50px;
+  margin: 20px auto;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 50px;
+  box-sizing: border-box;
+}
+
+/* FORM TAKES FULL WIDTH */
+.searchbar-container form {
+  width: 100%;
+}
+
+/* INNER WRAPPER */
+.search-bar-wraper {
+  width: 100%;                
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* INPUT FIELD */
+.search-bar-wraper input {
+  flex: 1;                     
+  border: none;
+  outline: none;
+  font-size: 20px;
+  color: #333;
+  padding: 8px 6px;
+  background: transparent;
+}
+
+/* ICONS */
+.search-bar-wraper svg {
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.search-bar-wraper svg:hover {
+  color: #000;
+}

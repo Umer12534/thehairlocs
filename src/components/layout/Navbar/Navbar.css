@@ -130,6 +130,12 @@
     padding: 0 8px;
     font-size: 20px;
 }
+.nav-header{
+    display: none;
+}
+.nav-header h2{
+    padding: 10px 0px;
+}
 
 /* Mobile menu toggle button */
 .nav-toggle {
@@ -185,6 +191,11 @@
 }
 .side-nav-icon{
     display: none;
+}
+.search-btn{
+    background-color: transparent;
+    outline: none;
+    border: none;
 }
 
 @media (max-width: 768px) {
@@ -293,6 +304,9 @@
         width: fit-content;
         margin: 5px auto;
         /* border-bottom: 1px solid #7d7d7d63; */
+    }
+    .nav-header{
+        display:block;
     }
 }
 
