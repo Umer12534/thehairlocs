@@ -30,7 +30,7 @@ function CartItem({
   return (
     <div className="item">
       <div className="item-container">
-        <Link to={`/Product/${id}`} onClick={() => {onClose();}}>
+        <Link to={`/product/${id}`} onClick={() => {onClose();}}>
           <img src={image} alt={title} />
         </Link>
 
@@ -77,7 +77,7 @@ function CartSidebar({ isCartOpen, closeCart }) {
     clearCart
   } = useCart();
 
-  const totalPrice = calculateTotal(); // ✅ dynamic total
+  const totalPrice = calculateTotal();
 
   return (
     <div className={`cart-sidebar ${isCartOpen ? 'active' : ''}`}>
@@ -94,7 +94,7 @@ function CartSidebar({ isCartOpen, closeCart }) {
         {cartItems.length === 0 ? (
           <div className="empty-cart">
             <p>Your cart is empty</p>
-            <Link to="/product" onClick={closeCart}>
+            <Link to="/products" onClick={closeCart}>
               <Button variant="primary">Continue Shopping</Button>
             </Link>
           </div>

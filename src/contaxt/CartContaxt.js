@@ -20,14 +20,14 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  /* ✅ TOTAL PRICE (FIXED) */
+  /*TOTAL PRICE (FIXED) */
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
       return total + item.price * item.qty;
     }, 0);
   };
 
-  /* ✅ ADD TO CART (FIXED PRICE) */
+  /*  ADD TO CART (FIXED PRICE) */
   const addToCart = (product, selectedSize = '20ml', quantity = 1) => {
     setCartItems(prevItems => {
       const existingItemIndex = prevItems.findIndex(
@@ -48,7 +48,7 @@ export const CartProvider = ({ children }) => {
           id: product.id,
           image: product.image[0],
           title: product.name,
-          price: Number(finalPrice), // ✅ NUMBER ONLY
+          price: Number(finalPrice), // NUMBER ONLY
           qty: quantity,
           size: selectedSize
         }
@@ -77,6 +77,44 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const changeItemSize = (id, oldSize, newSize) => {
+    setCartItems(prev => {
+      // Find current item
+      const currentItem = prev.find(
+        item => item.id === id && item.size === oldSize
+      );
+
+      if (!currentItem) return prev;
+
+      // Check if same product with new size already exists
+      const existingItem = prev.find(
+        item => item.id === id && item.size === newSize
+      );
+
+      // Remove old item
+      let updatedCart = prev.filter(
+        item => !(item.id === id && item.size === oldSize)
+      );
+
+      if (existingItem) {
+        // Merge quantities
+        updatedCart = updatedCart.map(item =>
+          item.id === id && item.size === newSize
+            ? { ...item, qty: item.qty + currentItem.qty }
+            : item
+        );
+      } else {
+        // Add item with new size
+        updatedCart.push({
+          ...currentItem,
+          size: newSize
+        });
+      }
+
+      return updatedCart;
+    });
+  };
+
   const clearCart = () => setCartItems([]);
 
   const getCartCount = () => {
@@ -92,7 +130,8 @@ export const CartProvider = ({ children }) => {
         updateQuantity,
         clearCart,
         calculateTotal,
-        getCartCount
+        getCartCount,
+        changeItemSize
       }}
     >
       {children}

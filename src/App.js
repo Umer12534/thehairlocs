@@ -20,13 +20,18 @@ import RefundPolicy from "./pages/RefundPolicy";
 
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp"
+import AccountLayout from "./components/layout/AccountLayout";
+import Orders from "./pages/Orders";
+import AccountDetails from "./pages/AccountDetails";
+import AccountSettings from "./pages/AccountSettings";
+import AccountNavbar from "./components/sections/accountNavbar/AccountNavbar";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
     <CartProvider>
       <Router>
         <Routes>
-
           {/*  Pages With Navbar & Footer */}
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
@@ -37,6 +42,8 @@ function App() {
             <Route path="/sale" element={<Sale />} />
             <Route path="/about" element={<About />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/cart" element={<Cart />} />
+
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/faqs" element={<Faqs />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
@@ -49,6 +56,13 @@ function App() {
             <Route path="/SignUp" element={<SignUp />} />
           </Route>
 
+          {/* Account Pages */}
+          <Route element={<AccountLayout />}>
+            {/* <Route path="/account" element={<Account />} /> */}
+            <Route path="/account/orders" element={<Orders />} />
+            <Route path="/account/profile" element={<AccountDetails />} />
+            <Route path="/account/settings" element={<AccountSettings />} />
+          </Route>
         </Routes>
       </Router>
     </CartProvider>

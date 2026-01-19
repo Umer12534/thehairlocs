@@ -472,7 +472,7 @@
   }
   
   .footer-links ul {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 12px;
     align-items: center;
   }

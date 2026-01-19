@@ -34,7 +34,7 @@ const NavTabs = ({ navOpen, onClose }) => {
       {/* Product */}
       <li>
         <NavLink
-          to="/product"
+          to="/products"
           className={({ isActive }) => isActive ? "NavLink Active" : "NavLink"}
           onClick={onClose}
         >
