@@ -1,54 +1,57 @@
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import './App.css';
-import Navbar from './components/layout/Navbar/Navbar';
-import Home from './pages/Home'
-import Categories from './pages/Categories';
-import Contact from './pages/Contact';
-import Product from './pages/Products';
-import Sale from './pages/Sale';
-import ProductDetails from './pages/ProductDetails';
-import Footer from './components/layout/Footer/Footer';
-import WhatsappIcon from './components/ui/whatsappChat/WhatsappIcon';
-import BacktoTop from './components/ui/backTotop/BacktoTop';
-import About from './pages/About'
-import { CartProvider } from './contaxt/CartContaxt';
-import Checkout from './pages/Checkout';
-import PrivacyPolicy from './pages/privacyPolicy/PrivacyPolicy';
-import Faqs from './pages/Faqs';
-import ShippingPolicy from './pages/ShippingPolicy';
-import RefundPolicy from './pages/refundPolicy/RefundPolicy';
-import {getDatabase} from "firebase/database"
-import {app} from "./firebase"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./contaxt/CartContaxt";
 
+import MainLayout from "./components/layout/MainLayout";
+import AuthLayout from "./components/layout/AuthLayout";
+
+// Pages
+import Home from "./pages/Home";
+import Categories from "./pages/Categories";
+import Contact from "./pages/Contact";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import Sale from "./pages/Sale";
+import About from "./pages/About";
+import Checkout from "./pages/Checkout";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Faqs from "./pages/Faqs";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp"
 
 function App() {
   return (
-    <>
     <CartProvider>
       <Router>
-          <Navbar/>
-          <Routes>
+        <Routes>
+
+          {/*  Pages With Navbar & Footer */}
+          <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/Product" element={<Product />} />
+            <Route path="/products" element={<Products />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/sale" element={<Sale />} />
-            <Route path='/About' element={<About />} />
-            <Route path='/checkout' element={<Checkout />} />
-            <Route path='/Privacy-Policy' element={<PrivacyPolicy />} />
-            <Route path='/F.A.Qs' element={<Faqs />} />
-            <Route path='Shipping-Policy' element={<ShippingPolicy />} />
-            <Route path='Refund-Policy' element={<RefundPolicy />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/faqs" element={<Faqs />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+          </Route>
 
+          {/* Auth Pages */}
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/SignUp" element={<SignUp />} />
+          </Route>
 
-          </Routes>
-          <Footer/>
-        <WhatsappIcon />
-        <BacktoTop />
+        </Routes>
       </Router>
     </CartProvider>
-    </>
   );
 }
 

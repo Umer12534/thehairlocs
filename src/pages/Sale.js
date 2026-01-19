@@ -6,7 +6,7 @@ import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import Pagination from '@mui/material/Pagination';
 import { products } from '../data/Products';
 import Stack from '@mui/material/Stack';
-import './Global.css'
+import '../styles/Global.css'
 import React from 'react';
 
 function Sale(){

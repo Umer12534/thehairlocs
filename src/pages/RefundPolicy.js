@@ -1,5 +1,5 @@
 import React from 'react'
-import './RefundPolicy.css'
+import '../styles/RefundPolicy.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBan, faCheckCircle, faEnvelope, faExchange, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 const RefundPolicy = () => {

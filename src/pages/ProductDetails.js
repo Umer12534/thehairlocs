@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./ProductDetails.css";
+import "../styles/ProductDetails.css";
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import { useParams } from "react-router-dom";

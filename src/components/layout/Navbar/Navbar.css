@@ -65,6 +65,11 @@
 .NavLink:hover {
     color: #fac6ae;
 }
+.account-btn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
 
 /* Active navigation link */
 .Active {

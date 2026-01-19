@@ -1,7 +1,7 @@
 import React from 'react'
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import QuestionAnswer from '../components/sections/questionAnswer/QuestionAnswer'
-import './Faqs.css'
+import '../styles/Faqs.css'
 function Faqs(){
     return(
         <>

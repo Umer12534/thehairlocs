@@ -15,8 +15,12 @@ import NavTabs from "./Navtabs";
 import BottomMobileNav from "./BottomMobileNav";
 import SearchBar from "../../ui/searchBar/SearchBar";
 import { useCart } from "../../../contaxt/CartContaxt";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { app } from "../../../firebase";
 
 const sale = "We are running a sale - Get 20% off on all products!";
+const auth = getAuth(app);
 
 const SaleBanner = () => (
   <div className="sale-banner">
@@ -25,12 +29,22 @@ const SaleBanner = () => (
 );
 
 export default function Navbar() {
+
+  const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
 
+  // Redirect to login or account page
+  const handleAccount=()=>{
+    if(auth.currentUser){
+      navigate("/account");
+    }
+    else
+      navigate("/login");
+  }
 
   return (
     <>
@@ -75,9 +89,10 @@ export default function Navbar() {
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
 
-              <Link to="/" className="NavLink">
+              <button className="NavLink account-btn" onClick={handleAccount}>
                 <FontAwesomeIcon icon={faUser} />
-              </Link>
+              </button>
+
 
               <div className="cart-link NavLink">
                 <FontAwesomeIcon

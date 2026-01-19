@@ -1,5 +1,5 @@
 import React from 'react';
-import './PrivacyPolicy.css'; // We'll create this CSS file
+import '../styles/PrivacyPolicy.css'; // We'll create this CSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink } from "react-router-dom";
 import {

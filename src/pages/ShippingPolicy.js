@@ -1,6 +1,6 @@
 import { faCalculator, faClock, faExclamationTriangle, faMapMarker, faShippingFast } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import './ShippingPolicy.css'
+import '../styles/ShippingPolicy.css'
 const ShippingPolicy = () => {
   return (
     <>

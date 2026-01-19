@@ -5,7 +5,7 @@ import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection';
 import Pagination from '@mui/material/Pagination';
 import { products } from '../data/Products';
-import './Global.css'
+import '../styles/Global.css'
 
 function Products() {
   const [sortedProducts, setSortedProducts] = useState(products);
