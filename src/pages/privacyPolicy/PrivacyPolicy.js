@@ -1,5 +1,17 @@
 import React from 'react';
 import './PrivacyPolicy.css'; // We'll create this CSS file
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { NavLink } from "react-router-dom";
+import {
+  faCogs,
+  faShareAlt,
+  faShieldAlt,
+  faCookieBite,
+  faUserShield,
+  faEnvelope,
+  faInfoCircle
+} from "@fortawesome/free-solid-svg-icons";
+
 
 const PrivacyPolicy = () => {
   return (
@@ -19,7 +31,7 @@ const PrivacyPolicy = () => {
       <div className="privacy-grid">
         <div className="privacy-card">
           <div className="privacy-card-icon">
-            <i className="fas fa-info-circle"></i>
+            <FontAwesomeIcon icon={faInfoCircle} className='icon'/>
           </div>
           <h3>Information We Collect</h3>
           <ul>
@@ -35,7 +47,8 @@ const PrivacyPolicy = () => {
 
         <div className="privacy-card">
           <div className="privacy-card-icon">
-            <i className="fas fa-cogs"></i>
+            <FontAwesomeIcon icon={faCogs} />
+
           </div>
           <h3>How We Use Your Information</h3>
           <ul>
@@ -49,7 +62,7 @@ const PrivacyPolicy = () => {
 
         <div className="privacy-card">
           <div className="privacy-card-icon">
-            <i className="fas fa-share-alt"></i>
+            <FontAwesomeIcon icon={faShareAlt} />
           </div>
           <h3>Information Sharing</h3>
           <p>
@@ -67,7 +80,7 @@ const PrivacyPolicy = () => {
 
       <div className="data-protection">
         <div className="data-protection-header">
-          <i className="fas fa-shield-alt"></i>
+          <FontAwesomeIcon icon={faShieldAlt} />
           <h3>Security of Your Data</h3>
         </div>
         <p>
@@ -98,7 +111,7 @@ const PrivacyPolicy = () => {
 
       <div className="cookies-section">
         <h3>
-          <i className="fas fa-cookie-bite"></i> Cookies & Tracking
+          <FontAwesomeIcon icon={faCookieBite} /> Cookies & Tracking
         </h3>
         <p>
           We use cookies and similar tracking technologies to enhance your
@@ -121,7 +134,7 @@ const PrivacyPolicy = () => {
 
       <div className="privacy-rights">
         <h3>
-          <i className="fas fa-user-shield"></i> Your Privacy Rights
+          <FontAwesomeIcon icon={faUserShield} /> Your Privacy Rights
         </h3>
         <p>You have the right to:</p>
 
@@ -155,9 +168,9 @@ const PrivacyPolicy = () => {
           privacy rights, please don't hesitate to contact our privacy team.
         </p>
 
-        <a href="mailto:thehairlocs@gmail.com" className="contact-email">
-          <i className="fas fa-envelope"></i> Contact Our Privacy Team
-        </a>
+        <NavLink to="/contact" className="contact-email">
+          <FontAwesomeIcon icon={faEnvelope} /> Contact Our Privacy Team
+        </NavLink>
 
         <p style={{ marginTop: '25px', color: '#777', fontSize: '0.95rem' }}>
           <i className="fas fa-clock"></i> We typically respond within 48 hours

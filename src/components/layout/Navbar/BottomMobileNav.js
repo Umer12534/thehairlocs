@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
-const BottomMobileNav = ({ onCartOpen }) => {
+const BottomMobileNav = ({ onCartOpen, isCartOpen }) => {
   return (
     <div className="mobile-bottom-nav">
       <Link to="/" className="nav-item">
@@ -25,7 +25,9 @@ const BottomMobileNav = ({ onCartOpen }) => {
         <span>Chat</span>
       </Link>
 
-      <button className="nav-item cart-btn" onClick={onCartOpen}>
+      <button className="nav-item cart-btn" onClick={()=>{
+        isCartOpen? onCartOpen(false) : onCartOpen(true)
+        }} >
         <FontAwesomeIcon icon={faCartShopping} className="iCon" />
         <span>Cart</span>
       </button>

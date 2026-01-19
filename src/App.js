@@ -14,6 +14,11 @@ import About from './pages/About'
 import { CartProvider } from './contaxt/CartContaxt';
 import Checkout from './pages/Checkout';
 import PrivacyPolicy from './pages/privacyPolicy/PrivacyPolicy';
+import Faqs from './pages/Faqs';
+import ShippingPolicy from './pages/ShippingPolicy';
+import RefundPolicy from './pages/refundPolicy/RefundPolicy';
+import {getDatabase} from "firebase/database"
+import {app} from "./firebase"
 
 
 function App() {
@@ -32,6 +37,10 @@ function App() {
             <Route path='/About' element={<About />} />
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/Privacy-Policy' element={<PrivacyPolicy />} />
+            <Route path='/F.A.Qs' element={<Faqs />} />
+            <Route path='Shipping-Policy' element={<ShippingPolicy />} />
+            <Route path='Refund-Policy' element={<RefundPolicy />} />
+
 
           </Routes>
           <Footer/>

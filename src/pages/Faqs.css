@@ -1,0 +1,27 @@
+.faqs-content {
+  width: 100%;
+  background-image: linear-gradient(to bottom, white, #f9f9f9);
+  height: auto;
+}
+
+.faqs-container {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+.faqs-section h2 {
+  font-size: 30px;
+  color: #333;
+  border-bottom: 2px solid #fac6ae;
+  margin-top: 50px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+}
+
+@media (max-width: 430px) {
+  .faqs-container {
+    padding: 0 20px;
+  }
+    .faqs-section h2 {
+    font-size: 25px;
+  }
+}

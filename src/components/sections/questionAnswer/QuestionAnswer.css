@@ -1,0 +1,65 @@
+
+.faqs-item {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px 15px;
+  margin-bottom: 15px;
+}
+.faqs-item:hover{
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  /* background-color: #fef3ea; */
+}
+/* SUMMARY (QUESTION) */
+.faqs-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #222;
+  list-style: none;
+  font-weight: 500;
+}
+
+/* Remove default arrow */
+.faqs-question::-webkit-details-marker {
+  display: none;
+}
+
+/* Icon styling */
+.faqs-question svg {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+/* Rotate icon when open */
+.faqs-item[open] .faqs-question svg {
+  transform: rotate(180deg);
+}
+
+/* ANSWER */
+.faqs-answer {
+  padding: 10px 0 0 0;
+  color: #555;
+  line-height: 1.6;
+  animation: fadeSlide 0.3s ease;
+}
+
+/* Smooth open animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover effect */
+.faqs-question:hover {
+  color: #000;
+}

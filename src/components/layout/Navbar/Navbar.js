@@ -14,6 +14,7 @@ import Overlay from "../../ui/overlay/OverLay";
 import NavTabs from "./Navtabs";
 import BottomMobileNav from "./BottomMobileNav";
 import SearchBar from "../../ui/searchBar/SearchBar";
+import { useCart } from "../../../contaxt/CartContaxt";
 
 const sale = "We are running a sale - Get 20% off on all products!";
 
@@ -27,11 +28,9 @@ export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
-  const searchHandler=()=>{
-
-
-  }
 
   return (
     <>
@@ -85,7 +84,11 @@ export default function Navbar() {
                   icon={faBagShopping}
                   onClick={() => setIsCartOpen(true)}
                 />
-                <span className="cart-count"></span>
+                {cartCount > 0 && (
+                  <span className="cart-count">
+                    {cartCount}
+                  </span>
+                )}
               </div>
             </div>
             
@@ -98,7 +101,7 @@ export default function Navbar() {
       </Overlay>
 
       {/* Bottom Mobile Navigation */}
-      <BottomMobileNav onCartOpen={() => setIsCartOpen(true)} />
+      <BottomMobileNav onCartOpen={setIsCartOpen} isCartOpen={isCartOpen} />
 
       {/* Cart Sidebar */}
       <Overlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} position="right" >

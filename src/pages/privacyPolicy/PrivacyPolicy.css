@@ -56,10 +56,7 @@
   border: 1px solid #f0f0f0;
 }
 
-.privacy-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
+
 
 .privacy-card-icon {
   width: 80px;
@@ -73,6 +70,11 @@
   color: #fac6ae;
   font-size: 2rem;
   border: 2px solid #fac6ae6f;
+  transition: all 0.3s ease;
+}
+
+.privacy-card:hover .privacy-card-icon {
+  transform: scale(1.1);
 }
 
 .privacy-card h3 {
@@ -162,9 +164,6 @@
   transition: transform 0.3s ease;
 }
 
-.protection-item:hover {
-  transform: translateY(-3px);
-}
 
 .protection-item h4 {
   color: #333;
@@ -224,11 +223,7 @@
   transition: all 0.3s ease;
 }
 
-.cookie-tag:hover {
-  background: #fac6ae;
-  color: white;
-  transform: translateY(-2px);
-}
+
 
 .privacy-rights {
   background: #fff;
@@ -272,11 +267,7 @@
   border: 1px solid #eaeaea;
 }
 
-.right-item:hover {
-  background: white;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
+
 
 .right-item h4 {
   color: #333;
@@ -332,8 +323,6 @@
 .contact-email:hover {
   background: transparent;
   color: #fac6ae;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(250, 198, 174, 0.3);
 }
 
 /* Responsive adjustments */
