@@ -1,125 +1,175 @@
-import { useEffect, useRef, useState } from "react";
-import "./AccountNavbar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faUser,
-    faChevronDown,
-    faBars,
-    faUserCircle,
-    faCog,
-    faSignOutAlt
-} from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect, useRef } from 'react';
+import './AccountNavbar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faChevronDown, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
+import { NavLink } from 'react-router-dom';
 
-function AccountNavbar() {
+const AccountNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    const [activeTab, setActiveTab] = useState('Shop');
 
-    // Close dropdown when clicking outside
+    const dropdownRef = useRef(null);
+    const mobileMenuRef = useRef(null);
+    const mobileMenuBtnRef = useRef(null);
+    const userBtnRef = useRef(null);
+
+    const tabs = [
+        { id: 'shop', name: 'Shop', path: '/' },
+        { id: 'orders', name: 'Orders', path: '/account/orders' }
+    ];
+
+    const dropdownItems = [
+        { id: 'profile', name: 'Profile', path: '/account/profile' },
+        { id: 'settings', name: 'Settings', path: '/account/settings' },
+        { id: 'notifications', name: 'Notifications', path: '/notifications' },
+        { id: 'help', name: 'Help & Support', path: '/help' },
+        { id: 'logout', name: 'Logout', path: '/logout', isLogout: true }
+    ];
+
+    const handleTabClick = (tabName) => {
+        setActiveTab(tabName);
+        if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+    };
+
+    const handleDropdownToggle = (e) => {
+        e.stopPropagation();
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
+    const handleMobileMenuToggle = (e) => {
+        e.stopPropagation();
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
     useEffect(() => {
-        const handleClickOutside = (e) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        const handleClickOutside = (event) => {
+        if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target) &&
+            userBtnRef.current &&
+            !userBtnRef.current.contains(event.target)
+        ) {
             setIsDropdownOpen(false);
         }
-        };
-        document.addEventListener("click", handleClickOutside);
-        return () => document.removeEventListener("click", handleClickOutside);
-    }, []);
 
-    // Handle window resize
-    useEffect(() => {
-        const handleResize = () => {
-        if (window.innerWidth > 576) {
+        if (
+            mobileMenuRef.current &&
+            !mobileMenuRef.current.contains(event.target) &&
+            mobileMenuBtnRef.current &&
+            !mobileMenuBtnRef.current.contains(event.target)
+        ) {
             setIsMobileMenuOpen(false);
         }
-        setIsDropdownOpen(false);
         };
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
-    const handleAction = (type) => {
-        setIsDropdownOpen(false);
-        if (type === "profile") alert("Opening profile page...");
-        if (type === "settings") alert("Opening settings page...");
-        if (type === "logout") alert("Signing out...");
-    };
+        const handleEscapeKey = (event) => {
+        if (event.key === 'Escape') {
+            setIsDropdownOpen(false);
+            setIsMobileMenuOpen(false);
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscapeKey);
+
+        return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, []);
 
     return (
         <nav className="navbar">
-        <div className="nav-container">
-            {/* Left */}
-            <div className="nav-left">
-            <button
-                className="mobile-menu-btn"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+
+        {/* Mobile Menu Button */}
+        <button
+            ref={mobileMenuBtnRef}
+            className="mobile-menu-btn"
+            onClick={handleMobileMenuToggle}
+        >
+            <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} />
+            <span>{isMobileMenuOpen ? 'Close' : 'Menu'}</span>
+        </button>
+
+        {/* Mobile Tabs */}
+        <div
+            ref={mobileMenuRef}
+            className={`mobile-tabs ${isMobileMenuOpen ? 'active' : ''}`}
+        >
+            {tabs.map(tab => (
+            <NavLink
+                key={tab.id}
+                to={tab.path}
+                className={({ isActive }) => isActive ? 'active' : ''}
+                onClick={() => handleTabClick(tab.name)}
             >
-                <FontAwesomeIcon icon={faBars} />
+                {tab.name}
+            </NavLink>
+            ))}
+        </div>
+
+        {/* Desktop Tabs */}
+        <div className="nav-left">
+            {tabs.map(tab => (
+            <NavLink
+                key={tab.id}
+                to={tab.path}
+                className={({ isActive }) => isActive ? 'active' : ''}
+                onClick={() => handleTabClick(tab.name)}
+            >
+                {tab.name}
+            </NavLink>
+            ))}
+        </div>
+
+        {/* Center Logo */}
+        <div className="nav-center">
+            <img src="/logo192.png" alt="Logo" />
+        </div>
+
+        {/* User Dropdown */}
+        <div className="nav-right">
+            <div className="user-dropdown">
+            <button
+                ref={userBtnRef}
+                className={`user-btn ${isDropdownOpen ? 'active' : ''}`}
+                onClick={handleDropdownToggle}
+            >
+                <FontAwesomeIcon icon={faUser} />
+                <FontAwesomeIcon
+                icon={faChevronDown}
+                className={`downarrow ${isDropdownOpen ? 'active' : ''}`}
+                />
             </button>
 
-            <div className={`nav-tabs ${isMobileMenuOpen ? "open" : ""}`}>
-                <a href="#" className="tab">Shop</a>
-                <a href="#" className="tab">Orders</a>
-            </div>
-            </div>
-
-            {/* Center */}
-            <div className="nav-center">
-                <img src="/logo192.png" alt="logo" />
-            </div>
-
-            {/* Right */}
-            <div className="nav-right" ref={dropdownRef}>
             <div
-                className="account-dropdown"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                ref={dropdownRef}
+                className={`dropdown-menu ${isDropdownOpen ? 'active' : ''}`}
             >
-                <div className="user-icon">
-                <FontAwesomeIcon icon={faUser} />
-                </div>
-                <FontAwesomeIcon icon={faChevronDown} className="dropdown-arrow" />
-            </div>
-
-            <div className={`dropdown-menu ${isDropdownOpen ? "show" : ""}`}>
-                <div className="dropdown-header">
-                <div className="user-icon">
-                    <FontAwesomeIcon icon={faUser} />
-                </div>
-                <div className="user-email">user@example.com</div>
-                </div>
-
-                <div className="dropdown-divider" />
-
-                <button
-                className="dropdown-item"
-                onClick={() => handleAction("profile")}
+                {dropdownItems.map(item => (
+                <NavLink
+                    key={item.id}
+                    to={item.path}
+                    className={item.isLogout ? 'logout' : ''}
+                    onClick={() => setIsDropdownOpen(false)}
                 >
-                <FontAwesomeIcon icon={faUserCircle} />
-                <span>Profile</span>
-                </button>
-
-                <button
-                className="dropdown-item"
-                onClick={() => handleAction("settings")}
-                >
-                <FontAwesomeIcon icon={faCog} />
-                <span>Settings</span>
-                </button>
-
-                <div className="dropdown-divider" />
-
-                <button
-                className="dropdown-item sign-out"
-                onClick={() => handleAction("logout")}
-                >
-                <FontAwesomeIcon icon={faSignOutAlt} />
-                <span>Sign Out</span>
-                </button>
+                    {item.name}
+                </NavLink>
+                ))}
             </div>
             </div>
         </div>
+
+        {isDropdownOpen && (
+            <div
+            className="dropdown-overlay"
+            onClick={() => setIsDropdownOpen(false)}
+            />
+        )}
+
         </nav>
     );
-}
+};
 
 export default AccountNavbar;
