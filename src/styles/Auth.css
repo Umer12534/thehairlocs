@@ -131,3 +131,13 @@
     color: #5b3df5;
     text-decoration: none;
 }
+
+.auth-error {
+    background-color: #ffe5e5;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    text-align: center;
+}
