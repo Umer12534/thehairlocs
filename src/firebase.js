@@ -1,4 +1,5 @@
 import {initializeApp} from 'firebase/app';
+import {getFirestore} from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: "AIzaSyC_nW6MlGeU4oAXovIhxSxnoNcihb7QnO4",
@@ -9,4 +10,7 @@ const firebaseConfig = {
     appId: "1:7141909410:web:aec3b4d83500e5748208fb",
     measurementId: "G-QZ0KTBSC7M",
     databaseURL: "https://thehearlocs-default-rtdb.firebaseio.com"};
+
 export const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);

@@ -1,0 +1,16 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar{
+  width: 20%;
+}
+
+/* Right side content */
+.admin-main {
+  padding: 30px;
+  width: 80%;
+  background: #f4f4f4;
+  min-height: 100vh;
+}

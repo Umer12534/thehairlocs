@@ -26,6 +26,10 @@ import AccountDetails from "./pages/AccountDetails";
 import AccountSettings from "./pages/AccountSettings";
 import AccountNavbar from "./components/sections/accountNavbar/AccountNavbar";
 import Cart from "./pages/Cart";
+import AdminLayout from "./components/layout/AdminLayout";
+import Dashboard from "./pages/Dashboard";
+import MangeProducts from "./pages/MangeProducts";
+import MangeCategories from "./pages/MangeCategories";
 
 function App() {
   return (
@@ -56,12 +60,23 @@ function App() {
             <Route path="/SignUp" element={<SignUp />} />
           </Route>
 
-          {/* Account Pages */}
+          {/* User Account Pages */}
           <Route element={<AccountLayout />}>
             {/* <Route path="/account" element={<Account />} /> */}
             <Route path="/account/orders" element={<Orders />} />
             <Route path="/account/profile" element={<AccountDetails />} />
             <Route path="/account/settings" element={<AccountSettings />} />
+          </Route>
+
+          {/* Admin Panel */}
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/mange-products" element={<MangeProducts />} />
+            <Route path="/admin/orders" element={<Orders />} />
+            <Route path="/admin/mange-categories" element={<MangeCategories />} />
+
+            {/* <Route path="/users" element={<Users />} />
+            <Route path="/settings" element={<Settings />} /> */}
           </Route>
         </Routes>
       </Router>
@@ -70,3 +85,6 @@ function App() {
 }
 
 export default App;
+
+
+
