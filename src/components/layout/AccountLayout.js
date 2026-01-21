@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import AccountNavbar from '../sections/accountNavbar/AccountNavbar'
+import AccountNavbar from '../sections/adminNavbar/AdminNavbar'
 
 const AccountLayout = () => {
     return (

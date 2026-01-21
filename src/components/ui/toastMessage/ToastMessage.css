@@ -1,0 +1,27 @@
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: -400px; /* start off-screen */
+  min-width: 250px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: right 0.5s ease-in-out;
+}
+
+/* Slide-in animation */
+.toast-message.show {
+  right: 20px; /* slides to visible */
+}
+
+/* Types */
+.toast-message.success {
+  background-color: #28a745;
+}
+
+.toast-message.error {
+  background-color: #dc3545;
+}

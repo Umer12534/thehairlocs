@@ -9,6 +9,11 @@ export default function AdminSidebar() {
             </div>
 
             <nav className="sidebar-nav">
+
+                <NavLink to="/" end className="sidebar-link">
+                    Profile
+                </NavLink>
+
                 <NavLink to="/admin/dashboard" end className="sidebar-link">
                     Dashboard
                 </NavLink>
@@ -31,6 +36,10 @@ export default function AdminSidebar() {
 
                 <NavLink to="/settings" className="sidebar-link">
                     Settings
+                </NavLink>
+
+                <NavLink to="/settings" className="sidebar-link">
+                    LogOut
                 </NavLink>
             </nav>
         </aside>

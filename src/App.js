@@ -24,12 +24,13 @@ import AccountLayout from "./components/layout/AccountLayout";
 import Orders from "./pages/Orders";
 import AccountDetails from "./pages/AccountDetails";
 import AccountSettings from "./pages/AccountSettings";
-import AccountNavbar from "./components/sections/accountNavbar/AccountNavbar";
+import AccountNavbar from "./components/sections/adminNavbar/AdminNavbar";
 import Cart from "./pages/Cart";
 import AdminLayout from "./components/layout/AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
+import AddProduct from "./pages/AddProduct";
 
 function App() {
   return (
@@ -71,7 +72,8 @@ function App() {
           {/* Admin Panel */}
           <Route element={<AdminLayout />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/mange-products" element={<MangeProducts />} />
+            <Route path="/admin/mange-products" element={<MangeProducts />} /> 
+            <Route path="/admin/addproducts" element={<AddProduct />} /> 
             <Route path="/admin/orders" element={<Orders />} />
             <Route path="/admin/mange-categories" element={<MangeCategories />} />
 

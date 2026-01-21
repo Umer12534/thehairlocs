@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './AccountNavbar.css';
+import './AdminNavbar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
 
-const AccountNavbar = () => {
+const AdminNavbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('Shop');
@@ -16,14 +16,12 @@ const AccountNavbar = () => {
 
     const tabs = [
         { id: 'shop', name: 'Shop', path: '/' },
-        { id: 'orders', name: 'Orders', path: '/account/orders' }
+        { id: 'Admin', name: 'Admin', path: '/admin/dashboard' }
     ];
 
     const dropdownItems = [
         { id: 'profile', name: 'Profile', path: '/account/profile' },
         { id: 'settings', name: 'Settings', path: '/account/settings' },
-        { id: 'notifications', name: 'Notifications', path: '/notifications' },
-        { id: 'help', name: 'Help & Support', path: '/help' },
         { id: 'logout', name: 'Logout', path: '/logout', isLogout: true }
     ];
 
@@ -172,4 +170,4 @@ const AccountNavbar = () => {
     );
 };
 
-export default AccountNavbar;
+export default AdminNavbar;
