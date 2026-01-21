@@ -9,23 +9,23 @@ export default function AdminSidebar() {
             </div>
 
             <nav className="sidebar-nav">
-                <NavLink to="/" end className="sidebar-link">
+                <NavLink to="/admin/dashboard" end className="sidebar-link">
                     Dashboard
                 </NavLink>
 
-                <NavLink to="/products" className="sidebar-link">
+                <NavLink to="/admin/mange-products" className="sidebar-link">
                     Products
                 </NavLink>
 
-                <NavLink to="/orders" className="sidebar-link">
+                <NavLink to="/admin/orders" className="sidebar-link">
                     Orders
                 </NavLink>
 
-                <NavLink to="/categories" className="sidebar-link">
+                <NavLink to="/admin/mange-categories" className="sidebar-link">
                     Categories
                 </NavLink>
 
-                <NavLink to="/users" className="sidebar-link">
+                <NavLink to="/admin/users" className="sidebar-link">
                     Users
                 </NavLink>
 
