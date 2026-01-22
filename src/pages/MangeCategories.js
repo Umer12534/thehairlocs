@@ -9,190 +9,206 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import "../styles/admin.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import ToastMessage from "../components/ui/toastMessage/ToastMessage";
 import Button from "../components/ui/button/Button";
+import ToastMessage from "../components/ui/toastMessage/ToastMessage";
+import OverlayForm from "../components/sections/overlayForm/OverlayForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ManageCategories = () => {
-  
-  // toast Message state
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastType, setToastType] = useState("success");
+  const categoryRef = collection(db, "Category");
 
   const [categories, setCategories] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
-  const categoryRef = collection(db, "Category");
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("success");
 
+  // 🔹 Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+  });
+
+  // 🔹 Field configuration (reusable)
+  const categoryFields = [
+    {
+      name: "name",
+      label: "Category Name",
+      type: "text",
+      placeholder: "Enter category name",
+      required: true,
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "textarea",
+      placeholder: "Enter description (optional)",
+    },
+    {
+      name: "image",
+      label: "Image URL",
+      type: "text",
+      placeholder: "Paste image link",
+    },
+  ];
+
+  // 🔹 Fetch categories
   const fetchCategories = async () => {
+    setLoadingCategories(true);
     const snapshot = await getDocs(categoryRef);
     setCategories(
-      snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
     );
+    setLoadingCategories(false);
   };
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // 🔹 Add category
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
-
     setLoading(true);
+
     try {
       await addDoc(categoryRef, {
-        name,
-        description,
+        ...formData,
         createdAt: serverTimestamp(),
       });
 
       setToastType("success");
-      setToastMessage("Category added successfully ");
+      setToastMessage("Category added successfully");
 
-      await fetchCategories();
-      setName("");
-      setDescription("");
-      setShowAdd(false); 
-    } catch (err) {
+      setFormData({ name: "", description: "", image: "" });
+      setShowAdd(false);
+      fetchCategories();
+    } catch (error) {
       setToastType("error");
-      setToastMessage("Failed to add category ");
+      setToastMessage("Failed to add category");
     }
+
     setLoading(false);
   };
 
+  // 🔹 Delete category
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this category?")) return;
     await deleteDoc(doc(db, "Category", id));
     setCategories((prev) => prev.filter((c) => c.id !== id));
   };
 
+  // 🔹 Skeleton row
+  const SkeletonRow = () => (
+    <tr className="skeleton-row">
+      <td><div className="skeleton skeleton-text"></div></td>
+      <td><div className="skeleton skeleton-image"></div></td>
+      <td><div className="skeleton skeleton-text"></div></td>
+      <td><div className="skeleton skeleton-text"></div></td>
+      <td><div className="skeleton skeleton-icon"></div></td>
+    </tr>
+  );
+
   return (
     <>
-    <div className="admin-page">
+      <div className="admin-page">
+        <div className="admin-header">
+          <h1>Categories</h1>
+          <Button
+            onClick={() => setShowAdd(true)}
+            margintop={0}
+            marginbottom={0}
+            position="right"
+          >
+            Add Category
+          </Button>
+        </div>
 
-      {/* HEADER */}
-      <div className="admin-header">
-        <h1>Categories</h1>
-        <Button position="right" onClick={() => setShowAdd(true)} marginbottom={0}>Add Category</Button>
-      </div>
+        {/* TABLE */}
+        <div className="table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-      {/* ===== CATEGORY LIST (z-index:1) ===== */}
-      <div className="table-wrapper z-base">
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.length ? (
-              categories.map((cat, i) => (
-                <tr key={cat.id}>
-                  <td>{i + 1}</td>
-                  <td>{cat.name}</td>
-                  <td>{cat.description || "-"}</td>
-                  <td>
-                    <button
-                      className="btn-delete"
-                      onClick={() => handleDelete(cat.id)}
-                    >
-                      Delete
-                    </button>
+            <tbody>
+              {loadingCategories ? (
+                [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
+              ) : categories.length ? (
+                categories.map((cat, i) => (
+                  <tr key={cat.id}>
+                    <td>{i + 1}</td>
+
+                    <td>
+                      {cat.image ? (
+                        <img
+                          src={cat.image}
+                          alt={cat.name}
+                          className="table-image"
+                        />
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+
+                    <td>{cat.name}</td>
+                    <td>{cat.description || "-"}</td>
+                    <td>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDelete(cat.id)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="no-data">
+                    No categories found
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4" className="no-data">
-                  No categories found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* OVERLAY FORM */}
+        {showAdd && (
+          <OverlayForm
+            title="Add Category"
+            fields={categoryFields}
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleAddCategory}
+            onClose={() => setShowAdd(false)}
+            loading={loading}
+            submitText="Add Category"
+          />
+        )}
       </div>
 
-      {/* ===== ADD CATEGORY OVERLAY  ===== */}
-
-      {showAdd && (
-        <div className="overlay">
-          <div className="overlay-content">
-            <button
-              type="button"
-              className="btn-close"
-              onClick={() => setShowAdd(false)}
-              aria-label="Close modal"
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-            
-            <h2>Add Category</h2>
-
-            <form onSubmit={handleAddCategory}>
-              <div>
-                <label htmlFor="category-name">Category Name</label>
-                <input
-                  id="category-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Enter category name"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="category-description">Description</label>
-                <textarea
-                  id="category-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter category description (optional)"
-                />
-              </div>
-
-              <div className="overlay-actions">
-                <button type="submit" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <span className="spinner"></span>
-                      Adding...
-                    </>
-                  ) : (
-                    "Add Category"
-                  )}
-                </button>
-                <button 
-                  type="button" 
-                  className="btn-cancel"
-                  onClick={() => setShowAdd(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-
-    <ToastMessage
-      type={toastType}
-      message={toastMessage}
-      duration={3000}
-      onClose={() => setToastMessage("")}
-    />
+      <ToastMessage
+        type={toastType}
+        message={toastMessage}
+        duration={3000}
+        onClose={() => setToastMessage("")}
+      />
     </>
-
   );
 };
 

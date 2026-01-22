@@ -11,20 +11,28 @@ import {
   faSearch, 
   faEdit, 
   faTrash,
-  faBox,
-  faTags,
-  faMoneyBillWave,
-  faWarehouse
 } from "@fortawesome/free-solid-svg-icons";
+import ToastMessage from "../components/ui/toastMessage/ToastMessage";
+import EditProduct from "./EditProduct"
 
 const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]); 
+  // Edit Product
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
 
   const collectionRef = collection(db, "products");
+
+  const [toast, setToast] = useState({ message: "", type: "success" });
+
+  const showToast = (message, type = "success") => {
+        setToast({ message, type });
+    };
 
   // Fetch products
   const fetchProducts = async () => {
@@ -68,10 +76,11 @@ const ManageProducts = () => {
     try {
       await deleteDoc(doc(db, "products", id));
       setProducts((prev) => prev.filter((p) => p.id !== id));
-      alert("Product deleted successfully!");
+
+      showToast("Product deleted successfully!");
     } catch (err) {
       console.error("Error deleting product:", err);
-      alert("Error deleting product. Please try again.");
+      showToast("Error deleting product. Please try again.", "error");
     }
   };
 
@@ -100,6 +109,7 @@ const ManageProducts = () => {
             onClick={() => setShowAddForm(true)}
             margintop={0}
             marginbottom={0}
+            position="right"
           >
             <FontAwesomeIcon icon={faPlus} />
             Add Product
@@ -123,12 +133,9 @@ const ManageProducts = () => {
             </button>
           </div>
           <div className="overlay-body">
-            <AddProduct 
-              onProductAdded={() => {
-                fetchProducts();
-                setShowAddForm(false);
-              }} 
+            <AddProduct feathedproducts = {fetchProducts}  
               onClose={() => setShowAddForm(false)}
+              showToast = {showToast}
             />
           </div>
         </div>
@@ -140,9 +147,10 @@ const ManageProducts = () => {
           <thead>
             <tr>
               <th>#</th>
+              <th>Image</th>
               <th>Product Name</th>
               <th>Category</th>
-              <th>Price (PKR)</th>
+              <th>Price</th>
               <th>Stock</th>
               <th>Status</th>
               <th>Actions</th>
@@ -154,6 +162,8 @@ const ManageProducts = () => {
               [...Array(6)].map((_, i) => (
                 <tr key={i} className="skeleton-row">
                   <td><div className="skeleton skeleton-text small" /></td>
+                  <td><div className="skeleton skeleton-image" /></td>
+
                   <td>
                     <div className="skeleton skeleton-text" />
                     <div className="skeleton skeleton-text tiny" />
@@ -162,6 +172,8 @@ const ManageProducts = () => {
                   <td><div className="skeleton skeleton-text" /></td>
                   <td><div className="skeleton skeleton-text" /></td>
                   <td><div className="skeleton skeleton-pill" /></td>
+                  
+                  
                   <td>
                     <div className="skeleton skeleton-button" />
                   </td>
@@ -174,23 +186,33 @@ const ManageProducts = () => {
                 const totalProductStock = Object.values(sizes).reduce(
                   (sum, size) => sum + (size.stock || 0), 0
                 );
-                const status = totalProductStock > 0 ? "In Stock" : "Out of Stock";
 
                 return (
                   <tr key={product.id}>
                     <td>{index + 1}</td>
                     <td>
+                      <img
+                        src={product.images?.[0] || "https://via.placeholder.com/60"}
+                        alt={product.name}
+                        className="table-product-image"
+                      />
+                    </td>
+
+                    <td>
                       <div className="product-name-cell">
                         {product.name}
                       </div>
+
                       {product.description && (
                         <span className="product-description">
                           {product.description.substring(0, 50)}...
                         </span>
                       )}
                     </td>
+
+
                     <td>
-                      <span className="category-badge">
+                      <span className="">
                         {product.category}
                       </span>
                     </td>
@@ -231,22 +253,25 @@ const ManageProducts = () => {
 
                     <td>
                       <span className={`status-badge ${
-                        status === "In Stock" ? 'status-in-stock' : 'status-out-of-stock'
+                        product.status === "active" ? 'status-active' : 'status-in-active'
                       }`}>
-                        {status}
+                        {product.status}
                       </span>
                     </td>
 
                     <td>
                       <div className="action-buttons">
-                        <button className="btn-edit">
-                          <FontAwesomeIcon icon={faEdit} /> Edit
+                        <button className="btn-edit"  onClick={() => {
+                          setSelectedProductId(product.id);
+                          setShowEditForm(true);
+                        }}>
+                          <FontAwesomeIcon icon={faEdit} />
                         </button>
                         <button
                           className="btn-delete"
                           onClick={() => handleDelete(product.id)}
                         >
-                          <FontAwesomeIcon icon={faTrash} /> Delete
+                          <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </div>
                     </td>
@@ -259,6 +284,7 @@ const ManageProducts = () => {
                   <div className="no-data-content">
                     No products found
                   </div>
+
                   {search && (
                     <button
                       onClick={() => setSearch("")}
@@ -272,8 +298,44 @@ const ManageProducts = () => {
             )}
           </tbody>
         </table>
+
+        {/* Edit product */}
+          <div className={`add-product-overlay ${showEditForm ? 'active' : ''}`}>
+            <div className="overlay-content">
+              <div className="overlay-header">
+                <h2>Edit Product</h2>
+                <button
+                  className="close-overlay"
+                  onClick={() => setShowEditForm(false)}
+                  aria-label="Close"
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </div>
+              <div className="overlay-body">
+                <EditProduct
+                  productId={selectedProductId}
+                  onClose={() => setShowEditForm(false)}
+                  refetchProducts={fetchProducts}
+                  showToast = {showToast}
+                />
+              </div>
+            </div>
+          </div>
+
+        
+
       </div>
+      {/* Toast */}
+        <ToastMessage
+            message={toast.message}
+            type={toast.type}
+            duration={3000}
+            onClose={() => setToast({ message: "", type: "success" })}
+        />
     </div>
+
+      
   );
 };
 

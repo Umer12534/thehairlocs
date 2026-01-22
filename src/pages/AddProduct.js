@@ -1,172 +1,271 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
-import ToastMessage from "../components/ui/toastMessage/ToastMessage"; 
+
+
 import Button from "../components/ui/button/Button";
 import "../styles/admin.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const AddProduct = () => {
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+
+const AddProduct = ({feathedproducts, onClose, showToast}) => {
+    const productsRef = collection(db, "products");
+    const categoryRef = collection(db, "Category");
+
+    //  Basic fields
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
-    const [sizes, setSizes] = useState([{ size: "", price: "", stock: "" }]);
+    const [description, setDescription] = useState("");
+    const [images, setImages] = useState(["", "", ""]);
+    const [status, setStatus] = useState("active");
+
+    //  Sizes
+    const [sizes, setSizes] = useState([
+        { size: "", price: "", stock: "" },
+    ]);
+
+    //  Sale fields
+    const [isOnSale, setIsOnSale] = useState(false);
+    const [salePercentage, setSalePercentage] = useState("");
+
+    // Badge Fields
+    const [isNewArrival, setIsNewArrival] = useState(false);
+    const [isFeatured, setIsFeatured] = useState(false);
+
+    // UI state
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [toast, setToast] = useState({ message: "", type: "success" }); 
-    const [categorys, setCategorys] = useState([]);
 
-    const productsRef = collection(db, "products");
-    const collectionCategoryRef = collection(db, "Category");
-
-    // Fetch categories from Firestore
+    //  Fetch categories
     useEffect(() => {
-        const getCategory = async () => {
+        const fetchCategories = async () => {
         try {
-            const snapshot = await getDocs(collectionCategoryRef);
-            const categorysData = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-            }));
-            setCategorys(categorysData);
-        } catch (err) {
-            console.error("Error fetching categories:", err);
+            const snapshot = await getDocs(categoryRef);
+            setCategories(
+            snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }))
+            );
+        } catch (error) {
+            console.error("Error fetching categories:", error);
         }
         };
-        getCategory();
+
+        fetchCategories();
     }, []);
 
-    // Add a new size field
+    //  Size handlers
     const handleAddSize = () => {
         setSizes([...sizes, { size: "", price: "", stock: "" }]);
     };
 
-    // Remove a size field
     const handleRemoveSize = (index) => {
-        const newSizes = sizes.filter((_, i) => i !== index);
-        setSizes(newSizes);
+        setSizes(sizes.filter((_, i) => i !== index));
     };
 
-    // Update a specific size field
     const handleSizeChange = (index, field, value) => {
-        const newSizes = [...sizes];
-        newSizes[index][field] = value;
-        setSizes(newSizes);
+        const updated = [...sizes];
+        updated[index][field] = value;
+        setSizes(updated);
     };
 
-    // Function to show toast
-    const showToast = (message, type = "success") => {
-        setToast({ message, type });
+    const handleImageChange = (index, value) => {
+        const updatedImages = [...images];
+        updatedImages[index] = value;
+        setImages(updatedImages);
     };
 
-    // Handle form submit
+
+
+    //  Submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const sizesObj = {};
         sizes.forEach((s) => {
-        if (s.size) {
+            if (s.size) {
             sizesObj[s.size] = {
-            price: Number(s.price),
-            stock: Number(s.stock),
+                price: Number(s.price),
+                stock: Number(s.stock),
             };
-        }
+            }
         });
 
-        if (!name || !category || Object.keys(sizesObj).length === 0) {
-        showToast("Please fill all required fields", "error");
-        return;
+        if (!name || !category || !Object.keys(sizesObj).length) {
+            showToast("Please fill all required fields", "error");
+            return;
+        }
+
+        if (isOnSale && !salePercentage) {
+            showToast("Please select sale percentage", "error");
+            return;
+        }
+
+        const filteredImages = images.filter(img => img.trim() !== "");
+
+        if (!filteredImages.length) {
+            showToast("Main product image is required", "error");
+            return;
         }
 
         try {
-        setLoading(true);
-        await addDoc(productsRef, {
+            setLoading(true);
+
+            await addDoc(productsRef, {
             name,
             category,
+            description,
+            images: filteredImages,
+            status,
             sizes: sizesObj,
+            sale: {
+                isOnSale,
+                percentage: isOnSale ? Number(salePercentage) : 0,
+            },
+            isNewArrival,
+            isFeatured,
             createdAt: Timestamp.now(),
-        });
-        showToast("Product added successfully!", "success");
-        setName("");
-        setCategory("");
-        setSizes([{ size: "", price: "", stock: "" }]);
-        } catch (err) {
-        console.error("Error adding product:", err);
-        showToast("Error adding product", "error");
+            });
+
+            showToast("Product added successfully!");
+
+            feathedproducts();
+
+
+            // Reset form
+            setName("");
+            setCategory("");
+            setDescription("");
+            setSizes([{ size: "", price: "", stock: "" }]);
+            setImages(["", "", ""]);
+            setIsOnSale(false);
+            setSalePercentage("");
+            setIsNewArrival(false);
+            setIsFeatured(false);
+            setStatus("active");
+            onClose();
+
+
+            // if (onProductAdded) onProductAdded();
+
+        } catch (error) {
+            console.error("Error adding product:", error);
+            showToast("Error adding product", "error");
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
-    };
+        };
+
 
     return (
         <div className="admin-page">
         <h1>Add New Product</h1>
-        <form className="add-product-form" onSubmit={handleSubmit}>
 
+        <form className="add-product-form" onSubmit={handleSubmit}>
             {/* Product Name */}
             <div className="form-group">
-            <label>Product Name</label>
+                <label>Product Name</label>
+                <input
+                    type="text"
+                    placeholder="Enter product name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
+                
+                <label>Product description</label>
+                <input
+                    type="text"
+                    placeholder="Enter product description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                />
 
-            <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter product name"
-                required
-            />
-            </div>
+                <div className="form-group">
+                    <label>Product Images</label>
 
-            {/* Category Select */}
-            <div className="form-group">
-            <label>Category</label>
-            <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-            >
-                <option value="">Select Category</option>
-                {categorys.map((c) => (
-                <option key={c.id} value={c.name}>
-                    {c.name}
-                </option>
-                ))}
-            </select>
+                    <input
+                        type="text"
+                        placeholder="Enter product image link (Main Image)"
+                        value={images[0]}
+                        onChange={(e) => handleImageChange(0, e.target.value)}
+                        required
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Enter product image link (Optional)"
+                        value={images[1]}
+                        onChange={(e) => handleImageChange(1, e.target.value)}
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Enter product image link (Optional)"
+                        value={images[2]}
+                        onChange={(e) => handleImageChange(2, e.target.value)}
+                    />
+                    </div>
+
+
+                {/* Category */}
+                <label>Category</label>
+                <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    required
+                >
+                    <option value="">Select Category</option>
+                    {categories.map((c) => (
+                    <option key={c.id} value={c.name}>
+                        {c.name}
+                    </option>
+                    ))}
+                </select>
             </div>
 
             {/* Sizes */}
             <div className="form-group">
             <label>Sizes, Price & Stock</label>
+            
             {sizes.map((s, index) => (
                 <div key={index} className="product-size-row">
-
-                <select name="" id="" value={s.size} onChange={(e) => handleSizeChange(index, "size", e.target.value)} required className="product-size-select">
-                    <option value="">
-                        Select Size
-                    </option>
-                    <option value="50ml">
-                        50ml
-                    </option>
-                    <option value="100ml">
-                        100ml
-                    </option>
-                    <option value="150ml">
-                        150ml
-                    </option>
+                <select
+                    value={s.size}
+                    onChange={(e) =>
+                    handleSizeChange(index, "size", e.target.value)
+                    }
+                    required
+                >
+                    <option value="">Select Size</option>
+                    <option value="50ml">50ml</option>
+                    <option value="100ml">100ml</option>
+                    <option value="150ml">150ml</option>
                 </select>
 
                 <input
                     type="number"
                     placeholder="Price"
                     value={s.price}
-                    onChange={(e) => handleSizeChange(index, "price", e.target.value)}
+                    onChange={(e) =>
+                    handleSizeChange(index, "price", e.target.value)
+                    }
                     required
                 />
+
                 <input
                     type="number"
                     placeholder="Stock"
                     value={s.stock}
-                    onChange={(e) => handleSizeChange(index, "stock", e.target.value)}
+                    onChange={(e) =>
+                    handleSizeChange(index, "stock", e.target.value)
+                    }
                     required
                 />
+
                 {sizes.length > 1 && (
                     <button
                     type="button"
@@ -179,24 +278,66 @@ const AddProduct = () => {
                 </div>
             ))}
 
-            <Button type="button" fullWidth variant="green" onClick={handleAddSize}>
-                <FontAwesomeIcon icon={faPlus} /> Add Size    
+            <Button type="button" variant="green" onClick={handleAddSize}  margintop={0} marginbottom={0}>
+                <FontAwesomeIcon icon={faPlus} /> Add Size
             </Button>
             </div>
 
-            {/* Submit Button */}
-            <Button type="submit" disabled={loading} size="lg" fullWidth>
+            {/*  SALE SECTION */}
+            <div className="form-group">
+                <label className="checkbox-label">
+                    <input
+                    type="checkbox"
+                    checked={isOnSale}
+                    onChange={(e) => setIsOnSale(e.target.checked)}
+                    />
+                    This product is on sale
+                </label>
+
+                {isOnSale && (
+                    <select
+                    value={salePercentage}
+                    onChange={(e) => setSalePercentage(e.target.value)}
+                    required
+                    >
+                    <option value="">Select Sale Percentage</option>
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50">50%</option>
+                    </select>
+                )}
+                
+                <label className="checkbox-label">
+                    <input
+                    type="checkbox"
+                    checked={isFeatured}
+                    onChange={(e) => setIsFeatured(e.target.checked)}
+                    />
+                    This product is featured
+                </label>
+
+                <label className="checkbox-label">
+                    <input
+                    type="checkbox"
+                    checked={isNewArrival}
+                    onChange={(e) => setIsNewArrival(e.target.checked)}
+                    />
+                    This product is new arrival
+                </label>
+            </div>
+
+            {/* Submit */}
+            <Button type="submit" size="lg" fullWidth disabled={loading}>
             {loading ? "Adding..." : "Add Product"}
             </Button>
         </form>
 
-        {/* Toast Message */}
-        <ToastMessage
-            message={toast.message}
-            type={toast.type}
-            duration={3000}
-            onClose={() => setToast({ message: "", type: "success" })}
-        />
+        
         </div>
     );
 };
