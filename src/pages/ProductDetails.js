@@ -1,93 +1,203 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 import "../styles/ProductDetails.css";
-import Rating from '@mui/material/Rating';
-import Stack from '@mui/material/Stack';
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
 import { useParams } from "react-router-dom";
-import { products } from "../data/Products";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faCartPlus } from "@fortawesome/free-solid-svg-icons";
-import Button from '../components/ui/button/Button';
+import Button from "../components/ui/button/Button";
 import { useCart } from "../contaxt/CartContaxt";
 import CartNotification from "../components/ui/cartNotification/CartNotification";
 
 function ProductDetails({ openCartSidebar }) {
   const { id } = useParams();
-  const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(0); // Changed to 0 for array index
-  const [selectedSize, setSelectedSize] = useState('');
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationProduct, setNotificationProduct] = useState(null);
-  
   const { addToCart } = useCart();
 
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
-  
-  if (!product) {
-    return <h2>Product not found</h2>;
-  }
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationProduct, setNotificationProduct] = useState(null);
 
+  // Fetch product from Firestore by ID
+  useEffect(() => {
+    const getProductById = async () => {
+      try {
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const productData = { id: docSnap.id, ...docSnap.data() };
+          setProduct(productData);
+
+          // Set default size to "50ml" if available
+          if (productData.sizes && productData.sizes["50ml"]) {
+            setSelectedSize("50ml");
+          } else {
+            // If 50ml not available, pick the first available size
+            const firstSize = productData.sizes
+              ? Object.keys(productData.sizes)[0]
+              : "";
+            setSelectedSize(firstSize);
+          }
+        } else {
+          console.log("Product not found");
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) getProductById();
+  }, [id]);
+
+  // Get price data based on selected size
+  const sizeData = selectedSize ? product?.sizes?.[selectedSize] : null;
+  const displayPrice = sizeData?.salePrice ?? sizeData?.price ?? null;
+  const originalPrice = sizeData?.salePrice ? sizeData.price : null;
+
+  // Handle Add to Cart
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert("Please select a size");
       return;
     }
-    
-    // Add to cart
-    addToCart(product, selectedSize, quantity);
-    
-    // Prepare product data for notification
-    const notificationData = {
+
+    addToCart(
+      { ...product, price: displayPrice },
+      selectedSize,
+      quantity
+    );
+
+    setNotificationProduct({
       id: product.id,
-      image: product.image[0],
+      image: product.image?.[0],
       title: product.name,
-      price: product.salePrice ? `Rs. ${product.salePrice}` : `Rs. ${product.originalPrice}`,
+      price: displayPrice,
       qty: quantity,
-      size: selectedSize
-    };
-    
-    // Show notification
-    setNotificationProduct(notificationData);
+      size: selectedSize,
+    });
+
     setShowNotification(true);
-    // Reset quantity
     setQuantity(1);
-    
-    // Auto-hide notification after 4 seconds
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 4000);
+
+    setTimeout(() => setShowNotification(false), 4000);
   };
 
-  const handleCloseNotification = () => {
-    setShowNotification(false);
-  };
-
+  const handleCloseNotification = () => setShowNotification(false);
   const handleViewCart = () => {
-    // Close notification and open cart sidebar
     setShowNotification(false);
-    if (openCartSidebar) {
-      openCartSidebar();
-    }
+    if (openCartSidebar) openCartSidebar();
   };
+
+  // Skeleton Loader Component
+  const ProductSkeleton = () => (
+    <>
+      <div className="product-wrapper">
+        {/* Left - Images Skeleton */}
+        <div className="image-left">
+          <div className="main-img skeleton-img skeleton-animation"></div>
+          <div className="thumbs">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="thumb skeleton-thumb skeleton-animation"></div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right - Product Info Skeleton */}
+        <div className="right">
+          <div className="skeleton-title skeleton-animation"></div>
+          <div className="skeleton-rating skeleton-animation"></div>
+          
+          <div className="price-section">
+            <div className="skeleton-price skeleton-animation"></div>
+            <div className="skeleton-original-price skeleton-animation"></div>
+          </div>
+
+          <div className="skeleton-description skeleton-animation"></div>
+          <div className="skeleton-description skeleton-animation" style={{ width: '80%' }}></div>
+          <div className="skeleton-description skeleton-animation" style={{ width: '60%' }}></div>
+
+          {/* Selection Box Skeleton */}
+          <div className="selection-box">
+            <div className="size-box">
+              <div className="skeleton-label skeleton-animation"></div>
+              <div className="size">
+                {[1, 2, 3].map((item) => (
+                  <div key={item} className="skeleton-size-btn skeleton-animation"></div>
+                ))}
+              </div>
+            </div>
+
+            <div className="quantity-box">
+              <div className="skeleton-label skeleton-animation"></div>
+              <div className="qty-box skeleton-qty-box skeleton-animation"></div>
+            </div>
+          </div>
+
+          <div className="skeleton-button skeleton-animation"></div>
+        </div>
+      </div>
+
+      {/* Details Accordion Skeleton */}
+      <div className="questions">
+        {[1, 2, 3, 4].map((item) => (
+          <div key={item} className="skeleton-accordion skeleton-animation">
+            <div className="skeleton-accordion-title"></div>
+          </div>
+        ))}
+      </div>
+
+      {/* Related Products Skeleton */}
+      <section className="related-section">
+        <div className="skeleton-section-title skeleton-animation"></div>
+        <div className="related-container">
+          {[1, 2, 3].map((item) => (
+            <div key={item} className="related-card skeleton-card">
+              <div className="image-div skeleton-img skeleton-animation"></div>
+              <div className="skeleton-product-title skeleton-animation"></div>
+              <div className="skeleton-product-price skeleton-animation"></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+
+  // Error State Component
+  const ErrorState = () => (
+    <div className="error-state">
+      <h2>Product Not Found</h2>
+      <p>The product you're looking for doesn't exist or has been removed.</p>
+      <Button 
+        children="Back to Products" 
+        size="lg" 
+        onClick={() => window.history.back()} 
+      />
+    </div>
+  );
+
+  if (loading) return <ProductSkeleton />;
+  if (!product) return <ErrorState />;
 
   return (
     <>
-      {/* Product */}
       <div className="product-wrapper">
-        {/* Left — Images */}
+        {/* Left - Images */}
         <div className="image-left">
-          {/* Main Image */}
           <div className="main-img">
-            <img
-              src={product.image[activeImage]}
-              alt={product.name}
-            />
+            {product.image?.length > 0 && (
+              <img src={product.image[activeImage]} alt={product.name} />
+            )}
           </div>
-
-          {/* Thumbnails */}
           <div className="thumbs">
-            {product.image.map((img, index) => (
+            {product.image?.map((img, index) => (
               <button
                 key={index}
                 className={`thumb ${activeImage === index ? "active" : ""}`}
@@ -95,62 +205,68 @@ function ProductDetails({ openCartSidebar }) {
                 type="button"
                 aria-label={`View image ${index + 1}`}
               >
-                <img 
-                  src={img} 
-                  alt={`${product.name} - View ${index + 1}`} 
-                />
+                <img src={img} alt={`${product.name} - View ${index + 1}`} />
               </button>
             ))}
           </div>
         </div>
 
-        {/* Right — Product Info */}
+        {/* Right - Product Info */}
         <div className="right">
           <h1>{product.name}</h1>
-
           <Stack spacing={1}>
-            <Rating 
-              name="half-rating-read" 
-              value={product.rating} 
-              precision={0.5} 
-              readOnly 
+            <Rating
+              name="half-rating-read"
+              value={product.rating || 0}
+              precision={0.5}
+              readOnly
             />
           </Stack>
 
+          {/* Price Section */}
           <div className="price-section">
-            {product.salePrice ? (
+            {displayPrice ? (
               <>
-                <div className="sale-price">Rs. {product.salePrice.toLocaleString('en-PK')}</div>
-                <div className="old-price">
-                  <span className="original-price">Rs. {product.originalPrice.toLocaleString('en-PK')}</span>
+                <div className="sale-price">
+                  Rs. {displayPrice.toLocaleString("en-PK")}
                 </div>
+                {originalPrice && (
+                  <div className="old-price">
+                    <span className="original-price">
+                      Rs. {originalPrice.toLocaleString("en-PK")}
+                    </span>
+                  </div>
+                )}
               </>
             ) : (
-              <div className="current-price">Rs. {product.originalPrice.toLocaleString('en-PK')}</div>
+              <div className="current-price">Select a size</div>
             )}
           </div>
 
           <p className="desc">
-            {product.description || "High-quality handmade loc extensions designed to give your hair a natural, fuller, voluminous look."}
+            {product.description ||
+              "High-quality handmade loc extensions designed to give your hair a natural, fuller, voluminous look."}
           </p>
 
           {/* Selection */}
           <div className="selection-box">
-            {/* Size */}
+            {/* Sizes */}
             <div className="size-box">
               <label>Size</label>
               <div className="size">
-                {['10ml', '20ml', '30ml'].map((size) => (
-                  <Button
-                    key={size}
-                    children={size}
-                    size="sm"
-                    margianbuttom={0}
-                    variant={selectedSize === size ? "primary" : "outline"}
-                    onClick={() => setSelectedSize(size)}
-                    type="button"
-                  />
-                ))}
+                {product.sizes &&
+                  Object.keys(product.sizes).map((size) => (
+                    <Button
+                      key={size}
+                      size="sm"
+                      margianbuttom={0}
+                      variant={selectedSize === size ? "primary" : "outline"}
+                      onClick={() => setSelectedSize(size)}
+                      type="button"
+                    >
+                      {size}
+                    </Button>
+                  ))}
               </div>
             </div>
 
@@ -158,16 +274,16 @@ function ProductDetails({ openCartSidebar }) {
             <div className="quantity-box">
               <label>Quantity</label>
               <div className="qty-box">
-                <button 
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                <button
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   aria-label="Decrease quantity"
                   type="button"
                 >
                   <FontAwesomeIcon icon={faMinus} />
                 </button>
                 <span>{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(q => q + 1)}
+                <button
+                  onClick={() => setQuantity((q) => q + 1)}
                   aria-label="Increase quantity"
                   type="button"
                 >
@@ -177,64 +293,54 @@ function ProductDetails({ openCartSidebar }) {
             </div>
           </div>
 
-          <Button 
+          <Button
             children={
               <>
-                <FontAwesomeIcon icon={faCartPlus} style={{marginRight: '8px'}} />
+                <FontAwesomeIcon
+                  icon={faCartPlus}
+                  style={{ marginRight: "8px" }}
+                />
                 Add to Cart
               </>
-            } 
-            size="lg" 
-            fullWidth 
+            }
+            size="lg"
+            fullWidth
             onClick={handleAddToCart}
             disabled={!selectedSize}
             title={!selectedSize ? "Please select a size first" : "Add to cart"}
           />
-          
+
           {!selectedSize && (
             <p className="size-warning">Please select a size to add to cart</p>
           )}
         </div>
       </div>
 
-      {/* Questions Accordion */}
+      {/* Product Details Accordion */}
       <div className="questions">
         <details>
           <summary>
             Product Description <span className="arrow">⌄</span>
           </summary>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-            ex suscipit soluta maiores accusantium.
-          </p>
+          <p>{product.description}</p>
         </details>
-
         <details>
           <summary>
             Return Policy <span className="arrow">⌄</span>
           </summary>
-          <p>
-            We offer a 30-day return policy for unused and unopened products.
-          </p>
+          <p>We offer a 30-day return policy for unused and unopened products.</p>
         </details>
-
         <details>
           <summary>
             Shipping Information <span className="arrow">⌄</span>
           </summary>
-          <p>
-            Orders are processed within 1–2 business days and delivered in 5–7
-            working days.
-          </p>
+          <p>Orders are processed within 1–2 business days and delivered in 5–7 working days.</p>
         </details>
-
         <details>
           <summary>
             Care Instructions <span className="arrow">⌄</span>
           </summary>
-          <p>
-            Store in a cool, dry place. Avoid direct sunlight and moisture.
-          </p>
+          <p>Store in a cool, dry place. Avoid direct sunlight and moisture.</p>
         </details>
       </div>
 
@@ -245,10 +351,7 @@ function ProductDetails({ openCartSidebar }) {
           {[1, 2, 3].map((item) => (
             <div key={item} className="related-card">
               <div className="image-div">
-                <img
-                  src="/assets/images/sale-product (5).jpg"
-                  alt="Related product"
-                />
+                <img src="/assets/images/sale-product (5).jpg" alt="Related product" />
               </div>
               <h3>Premium Loc Extensions</h3>
               <p>Rs. 2,999</p>
@@ -259,8 +362,8 @@ function ProductDetails({ openCartSidebar }) {
 
       {/* Cart Notification */}
       {showNotification && notificationProduct && (
-        <CartNotification 
-          product={notificationProduct} 
+        <CartNotification
+          product={notificationProduct}
           onClose={handleCloseNotification}
           onViewCart={handleViewCart}
         />

@@ -4,11 +4,9 @@ import ProductsSection from '../components/sections/ProductsSection/ProductsSect
 import Banner from '../components/sections/Banner/Banner';
 import Explore from '../components/sections/Explore/Explore';
 import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
-// import { featuredCardproducts } from '../data/Products';
 import Heading from '../components/ui/heading/Heading';
 import Button from '../components/ui/button/Button'
 import { useNavigate } from 'react-router-dom';
-import { products } from '../data/Products';
 import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
