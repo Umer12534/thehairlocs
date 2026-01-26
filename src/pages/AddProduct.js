@@ -33,6 +33,11 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
     const [isNewArrival, setIsNewArrival] = useState(false);
     const [isFeatured, setIsFeatured] = useState(false);
 
+    // Like and rating
+    const [likes, setLikes] = useState(0);
+    const [rating, setRating] = useState(0.0);
+
+
     // UI state
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -119,6 +124,8 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
             description,
             images: filteredImages,
             status,
+            likes,
+            rating,
             sizes: sizesObj,
             sale: {
                 isOnSale,

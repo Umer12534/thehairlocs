@@ -105,13 +105,21 @@
 .product-badge {
   position: absolute;
   top: 15px;
-  left: 0;
   padding: 6px 14px;
   color: #fff;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 0 12px 12px 0;
   z-index: 2;
+}
+
+.product-badge--left{
+  left: 0;
+  border-radius: 0 12px 12px 0;
+}
+
+.product-badge--right{
+  right: 0;
+  border-radius:  12px 0 0 12px;
 }
 
 .product-badge--sale {
@@ -131,7 +139,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 10px;
+  padding: 15px 10px 5px 10px;
 }
 
 .product-card__name {
@@ -157,6 +165,13 @@
   font-size: 14px;
   text-decoration: line-through;
   color: gray;
+}
+
+.product-card__rating-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
 }
 
 /* ---------- RESPONSIVE ---------- */

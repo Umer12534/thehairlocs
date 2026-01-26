@@ -1,71 +1,88 @@
-import React from 'react';
-import ProductCard from '../../ui/ProductCard/ProductCard';
-import './ProductsSection.css';
-import { products } from '../../../data/Products';
+import React from "react";
+import ProductCard from "../../ui/ProductCard/ProductCard";
+import "./ProductsSection.css";
 
 const ProductsSection = ({
-  ProductsType = null,
-  category = null,
-  badgeType = null,
+  ProductsType = null,      // featured
+  category = null,          // "Shampoos"
+  badgeType = null,         // sale | new
   layout = 3,
   page = 1,
   productsPerPage = 8,
   sortedFilteredProducts = [],
 }) => {
 
-  // Apply filters on the sortedFilteredProducts passed from parent
+  //  Apply filters according to DB fields
   const filteredProducts = sortedFilteredProducts.filter(product => {
-    // Filter by badge type (e.g., "sale")
-    if (badgeType != null) return product.badgeType === badgeType;
+    // Only show active products
+    if (product.status !== "active") return false;
 
-    // Featured filter
-    if (ProductsType && ProductsType.toLowerCase() === 'featured') return product.isFeatured;
+    // Badge filter
+    if (badgeType === "sale") {
+      return product.sale?.isOnSale === true;
+    }
+
+    if (badgeType === "new") {
+      return product.isNewArrival === true;
+    }
+
+    // Products type filter
+    if (ProductsType?.toLowerCase() === "featured") {
+      return product.isFeatured === true;
+    }
 
     // Category filter
-    if (category) return product.category.toLowerCase() === category.toLowerCase();
+    if (category) {
+      return product.category?.toLowerCase() === category.toLowerCase();
+    }
 
-    return true; // if no filters, keep product
+    return true;
   });
 
-  // Pagination logic
+  // Pagination
   const startIndex = (page - 1) * productsPerPage;
   const paginatedProducts = filteredProducts.slice(
     startIndex,
     startIndex + productsPerPage
   );
 
-  const productsToRender = paginatedProducts;
-  const productNotFound = productsToRender.length === 0;
+  const productNotFound = paginatedProducts.length === 0;
+
   return (
-    <>
-      <section className="product-container">
-        <div className="products">
-          <div className={`product-grid product-grid-${layout}`}>
-            {productsToRender.length > 0 &&
-              productsToRender.map(product => (
-                <ProductCard
-                  key={product.id}
-                  {...product}
-                />
-              ))
-            }
-          </div>
-        </div>
-
-        {productNotFound && (
-          <div className="no-products">
-            <img
-              src="./assets/images/products/product_not_found.png"
-              alt="Product not found"
-              className="no-products-img"
+    <section className="product-container">
+      <div className="products">
+        <div className={`product-grid product-grid-${layout}`}>
+          {paginatedProducts.map(product => (
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              description={product.description}
+              image={product.images?.[0]}
+              images={product.images}
+              rating={product.rating}
+              likes={product.likes}
+              isFeatured={product.isFeatured}
+              isNewArrival={product.isNewArrival}
+              sale={product.sale}
+              sizes={product.sizes}
+              category={product.category}
             />
-            <p>No products found</p>
-          </div>
-        )}
-      </section>
-      
-    </>
+          ))}
+        </div>
+      </div>
 
+      {productNotFound && (
+        <div className="no-products">
+          <img
+            src="/assets/images/products/product_not_found.png"
+            alt="Product not found"
+            className="no-products-img"
+          />
+          <p>No products found</p>
+        </div>
+      )}
+    </section>
   );
 };
 

@@ -42,7 +42,7 @@ function Home() {
       <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center'/>
       <Explore /> 
       <Heading heading_text="Featured Products"/>
-      {/* <ProductsSection ProductsType = "featured" sortedFilteredProducts={products}/> */}
+      <ProductsSection ProductsType = "featured" sortedFilteredProducts={products}/>
       <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/product")}/>
       <Banner />
       <ScrollingBar/>

@@ -3,116 +3,167 @@ import { Link } from "react-router-dom";
 import "./ProductCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { products } from "../../../data/Products";
 import { useCart } from "../../../contaxt/CartContaxt";
 import Overlay from "../overlay/OverLay";
 import CartSiderbar from "../../layout/CartSidebar/CartSidebar";
 
+// MUI imports
+import Rating from '@mui/material/Rating';
+import Stack from '@mui/material/Stack';
+
 function ProductCard({
   id,
-  image,
+  images = [],
   name,
-  salePrice,
-  originalPrice,
-  likes,
-  badgeType,
-  badgeText,
+  sizes = {},
+  sale,
+  likes = 0,
   category,
+  isNewArrival,
+  rating = 0,
   openCartSidebar,
 }) {
-
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const { addToCart } = useCart();
 
+  // Extract prices and stock from sizes
+  const sizeEntries = Object.entries(sizes);
+  const defaultSize = sizeEntries[0]?.[0]; // e.g. "50ml"
+
+  const prices = sizeEntries.map(([_, value]) => value.price);
+  const originalPrice = Math.min(...prices);
+
+  const totalStock = sizeEntries.reduce((acc, [_, value]) => acc + (value.stock || 0), 0);
+
+  // Sale price calculation
+  const salePrice = sale?.isOnSale
+    ? Math.round(originalPrice - (originalPrice * sale.percentage) / 100)
+    : null;
+
   const handleQuickAdd = () => {
+    if (totalStock <= 0) return; // prevent adding out of stock
+
     addToCart(
       {
         id,
-        image,
         name,
-        salePrice,
-        originalPrice,
+        image: images[0],
+        price: salePrice ?? originalPrice,
       },
-      "20ml", // default size
+      defaultSize,
       1
     );
 
     if (openCartSidebar) {
       openCartSidebar(); // OPEN CART
     }
+
+    setIsCartOpen(true);
   };
-  
+
+  const handleLike = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsLiked(!isLiked);
+  };
+
+  // Badge logic (SALE, NEW, OUT OF STOCK)
+  const badges = [];
+
+  // SALE badge - will be positioned left
+  if (sale?.isOnSale) {
+    badges.push({ type: "sale", text: `-${sale.percentage}%`, position: "left" });
+  }
+
+  // NEW badge - will be positioned right
+  if (isNewArrival) {
+    badges.push({ type: "new", text: "New", position: "right" });
+  }
+
+  // OUT OF STOCK badge if stock = 0
+  if (totalStock === 0) {
+    badges.push({ type: "out-of-stock", text: "Out of Stock", position: "left" });
+  }
+
   return (
     <>
-
-    <div className="product-card">
-      
-      {/* Badge */}
-      {badgeType && (
-        <span className={`product-badge product-badge--${badgeType}`}>
-          {badgeText}
-        </span>
-      )}
-
-      <div className="productCard-div">
-        <Link to={`/Product/${id}`}>
-          {/* Image */}
-          <div className="product-card__image-wrapper">
-            <img src={image[0]} alt={name} className="product-card__image" />
-            {/* Overlay */}
-            <div className="product-card__overlay">
-              {category && (
-                <span className="product-card__category">{category}</span>
-              )}
-              
-            </div>
-          </div>
-        </Link>
-
-        <div className="product-card__actions">
-          {likes && (
-            <div className="product-card__like">
-              <span>{likes}</span>
-              <FontAwesomeIcon icon={faHeart} />
-            </div>
-          )}
-          <button className="product-card__add-btn" 
-            onClick={() => {
-              handleQuickAdd()
-              setIsCartOpen(true)
-            }}>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
+      <div className="product-card">
+        {/* Badges */}
+        <div className="product-badges">
+          {badges.map((badge, index) => (
+            <span 
+              key={index} 
+              className={`product-badge product-badge--${badge.type} product-badge--${badge.position}`}
+            >
+              {badge.text}
+            </span>
+          ))}
         </div>
-      </div>
 
+        <div className="productCard-div">
+          <Link to={`/Product/${id}`}>
+            <div className="product-card__image-wrapper">
+              <img src={images?.[0]} alt={name} className="product-card__image" />
+              {/* Overlay */}
+              <div className="product-card__overlay">
+                {category && <span className="product-card__category">{category}</span>}
+              </div>
+            </div>
+          </Link>
+
+          <div className="product-card__actions">
+            <button 
+              className={`product-card__like ${isLiked ? 'product-card__like--active' : ''}`}
+              onClick={handleLike}
+            >
+              {likes > 0 && <span className="product-card__like-count">{likes}</span>}
+              <FontAwesomeIcon icon={faHeart} />
+            </button>
+            <button
+              className="product-card__add-btn"
+              onClick={handleQuickAdd}
+              disabled={totalStock === 0} // disable button if out of stock
+            >
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
+          </div>
+        </div>
 
         {/* Content */}
         <div className="product-card__content">
           <p className="product-card__name">{name}</p>
 
+          {/* Price */}
           <div className="product-card__price">
-
-            <span className="price--sale">PKR {salePrice ? salePrice : originalPrice}</span>
-            
-            {salePrice&& (
+            <span className="price--sale">PKR {salePrice ?? originalPrice}</span>
+            {salePrice && (
               <span className="price--original">PKR {originalPrice}</span>
-            )
-            }
+            )}
           </div>
         </div>
-      
-    </div>
+          {/* Rating */}
+          <div className="product-card__rating-wrapper">
+            <Stack spacing={1}>
+              <Rating
+                name="half-rating-read"
+                value={rating}
+                precision={0.5}
+                readOnly
+                size="small"
+                className="product-card__rating"
+              />
+            </Stack>
+            <span className="product-card__rating-value">{rating.toFixed(1)}</span>
+          </div>
+      </div>
 
-    {/* Cart Sidebar */}
-      <Overlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} position="right" >
-        <CartSiderbar
-        isCartOpen={isCartOpen}
-        closeCart={() => setIsCartOpen(false)}
-        />  
+      {/* Cart Sidebar */}
+      <Overlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} position="right">
+        <CartSiderbar isCartOpen={isCartOpen} closeCart={() => setIsCartOpen(false)} />
       </Overlay>
     </>
   );
 }
 
-export default ProductCard;
+export default ProductCard; 
