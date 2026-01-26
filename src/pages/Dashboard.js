@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import "../styles/admin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBox, faMoneyBillWave, faTags, faWarehouse } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faTags, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -16,35 +16,39 @@ const Dashboard = () => {
   });
 
   const [products, setProducts] = useState([]);
-  const colectionRef = collection(db, "products");
+  const [loading, setLoading] = useState(true); // <-- loading state
+  const collectionRef = collection(db, "products");
 
   useEffect(() => {
-      const getProducts = async () => {
-      try{
-        const data = await getDocs(colectionRef);
-        const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
+    const getProducts = async () => {
+      try {
+        setLoading(true); // start loading
+        const data = await getDocs(collectionRef);
+        const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
         setProducts(filteredData);
-      } catch(err){
+
+        setStats({
+          totalProducts: filteredData.length,
+          totalCategories: [...new Set(filteredData.map(p => p.category))].length,
+          totalStock: filteredData.reduce((sum, product) => {
+            const sizes = product.sizes || {};
+            return sum + Object.values(sizes).reduce((sizeSum, size) => sizeSum + (size.stock || 0), 0);
+          }, 0),
+          orders: null,
+          users: null,
+          revenue: 185000,
+        });
+      } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false); // end loading
       }
-      
-    }
-    getProducts()
+    };
 
-    setStats({
-      totalProducts: products.length,
-      totalCategories: [...new Set(products.map(p => p.category))].length,
-      totalStock: products.reduce((sum, product) => {
-      const sizes = product.sizes || {};
-      return sum + Object.values(sizes).reduce((sizeSum, size) => sizeSum + (size.stock || 0), 0);}, 0),
+    getProducts();
+  }, []);
 
-      orders: null,
-      users: null,
-      revenue: 185000,
-    });
-  }, [products]);
 
-  
 
   return (
     <div className="dashboard">
@@ -52,27 +56,55 @@ const Dashboard = () => {
 
       {/* STATS CARDS */}
       <div className="stats-cards">
-        <div className="stat-card">
-          <h3><FontAwesomeIcon icon={faBox} /> Total Products</h3>
-          <p className="value">{stats.totalProducts}</p>
-        </div>
-        <div className="stat-card blue">
-          <h3><FontAwesomeIcon icon={faTags} /> Categories</h3>
-          <p className="value">{stats.totalCategories}</p>
-        </div>
-        <div className="stat-card orange">
-          <h3><FontAwesomeIcon icon={faWarehouse} /> Total Stock</h3>
-          <p className="value">{stats.totalStock}</p>
-        </div>
+
+          <>
+            <div className="stat-card">
+              <h3><FontAwesomeIcon icon={faBox} /> Total Products</h3>
+              {loading? (
+                <p className="skeleton-value skeleton"></p>
+              ): (
+                <p className="value">{stats.totalProducts}</p>
+              )}
+            </div>
+
+            <div className="stat-card blue">
+              <h3><FontAwesomeIcon icon={faTags} /> Categories</h3>
+              {loading? (
+                <p className="skeleton-value skeleton"></p>
+              ): (
+                <p className="value">{stats.totalCategories}</p>
+              )}
+            </div>
+
+            <div className="stat-card orange">
+              <h3><FontAwesomeIcon icon={faWarehouse} /> Total Stock</h3>
+              {loading? (
+                <p className="skeleton-value skeleton"></p>
+              ): (
+                <p className="value">{stats.totalStock}</p>
+              )}
+              
+              
+            </div>
+          </>
+
       </div>
 
       <div className="dashboard-section">
         <h2>Recent Activity</h2>
-        <ul>
-          <li>New order placed</li>
-          <li>Product added</li>
-          <li>New user registered</li>
-        </ul>
+        {loading ? (
+          <ul>
+            <li className="skeleton-text small"></li>
+            <li className="skeleton-text small"></li>
+            <li className="skeleton-text small"></li>
+          </ul>
+        ) : (
+          <ul>
+            <li>New order placed</li>
+            <li>Product added</li>
+            <li>New user registered</li>
+          </ul>
+        )}
       </div>
     </div>
   );

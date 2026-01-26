@@ -8,17 +8,25 @@ import {
   doc,
   serverTimestamp,
 } from "firebase/firestore";
+
 import "../styles/admin.css";
 import Button from "../components/ui/button/Button";
 import ToastMessage from "../components/ui/toastMessage/ToastMessage";
 import OverlayForm from "../components/sections/overlayForm/OverlayForm";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ManageCategories = () => {
   const categoryRef = collection(db, "Category");
 
+  /* =====================
+     STATES
+  ===================== */
   const [categories, setCategories] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState([]);
+  const [search, setSearch] = useState("");
+
   const [showAdd, setShowAdd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(true);
@@ -26,14 +34,15 @@ const ManageCategories = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
 
-  // 🔹 Form state
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     image: "",
   });
 
-  // 🔹 Field configuration (reusable)
+  /* =====================
+     FORM FIELDS
+  ===================== */
   const categoryFields = [
     {
       name: "name",
@@ -56,24 +65,55 @@ const ManageCategories = () => {
     },
   ];
 
-  // 🔹 Fetch categories
+  /* =====================
+     FETCH CATEGORIES
+  ===================== */
   const fetchCategories = async () => {
-    setLoadingCategories(true);
-    const snapshot = await getDocs(categoryRef);
-    setCategories(
-      snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-    );
-    setLoadingCategories(false);
+    try {
+      setLoadingCategories(true);
+
+      const snapshot = await getDocs(categoryRef);
+      const data = snapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      }));
+
+      setCategories(data);
+      setFilteredCategories(data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    } finally {
+      setLoadingCategories(false);
+    }
   };
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  // 🔹 Add category
+  /* =====================
+     SEARCH FILTER
+  ===================== */
+  useEffect(() => {
+    if (!search.trim()) {
+      setFilteredCategories(categories);
+      return;
+    }
+
+    const lowerSearch = search.toLowerCase();
+
+    const filtered = categories.filter(
+      (cat) =>
+        cat.name?.toLowerCase().includes(lowerSearch) ||
+        cat.description?.toLowerCase().includes(lowerSearch)
+    );
+
+    setFilteredCategories(filtered);
+  }, [search, categories]);
+
+  /* =====================
+     ADD CATEGORY
+  ===================== */
   const handleAddCategory = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -93,19 +133,25 @@ const ManageCategories = () => {
     } catch (error) {
       setToastType("error");
       setToastMessage("Failed to add category");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
-  // 🔹 Delete category
+  /* =====================
+    DELETE CATEGORY
+  ===================== */
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this category?")) return;
+
     await deleteDoc(doc(db, "Category", id));
     setCategories((prev) => prev.filter((c) => c.id !== id));
+    setFilteredCategories((prev) => prev.filter((c) => c.id !== id));
   };
 
-  // 🔹 Skeleton row
+  /* =====================
+     SKELETON ROW
+  ===================== */
   const SkeletonRow = () => (
     <tr className="skeleton-row">
       <td><div className="skeleton skeleton-text"></div></td>
@@ -116,19 +162,38 @@ const ManageCategories = () => {
     </tr>
   );
 
+  /* =====================
+     UI
+  ===================== */
   return (
     <>
       <div className="admin-page">
+        {/* HEADER */}
         <div className="admin-header">
           <h1>Categories</h1>
-          <Button
-            onClick={() => setShowAdd(true)}
-            margintop={0}
-            marginbottom={0}
-            position="right"
-          >
-            Add Category
-          </Button>
+
+          <div className="admin-actions">
+            <div className="search-container">
+              <FontAwesomeIcon icon={faSearch} className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search categories..."
+                className="search-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+
+            <Button
+              variant="green"
+              onClick={() => setShowAdd(true)}
+              margintop={0}
+              marginbottom={0}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+              Add Category
+            </Button>
+          </div>
         </div>
 
         {/* TABLE */}
@@ -147,8 +212,8 @@ const ManageCategories = () => {
             <tbody>
               {loadingCategories ? (
                 [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
-              ) : categories.length ? (
-                categories.map((cat, i) => (
+              ) : filteredCategories.length ? (
+                filteredCategories.map((cat, i) => (
                   <tr key={cat.id}>
                     <td>{i + 1}</td>
 

@@ -48,8 +48,8 @@ const heroSlides = [
 ]
 
 const Hero = () => {
-  return (
-          <section className="heroSwiper">
+    return (
+            <section className="heroSwiper">
             <Swiper
                 modules={[Pagination, Autoplay]}
                 pagination={{ clickable: true }}
@@ -59,14 +59,14 @@ const Hero = () => {
                 slidesPerView={1}
                 loop={true}
             >
-              {heroSlides.map(slide=>(
+                {heroSlides.map(slide=>(
                 <SwiperSlide key={slide.id}>
                     <HeroSection {...slide}/>
                 </SwiperSlide>
-              ))}
+                ))}
             </Swiper>
         </section>
-  )
+    )
 }
 
 export default Hero

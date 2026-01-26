@@ -14,9 +14,33 @@ import "../styles/admin.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
+
+// skeleton Animation
+const EditProductSkeleton = () => {
+    return (
+        <div className="admin-page">
+        <div className="skeleton-title skeleton" />
+
+        <div className="skeleton-form">
+            {[...Array(8)].map((_, i) => (
+            <div key={i} className="skeleton-input skeleton" />
+            ))}
+
+            <div className="skeleton-row">
+            <div className="skeleton-input skeleton" />
+            <div className="skeleton-input skeleton" />
+            </div>
+
+            <div className="skeleton-button skeleton" />
+        </div>
+        </div>
+    );
+};
+
+// Main Function
 const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
-    const productRef = doc(db, "products", productId);
-    const categoryRef = collection(db, "Category");
+    
+    /*--------------- STATES --------------------*/
 
     // Basic fields
     const [name, setName] = useState("");
@@ -28,9 +52,11 @@ const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
     const [status, setStatus] = useState("active");
 
     // Sizes
-    const [sizes, setSizes] = useState([{ size: "", price: "", stock: "" }]);
+    const [sizes, setSizes] = useState([
+        { size: "", price: "", stock: "" },
+    ]);
 
-    // Sale fields
+    // Sale
     const [isOnSale, setIsOnSale] = useState(false);
     const [salePercentage, setSalePercentage] = useState("");
 
@@ -42,243 +68,357 @@ const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Fetch product data
+    // Loading 
+    const [initialLoading, setInitialLoading] = useState(true);
+
+    /* ------------FETCH PRODUCT--------------- */
+
     useEffect(() => {
+        if (!productId) return;
+
         const fetchProduct = async () => {
-            try {
-                const snap = await getDoc(productRef);
-                if (!snap.exists()) return;
+        try {
+            setInitialLoading(true);
 
-                const data = snap.data();
+            const productRef = doc(db, "products", productId);
+            const snap = await getDoc(productRef);
 
-                setName(data.name);
-                setCategory(data.category);
-                setDescription(data.description || "");
-                setImages([
-                    data.images?.[0] || "",
-                    data.images?.[1] || "",
-                    data.images?.[2] || "",
-                ]);
+            if (!snap.exists()) return;
 
-                setStatus(data.status || "active");
-                setIsOnSale(data.sale?.isOnSale || false);
-                setSalePercentage(
-                    data.sale?.percentage ? String(data.sale.percentage) : ""
-                );
-                setIsNewArrival(data.isNewArrival || false);
-                setIsFeatured(data.isFeatured || false);
+            const data = snap.data();
 
-                const sizeArray = Object.entries(data.sizes || {}).map(
-                    ([key, value]) => ({
-                        size: key,
-                        price: value.price,
-                        stock: value.stock,
-                    })
-                );
-                setSizes(sizeArray.length ? sizeArray : [{ size: "", price: "", stock: "" }]);
-            } catch (err) {
+            setName(data.name || "");
+            setCategory(data.category || "");
+            setDescription(data.description || "");
+            setImages([
+            data.images?.[0] || "",
+            data.images?.[1] || "",
+            data.images?.[2] || "",
+            ]);
+
+            setStatus(data.status || "active");
+            setIsOnSale(data.sale?.isOnSale || false);
+            setSalePercentage(
+            data.sale?.percentage ? String(data.sale.percentage) : ""
+            );
+
+            setIsNewArrival(data.isNewArrival || false);
+            setIsFeatured(data.isFeatured || false);
+
+            const sizeArray = Object.entries(data.sizes || {}).map(
+            ([key, value]) => ({
+                size: key,
+                price: value.price,
+                stock: value.stock,
+            })
+            );
+
+            setSizes(
+            sizeArray.length
+                ? sizeArray
+                : [{ size: "", price: "", stock: "" }]
+            );
+            } 
+            catch (err) {
+                showToast(`Error fetching product: ${err}`, "error");
                 console.error("Error fetching product:", err);
             }
+            finally {
+                setInitialLoading(false);
+            }
         };
+
         fetchProduct();
     }, [productId]);
 
-    // Fetch categories
+    /* =======================
+        FETCH CATEGORIES
+    ======================= */
     useEffect(() => {
         const fetchCategories = async () => {
-            const snap = await getDocs(categoryRef);
-            setCategories(
-                snap.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }))
-            );
+        const categoryRef = collection(db, "Category");
+        const snap = await getDocs(categoryRef);
+
+        setCategories(
+            snap.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+            }))
+        );
         };
+
         fetchCategories();
     }, []);
 
-    // Handlers
-    const handleAddSize = () => setSizes([...sizes, { size: "", price: "", stock: "" }]);
-    const handleRemoveSize = (index) => setSizes(sizes.filter((_, i) => i !== index));
+    /* =======================
+        HANDLERS
+    ======================= */
+    const handleAddSize = () =>
+        setSizes([...sizes, { size: "", price: "", stock: "" }]);
+
+    const handleRemoveSize = (index) =>
+        setSizes(sizes.filter((_, i) => i !== index));
+
     const handleSizeChange = (index, field, value) => {
         const updated = [...sizes];
         updated[index][field] = value;
         setSizes(updated);
     };
+
     const handleImageChange = (index, value) => {
         const updated = [...images];
         updated[index] = value;
         setImages(updated);
     };
 
-    // Submit update
+    /* =======================
+        SUBMIT UPDATE
+    ======================= */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const sizesObj = {};
-        sizes.forEach((s) => {
-            if (s.size) {
-                sizesObj[s.size] = {
-                    price: Number(s.price),
-                    stock: Number(s.stock),
-                };
-            }
-        });
-
-        if (!name || !category || !Object.keys(sizesObj).length) {
-            showToast("Please fill all required fields", "error");
+        if (!productId) {
+            showToast("Invalid product ID", "error");
             return;
         }
 
+        const sizesObj = {};
+        sizes.forEach((s) => {
+        if (s.size) {
+            sizesObj[s.size] = {
+            price: Number(s.price),
+            stock: Number(s.stock),
+            };
+        }
+        });
+
+        if (!name || !category || !Object.keys(sizesObj).length) {
+        showToast("Please fill all required fields", "error");
+        return;
+        }
+
         if (isOnSale && !salePercentage) {
-            showToast("Please select sale percentage", "error");
-            return;
+        showToast("Please select sale percentage", "error");
+        return;
         }
 
         const filteredImages = images.filter((img) => img.trim() !== "");
         if (!filteredImages.length) {
-            showToast("Main product image is required", "error");
-            return;
+        showToast("Main product image is required", "error");
+        return;
         }
 
         try {
-            setLoading(true);
+        setLoading(true);
 
-            await updateDoc(productRef, {
-                name,
-                category,
-                description,
-                images: filteredImages,
-                status,
-                sizes: sizesObj,
-                sale: { isOnSale, percentage: isOnSale ? Number(salePercentage) : 0 },
-                isNewArrival,
-                isFeatured,
-            });
+        const productRef = doc(db, "products", productId);
 
-            showToast("Product updated successfully!");
-            refetchProducts();
-            onClose();
+        await updateDoc(productRef, {
+            name,
+            category,
+            description,
+            images: filteredImages,
+            status,
+            sizes: sizesObj,
+            sale: {
+            isOnSale,
+            percentage: isOnSale ? Number(salePercentage) : 0,
+            },
+            isNewArrival,
+            isFeatured,
+        });
+
+        showToast("Product updated successfully!");
+        refetchProducts();
+        onClose();
         } catch (err) {
-            console.error(err);
-            showToast("Error updating product", "error");
+        console.error(err);
+        showToast("Error updating product", "error");
         } finally {
-            setLoading(false);
+        setLoading(false);
         }
     };
 
+    /*----------------LOADING GUARD--------------- */
+    if (!productId || initialLoading) {
+
+        return EditProductSkeleton();
+    }
+
+    /*-------------------UI-----------------------*/
     return (
         <div className="admin-page">
-            <h1>Edit Product</h1>
+        <h1>Edit Product</h1>
 
-            <form className="add-product-form" onSubmit={handleSubmit}>
-                {/* BASIC FIELDS */}
-                {/* .add-product-form input[type="text"] */}
-                <div className="form-group">
-                    <label>Product Name</label>
-                    <input value={name} onChange={(e) => setName(e.target.value)} type="text" />
+        <form className="add-product-form" onSubmit={handleSubmit}>
+            {/* BASIC FIELDS */}
+            <div className="form-group">
+            <label>Product Name</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
 
-                    <label>Description</label>
-                    <input value={description} onChange={(e) => setDescription(e.target.value)} type="text" />
+            <label>Description</label>
+            <textarea value={description}
+                onChange={(e) => setDescription(e.target.value)}></textarea
+            >
 
-                    <label>Product Images</label>
-                    {images.map((img, i) => (
-                        <input
-                            key={i}
-                            value={img}
-                            placeholder={`Image ${i + 1}`}
-                            onChange={(e) => handleImageChange(i, e.target.value)}
-                            type="text"
-                        />
-                    ))}
 
-                    <label>Category</label>
-                    <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                        <option value="">Select Category</option>
-                        {categories.map((c) => (
-                            <option key={c.id} value={c.name}>{c.name}</option>
-                        ))}
-                    </select>
+            <label>Product Images</label>
+            {images.map((img, i) => (
+            <div key={i} className="product-images-link">
+                <div className="link-base-image">
+                {img ? (
+                    <img src={img} alt={`Product ${i + 1}`} />
+                ) : (
+                    <div className="image-placeholder">No Image</div>
+                )}
                 </div>
 
-                {/* SIZES */}
-                <div className="form-group">
-                    <label>Sizes</label>
-                    {sizes.map((s, i) => (
-                        <div key={i} className="product-size-row">
-                            <select value={s.size} onChange={(e) => handleSizeChange(i, "size", e.target.value)}>
-                                <option value="">Select Size</option>
-                                <option value="50ml">50ml</option>
-                                <option value="100ml">100ml</option>
-                                <option value="150ml">150ml</option>
-                            </select>
+                <input
+                value={img}
+                placeholder={`Image ${i + 1}`}
+                onChange={(e) => handleImageChange(i, e.target.value)}
+                type="text"
+                />
+            </div>
+            ))}
 
-                            <input type="number" placeholder="Price" value={s.price} onChange={(e) => handleSizeChange(i, "price", e.target.value)} />
-                            <input type="number" placeholder="Stock" value={s.stock} onChange={(e) => handleSizeChange(i, "stock", e.target.value)} />
+            <label>Category</label>
+            <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+            >
+                <option value="">Select Category</option>
+                {categories.map((c) => (
+                <option key={c.id} value={c.name}>
+                    {c.name}
+                </option>
+                ))}
+            </select>
+            </div>
 
-                            {sizes.length > 1 && (
-                                <button type="button" className="btn-remove" onClick={() => handleRemoveSize(i)}>Remove</button>
-                            )}
-                        </div>
-                    ))}
-                    <Button type="button" variant="green" onClick={handleAddSize}>
-                        <FontAwesomeIcon icon={faPlus} /> Add Size
-                    </Button>
+            {/* SIZES */}
+            <div className="form-group">
+            <label>Sizes</label>
+            {sizes.map((s, i) => (
+                <div key={i} className="product-size-row">
+                <select
+                    value={s.size}
+                    onChange={(e) =>
+                    handleSizeChange(i, "size", e.target.value)
+                    }
+                >
+                    <option value="">Select Size</option>
+                    <option value="50ml">50ml</option>
+                    <option value="100ml">100ml</option>
+                    <option value="150ml">150ml</option>
+                </select>
+
+                <input
+                    type="number"
+                    placeholder="Price"
+                    value={s.price}
+                    onChange={(e) =>
+                    handleSizeChange(i, "price", e.target.value)
+                    }
+                />
+
+                <input
+                    type="number"
+                    placeholder="Stock"
+                    value={s.stock}
+                    onChange={(e) =>
+                    handleSizeChange(i, "stock", e.target.value)
+                    }
+                />
+
+                {sizes.length > 1 && (
+                    <button
+                    type="button"
+                    className="btn-remove"
+                    onClick={() => handleRemoveSize(i)}
+                    >
+                    Remove
+                    </button>
+                )}
                 </div>
+            ))}
 
-                {/* STATUS RADIO BUTTONS */}
-                <div className="form-group">
-                    <label>Status</label>
-                    <div className="radio-group">
-                        <label>
-                            <input type="radio" value="active" checked={status === "active"} onChange={() => setStatus("active")} />
-                            Active
-                        </label>
-                        <label>
-                            <input type="radio" value="inactive" checked={status === "inactive"} onChange={() => setStatus("inactive")} />
-                            Inactive
-                        </label>
-                    </div>
-                </div>
+            <Button type="button" variant="green" onClick={handleAddSize}>
+                <FontAwesomeIcon icon={faPlus} /> Add Size
+            </Button>
+            </div>
 
-                {/* SALE CHECKBOX & PERCENTAGE */}
-                <div className="form-group">
-                    <label>
-                        <input type="checkbox" checked={isOnSale} onChange={(e) => setIsOnSale(e.target.checked)} />
-                        On Sale
-                    </label>
+            {/* STATUS */}
+            <div className="form-group">
+            <label>Status</label>
+            <label>
+                <input
+                type="radio"
+                checked={status === "active"}
+                onChange={() => setStatus("active")}
+                />
+                Active
+            </label>
+            <label>
+                <input
+                type="radio"
+                checked={status === "inactive"}
+                onChange={() => setStatus("inactive")}
+                />
+                Inactive
+            </label>
+            </div>
 
-                    {isOnSale && (
-                        <select value={salePercentage} onChange={(e) => setSalePercentage(e.target.value)}>
-                            <option value="">Select Sale Percentage</option>
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                            <option value="15">15%</option>
-                            <option value="20">20%</option>
-                            <option value="25">25%</option>
-                            <option value="30">30%</option>
-                            <option value="40">40%</option>
-                            <option value="50">50%</option>
-                        </select>
-                    )}
-                </div>
+            {/* SALE */}
+            <div className="form-group">
+            <label>
+                <input
+                type="checkbox"
+                checked={isOnSale}
+                onChange={(e) => setIsOnSale(e.target.checked)}
+                />
+                On Sale
+            </label>
 
-                {/* FEATURED / NEW ARRIVAL */}
-                <div className="form-group">
-                    <label>
-                        <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} />
-                        Featured
-                    </label>
-                    <label>
-                        <input type="checkbox" checked={isNewArrival} onChange={(e) => setIsNewArrival(e.target.checked)} />
-                        New Arrival
-                    </label>
-                </div>
+            {isOnSale && (
+                <select
+                value={salePercentage}
+                onChange={(e) => setSalePercentage(e.target.value)}
+                >
+                <option value="">Select Sale Percentage</option>
+                {[5, 10, 15, 20, 25, 30, 40, 50].map((p) => (
+                    <option key={p} value={p}>
+                    {p}%
+                    </option>
+                ))}
+                </select>
+            )}
+            </div>
 
-                <Button type="submit" size="lg" fullWidth disabled={loading}>
-                    {loading ? "Updating..." : "Update Product"}
-                </Button>
-            </form>
+            {/* BADGES */}
+            <div className="form-group">
+            <label>
+                <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+                />
+                Featured
+            </label>
+            <label>
+                <input
+                type="checkbox"
+                checked={isNewArrival}
+                onChange={(e) => setIsNewArrival(e.target.checked)}
+                />
+                New Arrival
+            </label>
+            </div>
+
+            <Button type="submit" size="lg" fullWidth disabled={loading}>
+            {loading ? "Updating..." : "Update Product"}
+            </Button>
+        </form>
         </div>
     );
 };

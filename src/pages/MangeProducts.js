@@ -161,7 +161,7 @@ const ManageProducts = () => {
             {loading ? (
               [...Array(6)].map((_, i) => (
                 <tr key={i} className="skeleton-row">
-                  <td><div className="skeleton skeleton-text small" /></td>
+                  <td><div className="   skeleton-text small" /></td>
                   <td><div className="skeleton skeleton-image" /></td>
 
                   <td>
