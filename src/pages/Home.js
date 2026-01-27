@@ -13,7 +13,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 function Home() {
   const [products, setProducts] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const colectionRef = collection(db, "products");
 
   useEffect(() =>{
@@ -22,6 +22,7 @@ function Home() {
         const data = await getDocs(colectionRef);
         const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id}));
         setProducts(filteredData);
+        setLoading(false);
       } catch(err){
         console.log(err);
       }
@@ -40,7 +41,7 @@ function Home() {
       <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center'/>
       <Explore /> 
       <Heading heading_text="Featured Products"/>
-      <ProductsSection ProductsType = "featured" sortedFilteredProducts={products}/>
+      <ProductsSection ProductsType = "featured" sortedFilteredProducts={products} loading= {loading}/>
       <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/product")}/>
       <Banner />
       <ScrollingBar/>

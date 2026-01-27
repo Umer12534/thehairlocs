@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "../../ui/ProductCard/ProductCard";
+import ProductSkeleton from "../../ui/productSkeleton/ProductSkeleton"
 import "./ProductsSection.css";
 
 const ProductsSection = ({
@@ -10,6 +11,7 @@ const ProductsSection = ({
   page = 1,
   productsPerPage = 8,
   sortedFilteredProducts = [],
+  loading = false,
 }) => {
 
   //  Apply filters according to DB fields
@@ -52,27 +54,31 @@ const ProductsSection = ({
     <section className="product-container">
       <div className="products">
         <div className={`product-grid product-grid-${layout}`}>
-          {paginatedProducts.map(product => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              description={product.description}
-              image={product.images?.[0]}
-              images={product.images}
-              rating={product.rating}
-              likes={product.likes}
-              isFeatured={product.isFeatured}
-              isNewArrival={product.isNewArrival}
-              sale={product.sale}
-              sizes={product.sizes}
-              category={product.category}
-            />
-          ))}
+          {loading
+            ? 
+              <ProductSkeleton layout={layout} />
+              
+            : paginatedProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  description={product.description}
+                  image={product.images?.[0]}
+                  images={product.images}
+                  rating={product.rating}
+                  likes={product.likes}
+                  isFeatured={product.isFeatured}
+                  isNewArrival={product.isNewArrival}
+                  sale={product.sale}
+                  sizes={product.sizes}
+                  category={product.category}
+                />
+              ))}
         </div>
       </div>
 
-      {productNotFound && (
+      {!loading && productNotFound && (
         <div className="no-products">
           <img
             src="/assets/images/products/product_not_found.png"

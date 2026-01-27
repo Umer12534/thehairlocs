@@ -411,7 +411,8 @@
   visibility: visible;
 }
 
-.overlay-content {
+.admin-overlay .overlay-content,
+.add-product-overlay .overlay-content {
   background: white;
   width: 90%;
   max-width: 800px;
@@ -625,7 +626,7 @@
   border-radius: 6px;
 }
 
-.skeleton-image {
+.skeleton-row .skeleton-image {
   width: 50px;
   height: 50px;
   border-radius: 6px;
@@ -828,7 +829,7 @@
     grid-template-columns: 1fr;
   }
 
-  .overlay-content,
+  .admin-overlay .overlay-content,
   .admin-overlay-content {
     width: 95%;
     max-height: 85vh;

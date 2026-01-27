@@ -229,24 +229,6 @@ function Products() {
     filteredProducts.length / PRODUCTS_PER_PAGE
   );
 
-  // Skeleton loader component
-  const ProductsSkeleton = () => {
-    const skeletonItems = Array.from({ length: PRODUCTS_PER_PAGE });
-    
-    return (
-      <div className="allproductsection">
-        {skeletonItems.map((_, index) => (
-          <div key={index} className="product-card-skeleton">
-            <div className="skeleton-image"></div>
-            <div className="skeleton-text" style={{ width: '80%', height: '20px', marginTop: '10px' }}></div>
-            <div className="skeleton-text" style={{ width: '60%', height: '16px', marginTop: '8px' }}></div>
-            <div className="skeleton-text" style={{ width: '40%', height: '16px', marginTop: '8px' }}></div>
-            <div className="skeleton-button" style={{ width: '100%', height: '40px', marginTop: '15px' }}></div>
-          </div>
-        ))}
-      </div>
-    );
-  };
 
   // Empty state component
   const EmptyState = () => (
@@ -289,18 +271,15 @@ function Products() {
           <FilterSidebar toggleSidebar={toggleSidebar} setFilter={setFilter} loading={loading} />
         </div>
 
-        {loading ? (
-          <ProductsSkeleton />
-        ) : error ? (
+        { error ? (
           <ErrorState />
-        ) : filteredProducts.length === 0 ? (
-          <EmptyState />
-        ) : (
+        ):(
           <ProductsSection 
             layout={isLayout}  
             page={page} 
             productsPerPage={PRODUCTS_PER_PAGE} 
             sortedFilteredProducts={filteredProducts}
+            loading = {loading}
           />
         )}
       </div>

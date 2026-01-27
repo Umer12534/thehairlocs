@@ -1,19 +1,50 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 import { Link } from 'react-router-dom'
-import { categories } from '../../../data/Categories'
 import CategoryCard from '../../ui/CategoriesCard/CategoriesCard'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
-
+import { db } from "../../../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import CategoryCardSkeleton from '../../ui/categoryCardSkeleton/CategoryCardSkeleton'
 import './AllCategoriesSection.css'
 
 function AllCategoriesSection() {
     const swiperRef = useRef(null)
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    const fetchCategories = async () => {
+        try {
+        setLoading(true);
+        const snapshot = await getDocs(collection(db, "Category"));
+
+        const fetched = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+
+        const activeCategories = fetched.filter(
+            cat => cat.status !== "inactive"
+        );
+
+        setCategories(activeCategories);
+        } catch (err) {
+        console.error("Error fetching categories:", err);
+        } finally {
+        setLoading(false);
+        }
+    };
+
+    fetchCategories();
+    }, []);
+
+    if (!loading && categories.length === 0) return null;
 
     return (
         <section className="new-categories">
@@ -39,24 +70,35 @@ function AllCategoriesSection() {
                     <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         modules={[Navigation, Autoplay]}
-                        autoplay={{ delay: 5000, disableOnInteraction: false }}
-                        loop={true}
+                        navigation={{
+                        prevEl: '.cat-prev',
+                        nextEl: '.cat-next'
+                        }}
+                        autoplay={!loading ? { delay: 5000, disableOnInteraction: false } : false}
+                        loop={!loading}
                         spaceBetween={20}
                         slidesPerView={4}
                         breakpoints={{
-                            320: { slidesPerView: 1, spaceBetween: 10 },
-                            640: { slidesPerView: 2, spaceBetween: 20 },
-                            1024: { slidesPerView: 4, spaceBetween: 30 }
+                        320: { slidesPerView: 1, spaceBetween: 10 },
+                        640: { slidesPerView: 2, spaceBetween: 20 },
+                        1024: { slidesPerView: 4, spaceBetween: 30 }
                         }}
                     >
-                        {categories.map(category => (
+                        {loading
+                        ? Array.from({ length: 4 }).map((_, idx) => (
+                            <SwiperSlide key={idx}>
+                                <CategoryCardSkeleton />
+                            </SwiperSlide>
+                            ))
+                        : categories.map(category => (
                             <SwiperSlide key={category.id}>
                                 <CategoryCard {...category} />
                             </SwiperSlide>
-                        ))}
+                            ))
+                        }
                     </Swiper>
+                    </div>
 
-                </div>
             </div>
         </section>
     )
