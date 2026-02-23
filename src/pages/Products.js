@@ -4,7 +4,7 @@ import FilterBar from '../components/ui/filterbar/FilterBar';
 import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection';
 import Pagination from '@mui/material/Pagination';
-import { db } from '../firebase';
+import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import '../styles/Global.css'
 

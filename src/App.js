@@ -31,6 +31,7 @@ import Dashboard from "./pages/Dashboard";
 import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
 import AddProduct from "./pages/AddProduct";
+import Add from "./pages/add";
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
             <Route path="/faqs" element={<Faqs />} />
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/add" element={<Add />} />
+
           </Route>
 
           {/* Auth Pages */}

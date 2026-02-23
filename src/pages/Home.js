@@ -8,7 +8,7 @@ import Heading from '../components/ui/heading/Heading';
 import Button from '../components/ui/button/Button'
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { db } from '../firebase';
+import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 function Home() {

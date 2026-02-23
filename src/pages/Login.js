@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/ui/button/Button";
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase";
+import { app } from "../config/firebase";
 import "../styles/Auth.css";
 
 const auth = getAuth(app);

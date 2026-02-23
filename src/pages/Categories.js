@@ -5,7 +5,7 @@ import AllCategoriesSection from "../components/sections/allcategoriessection/Al
 import ProductsSection from "../components/sections/ProductsSection/ProductsSection";
 import Heading from "../components/ui/heading/Heading";
 
-import { db } from "../firebase";
+import { db } from "../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const categories = [

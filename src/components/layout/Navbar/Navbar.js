@@ -17,7 +17,7 @@ import SearchBar from "../../ui/searchBar/SearchBar";
 import { useCart } from "../../../contaxt/CartContaxt";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { app } from "../../../firebase";
+import { app } from "../../../config/firebase";
 
 const sale = "We are running a sale - Get 20% off on all products!";
 const auth = getAuth(app);

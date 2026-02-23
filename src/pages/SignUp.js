@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { app } from "../firebase";
+import { app } from "../config/firebase";
 import Button from "../components/ui/button/Button"
 import "../styles/Auth.css";
 
