@@ -103,6 +103,83 @@
   background: #0056b3;
 }
 
-/* ===============================
-   Responsive Adjustments
-================================ */
+/* Skeleton Loading Styles */
+.product-skeleton-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.product-skeleton-card:hover {
+  transform: translateY(-5px);
+}
+
+.skeleton-content {
+  padding: 16px;
+}
+
+.skeleton-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Products Section Layout for Skeletons */
+.products-section {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+  width: 100%;
+}
+
+.products-section.layout-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.products-section.layout-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.products-section.layout-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.products-section.layout-1 {
+  grid-template-columns: 1fr;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .products-section.layout-3,
+  .products-section.layout-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .products-section.layout-3,
+  .products-section.layout-4,
+  .products-section.layout-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MUI Skeleton Customization */
+.MuiSkeleton-root {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.MuiSkeleton-wave::after {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+}
+
+/* Pagination Wrapper */
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+  padding: 20px;
+}
