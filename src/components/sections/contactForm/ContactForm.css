@@ -1,25 +1,25 @@
 /* Contact Form */
-.contact-form {
+.contact_form {
   width: 100%;
 }
-.contact-form h2 {
+.contact_form h2 {
   font-size: 32px;
   margin-bottom: 30px;
   color: #333;
 }
 
-.form-group {
+.form_group {
   margin-bottom: 25px;
 }
 
-.form-group label {
+.form_group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
   color: #555;
 }
 
-.form-control {
+.form_control {
   width: 100%;
   padding: 15px;
   border: 1px solid #ddd;
@@ -28,12 +28,12 @@
   transition: border 0.3s;
 }
 
-textarea.form-control {
+textarea.form_control {
   min-height: 150px;
   resize: vertical;
 }
 
-.submit-btn {
+.submit_btn {
   background-color: #fac6ae;
   color: black;
   border: none;
@@ -46,7 +46,7 @@ textarea.form-control {
   transition: all 0.3s ease;
 }
 
-.submit-btn:hover,
+.submit_btn:hover,
 .subscribe-section a:hover,
 .social-icons a:hover {
   background-color: #f2a68c;

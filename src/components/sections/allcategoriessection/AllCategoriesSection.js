@@ -19,6 +19,19 @@ function AllCategoriesSection() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+    if (loading) return;
+
+    const swiper = swiperRef.current;
+    if (!swiper || !swiper.autoplay) return;
+
+    // Swiper may mount with autoplay disabled while loading;
+    // explicitly start autoplay once real data is ready.
+    if (!swiper.autoplay.running) {
+        swiper.autoplay.start();
+    }
+    }, [loading, categories.length]);
+
+    useEffect(() => {
     const fetchCategories = async () => {
         try {
         setLoading(true);
@@ -74,8 +87,8 @@ function AllCategoriesSection() {
                         prevEl: '.cat-prev',
                         nextEl: '.cat-next'
                         }}
-                        autoplay={!loading ? { delay: 5000, disableOnInteraction: false } : false}
-                        loop={!loading}
+                        autoplay={{ delay: 5000, disableOnInteraction: false }}
+                        loop={categories.length > 4}
                         spaceBetween={20}
                         slidesPerView={4}
                         breakpoints={{

@@ -17,18 +17,18 @@ const ContactForm = () => {
   }
   return (
     <>
-    <div className="contact-form">
+    <div className="contact_form">
       <h2>Send Us a Message</h2>
       <form onSubmit={(e)=>{
         submitHandler(e)
       }}>
-        <div className="form-group">
+        <div className="form_group">
           <label htmlFor="name">Full Name</label>
           <input 
           type="text" 
           id="name" 
           value={name} 
-          className="form-control" 
+          className="form_control" 
           placeholder="Your Name" 
           required 
           onChange={(e)=>{
@@ -38,13 +38,13 @@ const ContactForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form_group">
           <label htmlFor="email">Email Address</label>
           <input 
           type="email" 
           id="email" 
           value={email} 
-          className="form-control" 
+          className="form_control" 
           placeholder="your.email@example.com" 
           required 
           onChange={(e)=>{
@@ -53,13 +53,13 @@ const ContactForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form_group">
           <label htmlFor="subject">Subject</label>
           <input 
           type="text" 
           id="subject" 
           value={subject} 
-          className="form-control" 
+          className="form_control" 
           placeholder="What is this regarding?" 
           required 
           onChange={(e)=>{
@@ -68,12 +68,12 @@ const ContactForm = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form_group">
           <label htmlFor="message">Your Message</label>
           <textarea 
           id="message" 
           value={message} 
-          className="form-control" 
+          className="form_control" 
           placeholder="Please share your questions..." 
           required 
           onChange={(e)=>{
@@ -82,7 +82,7 @@ const ContactForm = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn">Send Message</button>
+        <button type="submit" className="submit_btn">Send Message</button>
       </form>
     </div>
     </>
