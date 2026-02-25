@@ -34,7 +34,12 @@ export const CartProvider = ({ children }) => {
         item => item.id === product.id && item.size === selectedSize
       );
 
-      const finalPrice = product.salePrice ?? product.originalPrice;
+      const finalPrice = Number(
+        product.price ?? product.salePrice ?? product.originalPrice ?? 0
+      );
+      const firstImage = Array.isArray(product.image)
+        ? product.image[0]
+        : (product.image || product.images?.[0] || "");
 
       if (existingItemIndex > -1) {
         const updatedItems = [...prevItems];
@@ -46,9 +51,9 @@ export const CartProvider = ({ children }) => {
         ...prevItems,
         {
           id: product.id,
-          image: product.image[0],
+          image: firstImage,
           title: product.name,
-          price: Number(finalPrice), // NUMBER ONLY
+          price: finalPrice,
           qty: quantity,
           size: selectedSize
         }

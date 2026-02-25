@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import "../styles/ProductDetails.css";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/ui/button/Button";
@@ -13,6 +13,7 @@ import CartNotification from "../components/ui/cartNotification/CartNotification
 
 function ProductDetails({ openCartSidebar }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
 
   const [product, setProduct] = useState(null);
@@ -61,6 +62,15 @@ function ProductDetails({ openCartSidebar }) {
   const sizeData = selectedSize ? product?.sizes?.[selectedSize] : null;
   const displayPrice = sizeData?.salePrice ?? sizeData?.price ?? null;
   const originalPrice = sizeData?.salePrice ? sizeData.price : null;
+  const productImages = Array.isArray(product?.images)
+    ? product.images
+    : Array.isArray(product?.image)
+      ? product.image
+      : product?.images
+        ? [product.images]
+        : product?.image
+          ? [product.image]
+          : [];
 
   // Handle Add to Cart
   const handleAddToCart = () => {
@@ -70,14 +80,19 @@ function ProductDetails({ openCartSidebar }) {
     }
 
     addToCart(
-      { ...product, price: displayPrice },
+      {
+        id: product.id,
+        name: product.name,
+        image: productImages[0] || "",
+        price: displayPrice ?? 0,
+      },
       selectedSize,
       quantity
     );
 
     setNotificationProduct({
       id: product.id,
-      image: product.image?.[0],
+      image: productImages[0] || "",
       title: product.name,
       price: displayPrice,
       qty: quantity,
@@ -93,7 +108,11 @@ function ProductDetails({ openCartSidebar }) {
   const handleCloseNotification = () => setShowNotification(false);
   const handleViewCart = () => {
     setShowNotification(false);
-    if (openCartSidebar) openCartSidebar();
+    if (openCartSidebar) {
+      openCartSidebar();
+      return;
+    }
+    navigate("/cart");
   };
 
   // Skeleton Loader Component
@@ -192,12 +211,15 @@ function ProductDetails({ openCartSidebar }) {
         {/* Left - Images */}
         <div className="image-left">
           <div className="main-img">
-            {product.image?.length > 0 && (
-              <img src={product.image[activeImage]} alt={product.name} />
+            {productImages.length > 0 && (
+              <img
+                src={productImages[Math.min(activeImage, productImages.length - 1)]}
+                alt={product.name}
+              />
             )}
           </div>
           <div className="thumbs">
-            {product.image?.map((img, index) => (
+            {productImages.map((img, index) => (
               <button
                 key={index}
                 className={`thumb ${activeImage === index ? "active" : ""}`}
