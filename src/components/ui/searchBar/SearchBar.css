@@ -1,18 +1,26 @@
 /* OUTER CONTAINER */
 .searchbar-container {
-  width: 100%;                 
-  max-width: 850px;            
-  height: 50px;
-  margin: 20px auto;
-  padding: 0 16px;
+  width: 100%;
+  max-width: 850px;
+  min-height: 52px;
+  margin: 8px auto 0;
+  padding: 0 12px;
 
   display: flex;
   align-items: center;
 
   background-color: #fff;
-  border: 1px solid #333;
+  border: 1px solid #d7d7d7;
   border-radius: 50px;
   box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.searchbar-container:focus-within {
+  border-color: #f2a68c;
+  box-shadow: 0 10px 28px rgba(242, 166, 140, 0.25);
+  transform: translateY(-1px);
 }
 
 /* FORM TAKES FULL WIDTH */
@@ -22,7 +30,7 @@
 
 /* INNER WRAPPER */
 .search-bar-wraper {
-  width: 100%;                
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -30,18 +38,50 @@
 
 /* INPUT FIELD */
 .search-bar-wraper input {
-  flex: 1;                     
+  flex: 1;
   border: none;
   outline: none;
-  font-size: 20px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.2;
   color: #333;
-  padding: 8px 6px;
+  padding: 8px 4px;
   background: transparent;
+}
+
+.search-bar-wraper input::placeholder {
+  color: #9b9b9b;
+  font-weight: 400;
+}
+
+.search-icon-btn,
+.search-clear-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.search-icon-btn:hover,
+.search-clear-btn:hover {
+  background-color: #f6f6f6;
+}
+
+.search-icon-btn:focus-visible,
+.search-clear-btn:focus-visible {
+  outline: 2px solid #f2a68c;
+  outline-offset: 2px;
 }
 
 /* ICONS */
 .search-bar-wraper svg {
-  font-size: 18px;
+  font-size: 16px;
   color: #555;
   cursor: pointer;
   transition: 0.2s;
@@ -49,4 +89,23 @@
 
 .search-bar-wraper svg:hover {
   color: #000;
+}
+
+@media (max-width: 640px) {
+  .searchbar-container {
+    min-height: 46px;
+    margin-top: 6px;
+    padding: 0 10px;
+  }
+
+  .search-bar-wraper input {
+    font-size: 15px;
+    padding: 7px 2px;
+  }
+
+  .search-icon-btn,
+  .search-clear-btn {
+    width: 28px;
+    height: 28px;
+  }
 }

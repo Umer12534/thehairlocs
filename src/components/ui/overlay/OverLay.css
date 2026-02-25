@@ -95,6 +95,14 @@
   background-color: white;
 }
 
+.overlay-search-panel {
+  position: fixed;
+  top: 20px;
+  width: 90%;
+  z-index: 1001;
+  animation: slideDownSearch 0.25s ease-out;
+}
+
 .overlay-close-btn {
   position: absolute;
   top: 16px;
@@ -185,6 +193,11 @@
   .overlay-content-search {
     max-height: 250px;
     padding: 16px;
+  }
+
+  .overlay-search-panel {
+    top: 16px;
+    width: 95%;
   }
 }
 

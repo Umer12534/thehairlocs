@@ -19,6 +19,8 @@ const Overlay = ({ isOpen, onClose, children, position = 'center' }) => {
 
   if (!isOpen) return null;
 
+  const isSearchOverlay = position === 'search';
+
   const positionClasses = {
     left: 'overlay-content-left',
     right: 'overlay-content-right',
@@ -35,16 +37,22 @@ const Overlay = ({ isOpen, onClose, children, position = 'center' }) => {
         onClick={onClose}
         aria-label="Close overlay"
       />
-      <div className={`overlay-content ${positionClasses[position]}`}>
-        <button 
-          className="overlay-close-btn" 
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <FontAwesomeIcon icon={faXmark} />
-        </button>
-        {children}
-      </div>
+      {isSearchOverlay ? (
+        <div className="overlay-search-panel">
+          {children}
+        </div>
+      ) : (
+        <div className={`overlay-content ${positionClasses[position]}`}>
+          <button 
+            className="overlay-close-btn" 
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+          {children}
+        </div>
+      )}
     </div>,
     document.getElementById('overlay-root')
   );

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
-  faChevronDown,
   faMagnifyingGlass,
   faBagShopping,
   faBars
@@ -92,6 +91,16 @@ export default function Navbar() {
     navigate("/login");
   };
 
+  const handleSearch = (value) => {
+    const trimmedValue = value.trim();
+    const targetPath = trimmedValue
+      ? `/products?search=${encodeURIComponent(trimmedValue)}`
+      : "/products";
+
+    navigate(targetPath);
+    setIsSearchOpen(false);
+  };
+
   return (
     <>
       {/* Overlay */}
@@ -176,8 +185,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      <Overlay position="search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} children={SearchBar}>
-        <SearchBar isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}/>
+      <Overlay position="search" isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)}>
+        <SearchBar
+          autoFocus
+          onSearch={handleSearch}
+          onClose={() => setIsSearchOpen(false)}
+        />
       </Overlay>
 
       {/* Bottom Mobile Navigation */}
@@ -190,14 +203,6 @@ export default function Navbar() {
         closeCart={() => setIsCartOpen(false)}
         />  
       </Overlay>
-      {isSearchOpen && (
-        <SearchBar
-          autoFocus
-          onSearch={(value) => console.log("Searching:", value)}
-          className="navbar-search"
-          onClose={() => setIsSearchOpen(false)}
-        />
-      )}
     </>
   );
 }

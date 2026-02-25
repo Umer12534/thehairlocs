@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import FilterBar from '../components/ui/filterbar/FilterBar';
 import FilterSidebar from '../components/ui/filtersidebar/FilterSidebar';
@@ -9,6 +10,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import '../styles/Global.css'
 
 function Products() {
+  const location = useLocation();
+  const searchTerm = new URLSearchParams(location.search).get("search")?.trim().toLowerCase() || "";
   
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -219,11 +222,25 @@ function Products() {
       }
     }
 
+    if (searchTerm) {
+      filtered = filtered.filter((product) => {
+        const searchableFields = [
+          product?.name,
+          product?.category,
+          product?.description,
+        ];
+
+        return searchableFields.some(
+          (field) => typeof field === "string" && field.toLowerCase().includes(searchTerm)
+        );
+      });
+    }
+
     setFilteredProducts(filtered);
     console.log("Applied filters:", filter);
     console.log("Filtered products:", filtered);
     setPage(1);
-  }, [filter, sortedProducts, loading]);
+  }, [filter, sortedProducts, loading, searchTerm]);
 
   const totalPages = Math.ceil(
     filteredProducts.length / PRODUCTS_PER_PAGE
