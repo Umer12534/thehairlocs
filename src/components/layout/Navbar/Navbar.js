@@ -138,7 +138,7 @@ export default function Navbar() {
               <div className="account-menu-container" ref={accountMenuRef}>
                 <button className="NavLink account-btn" onClick={handleAccount} aria-label="Account menu">
                   <FontAwesomeIcon icon={faUser} />
-                  {currentUser && <FontAwesomeIcon icon={faChevronDown} className="account-chevron" />}
+                  {/* {currentUser && <FontAwesomeIcon icon={faChevronDown} className="account-chevron" />} */}
                 </button>
 
                 {currentUser && isAccountMenuOpen && (

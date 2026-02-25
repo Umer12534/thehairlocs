@@ -62,6 +62,23 @@
     cursor: pointer;
 }
 
+.nav-tabs .NavLink:focus,
+.nav-tabs .NavLink:focus-visible,
+.nav-tabs .NavLink:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.search-btn:focus,
+.search-btn:focus-visible,
+.search-btn:active,
+.account-btn:focus,
+.account-btn:focus-visible,
+.account-btn:active {
+    outline: none;
+    box-shadow: none;
+}
+
 .NavLink:hover {
     color: #fac6ae;
 }

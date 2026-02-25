@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import "./AdminSidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBoxOpen, faCog, faShoppingCart, faSignOut, faSignOutAlt, faTachometer, faTachometerAlt, faTag, faUser, faUserCircle, faUserShield } from "@fortawesome/free-solid-svg-icons";
+import { faBoxOpen, faCog, faShop, faShoppingCart, faSignOut, faSignOutAlt, faTachometer, faTachometerAlt, faTag, faUser, faUserCircle, faUserShield } from "@fortawesome/free-solid-svg-icons";
 
 export default function AdminSidebar() {
     return (
@@ -13,8 +13,8 @@ export default function AdminSidebar() {
 
             <nav className="sidebar-nav">
                 <NavLink to="/" end className="sidebar-link">
-                    <FontAwesomeIcon icon={faUserCircle}/>
-                    <span>Profile</span>
+                    <FontAwesomeIcon icon={faShop}/>
+                    <span>Shop</span>
                 </NavLink>
 
                 <NavLink to="/admin/dashboard" end className="sidebar-link">
