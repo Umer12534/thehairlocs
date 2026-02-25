@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 import { CartProvider } from "./contaxt/CartContaxt";
 
 import MainLayout from "./components/layout/MainLayout";
@@ -24,7 +26,6 @@ import AccountLayout from "./components/layout/AccountLayout";
 import Orders from "./pages/Orders";
 import AccountDetails from "./pages/AccountDetails";
 import AccountSettings from "./pages/AccountSettings";
-import AccountNavbar from "./components/sections/adminNavbar/AdminNavbar";
 import Cart from "./pages/Cart";
 import AdminLayout from "./components/layout/AdminLayout";
 import Dashboard from "./pages/Dashboard";
@@ -32,6 +33,38 @@ import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
 import AddProduct from "./pages/AddProduct";
 import Add from "./pages/add";
+import { auth } from "./config/firebase";
+import { resolveAndSyncUserRole } from "./utils/userRole";
+
+function RequireAdmin({ children }) {
+  const [isChecking, setIsChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setIsAuthenticated(false);
+        setIsAdmin(false);
+        setIsChecking(false);
+        return;
+      }
+
+      const role = await resolveAndSyncUserRole(user);
+      setIsAuthenticated(true);
+      setIsAdmin(role === "admin");
+      setIsChecking(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (isChecking) return null;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+
+  return children;
+}
 
 function App() {
   return (
@@ -66,14 +99,20 @@ function App() {
 
           {/* User Account Pages */}
           <Route element={<AccountLayout />}>
-            {/* <Route path="/account" element={<Account />} /> */}
+            <Route path="/account" element={<Navigate to="/account/profile" replace />} />
             <Route path="/account/orders" element={<Orders />} />
             <Route path="/account/profile" element={<AccountDetails />} />
             <Route path="/account/settings" element={<AccountSettings />} />
           </Route>
 
           {/* Admin Panel */}
-          <Route element={<AdminLayout />}>
+          <Route
+            element={
+              <RequireAdmin>
+                <AdminLayout />
+              </RequireAdmin>
+            }
+          >
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/mange-products" element={<MangeProducts />} /> 
             <Route path="/admin/addproducts" element={<AddProduct />} /> 
@@ -90,6 +129,3 @@ function App() {
 }
 
 export default App;
-
-
-

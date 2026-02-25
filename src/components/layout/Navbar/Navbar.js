@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
+  faChevronDown,
   faMagnifyingGlass,
   faBagShopping,
   faBars
@@ -16,8 +17,9 @@ import BottomMobileNav from "./BottomMobileNav";
 import SearchBar from "../../ui/searchBar/SearchBar";
 import { useCart } from "../../../contaxt/CartContaxt";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { app } from "../../../config/firebase";
+import { resolveAndSyncUserRole } from "../../../utils/userRole";
 
 const sale = "We are running a sale - Get 20% off on all products!";
 const auth = getAuth(app);
@@ -34,17 +36,61 @@ export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const accountMenuRef = useRef(null);
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
 
-  // Redirect to login or account page
-  const handleAccount=()=>{
-    if(auth.currentUser){
-      navigate("/account");
-    }
-    else
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      setIsAccountMenuOpen(false);
+
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+
+      const role = await resolveAndSyncUserRole(user);
+      setIsAdmin(role === "admin");
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(event.target)) {
+        setIsAccountMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Redirect to login or open account menu
+  const handleAccount = () => {
+    if (!currentUser) {
       navigate("/login");
-  }
+      return;
+    }
+
+    setIsAccountMenuOpen((prev) => !prev);
+  };
+
+  const handleAccountMenuNavigate = (path) => {
+    setIsAccountMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setIsAccountMenuOpen(false);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -89,9 +135,28 @@ export default function Navbar() {
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
               </button>
 
-              <button className="NavLink account-btn" onClick={handleAccount}>
-                <FontAwesomeIcon icon={faUser} />
-              </button>
+              <div className="account-menu-container" ref={accountMenuRef}>
+                <button className="NavLink account-btn" onClick={handleAccount} aria-label="Account menu">
+                  <FontAwesomeIcon icon={faUser} />
+                  {currentUser && <FontAwesomeIcon icon={faChevronDown} className="account-chevron" />}
+                </button>
+
+                {currentUser && isAccountMenuOpen && (
+                  <div className="account-dropdown">
+                    <button type="button" onClick={() => handleAccountMenuNavigate("/account/profile")}>
+                      Profile
+                    </button>
+                    {isAdmin && (
+                      <button type="button" onClick={() => handleAccountMenuNavigate("/admin/dashboard")}>
+                        Admin Panel
+                      </button>
+                    )}
+                    <button type="button" onClick={handleLogout}>
+                      Log Out
+                    </button>
+                  </div>
+                )}
+              </div>
 
 
               <div className="cart-link NavLink">

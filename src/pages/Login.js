@@ -3,6 +3,7 @@ import Button from "../components/ui/button/Button";
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../config/firebase";
+import { resolveAndSyncUserRole } from "../utils/userRole";
 import "../styles/Auth.css";
 
 const auth = getAuth(app);
@@ -20,8 +21,9 @@ function Login() {
         setLoading(true);
 
         try {
-        await signInWithEmailAndPassword(auth, email, password);
-        navigate("/"); 
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const role = await resolveAndSyncUserRole(userCredential.user);
+        navigate(role === "admin" ? "/admin/dashboard" : "/");
         } catch (err) {
         setError("Invalid email or password");
         } finally {

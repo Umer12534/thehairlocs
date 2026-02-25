@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { app } from "../config/firebase";
+import { resolveAndSyncUserRole } from "../utils/userRole";
 import Button from "../components/ui/button/Button"
 import "../styles/Auth.css";
 
@@ -39,10 +40,10 @@ function Signup() {
 
         try {
             setLoading(true);
-            await createUserWithEmailAndPassword(auth, email, password);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const role = await resolveAndSyncUserRole(userCredential.user);
 
-            // Redirect after successful signup
-            navigate("/login"); 
+            navigate(role === "admin" ? "/admin/dashboard" : "/");
             } catch (err) {
             //  Firebase error handling
             switch (err.code) {
