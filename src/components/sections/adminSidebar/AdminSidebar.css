@@ -86,6 +86,15 @@
     flex: 1;
 }
 
+.sidebar-button {
+    background: none;
+    border: 0;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+}
+
 /* Logout link styling */
 .logout-link {
     margin-top: auto;

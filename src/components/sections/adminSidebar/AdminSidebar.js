@@ -1,9 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./AdminSidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBoxOpen, faCog, faShop, faShoppingCart, faSignOut, faSignOutAlt, faTachometer, faTachometerAlt, faTag, faUser, faUserCircle, faUserShield } from "@fortawesome/free-solid-svg-icons";
+import { faBoxOpen, faCog, faShop, faShoppingCart, faSignOutAlt, faTachometerAlt, faTag, faUser, faUserShield } from "@fortawesome/free-solid-svg-icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../config/firebase";
 
 export default function AdminSidebar() {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+        } finally {
+            navigate("/login");
+        }
+    };
+
     return (
         <aside className="asidebar">
             <div className="sidebar-logo">
@@ -47,10 +59,10 @@ export default function AdminSidebar() {
                     <span>Settings</span>
                 </NavLink>
 
-                <NavLink to="/logout" className="sidebar-link logout-link">
+                <button type="button" className="sidebar-link logout-link sidebar-button" onClick={handleLogout}>
                     <FontAwesomeIcon icon={faSignOutAlt}/>
                     <span>LogOut</span>
-                </NavLink>
+                </button>
             </nav>
             
             <div className="sidebar-footer">
