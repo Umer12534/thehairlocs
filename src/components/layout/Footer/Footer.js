@@ -18,7 +18,7 @@ function Footer(){
           <div className="footer-card">
             <Link to={"/"} className='Link'>
                 <img
-                    src="logo512.png"
+                    src="/logo512.png"
                     alt="Logo"
                     className="footer-logo"
                 />
@@ -49,7 +49,7 @@ function Footer(){
             <ul>
                 <li><h3>Help</h3></li>     
                 <li>
-                    <Link to={"/F.A.Qs"} className='Link'>F.A.Qs</Link>
+                    <Link to={"/faqs"} className='Link'>F.A.Qs</Link>
                 </li>
                 <li>
                     <Link to={"/Privacy-Policy"} className='Link'>Privacy Policy</Link>
@@ -110,3 +110,4 @@ function Footer(){
 }
 
 export default Footer
+

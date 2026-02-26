@@ -1,0 +1,184 @@
+.pds-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.pds-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+  animation: pds-loading 1.2s infinite;
+}
+
+@keyframes pds-loading {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.pds-main-img {
+  height: 400px;
+  border-radius: 4px;
+}
+
+.pds-thumbs {
+  width: 100%;
+  justify-content: center;
+}
+
+.pds-thumb {
+  width: 75px;
+  height: 75px;
+  border-radius: 6px;
+}
+
+.pds-title {
+  height: 34px;
+  width: 70%;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.pds-rating {
+  height: 20px;
+  width: 35%;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+.pds-price-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pds-price {
+  height: 30px;
+  width: 140px;
+  border-radius: 6px;
+}
+
+.pds-original-price {
+  height: 20px;
+  width: 90px;
+  border-radius: 6px;
+}
+
+.pds-description {
+  height: 14px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.pds-w-80 {
+  width: 80%;
+}
+
+.pds-w-60 {
+  width: 60%;
+}
+
+.pds-selection-box {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.pds-label {
+  width: 72px;
+  height: 16px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.pds-size-row {
+  display: flex;
+  gap: 10px;
+}
+
+.pds-size-btn {
+  width: 70px;
+  height: 34px;
+  border-radius: 6px;
+}
+
+.pds-qty-box {
+  width: 150px;
+  height: 46px;
+  border-radius: 5px;
+  margin-top: 20px;
+  border: none;
+}
+
+.pds-button {
+  width: 100%;
+  height: 52px;
+  border-radius: 8px;
+}
+
+.pds-questions {
+  margin-top: 12px;
+}
+
+.pds-accordion {
+  height: 52px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.pds-accordion-title {
+  height: 100%;
+}
+
+.pds-related-section {
+  margin-top: 40px;
+}
+
+.pds-section-title {
+  width: 220px;
+  height: 32px;
+  border-radius: 8px;
+  margin: 0 auto 25px;
+}
+
+.pds-related-card {
+  background: #fff;
+}
+
+.pds-related-img {
+  width: 100%;
+  height: 240px;
+  border-radius: 10px;
+}
+
+.pds-product-title {
+  width: 80%;
+  height: 18px;
+  border-radius: 6px;
+  margin: 12px auto 8px;
+}
+
+.pds-product-price {
+  width: 45%;
+  height: 16px;
+  border-radius: 6px;
+  margin: 0 auto 8px;
+}
+
+@media (max-width: 600px) {
+  .pds-thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  .pds-main-img {
+    height: 320px;
+  }
+
+  .pds-related-img {
+    height: 200px;
+  }
+}

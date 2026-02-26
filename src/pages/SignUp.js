@@ -70,7 +70,7 @@ function Signup() {
 
             {/* Logo */}
             <div className="auth-logo">
-            <img src="./logo192.png" alt="Brand Logo" />
+            <img src="/logo192.png" alt="Brand Logo" />
             </div>
 
             <h2 className="auth-title">Create account</h2>
@@ -124,3 +124,4 @@ function Signup() {
 }
 
 export default Signup;
+

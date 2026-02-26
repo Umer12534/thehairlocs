@@ -1,33 +1,73 @@
 .category-card-skeleton {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  width: 100%;
 }
 
 .category-card-skeleton .skeleton-image {
-  width: 150px;
-  height: 150px;
-  background: linear-gradient(-90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-  background-size: 400% 400%;
-  border-radius: 8px;
-  animation: shimmer 1.2s ease-in-out infinite;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-.category-card-skeleton .skeleton-text {
-  width: 100px;
-  height: 20px;
-  background: linear-gradient(-90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
-  background-size: 400% 400%;
+.category-card-skeleton .skeleton-text-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 2px;
+}
+
+.category-card-skeleton .skeleton-name {
+  width: 60px;
+  height: 16px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
   border-radius: 4px;
-  animation: shimmer 1.2s ease-in-out infinite;
+  animation: shimmer 1.5s infinite;
+}
+
+.category-card-skeleton .skeleton-total {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-card-skeleton .skeleton-icon {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 50%;
+  animation: shimmer 1.5s infinite;
+}
+
+.category-card-skeleton .skeleton-count {
+  width: 30px;
+  height: 16px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
   0% {
-    background-position: 400% 0;
+    background-position: 200% 0;
   }
   100% {
-    background-position: -400% 0;
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 425px) {
+  .category-card-skeleton {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }

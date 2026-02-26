@@ -38,11 +38,11 @@ function Home() {
       <ScrollingBar/>
       <Heading heading_text="All Categories" position='center'/>
       <AllCategoriesSection/>
-      <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center'/>
+      <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center' onClick={()=> navigate("/categories")}/>
       <Explore /> 
       <Heading heading_text="Featured Products"/>
       <ProductsSection ProductsType = "featured" sortedFilteredProducts={products} loading= {loading}/>
-      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/product")}/>
+      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/products")}/>
       <Banner />
       <ScrollingBar/>
     </main>

@@ -129,7 +129,7 @@ export default function Navbar() {
             {/* Logo */}
             <div className="logo-container">
               <Link to="/" className="NavLink">
-                <img src="./logo192.png" alt="logo" className="logo" />
+                <img src="/logo192.png" alt="logo" className="logo" />
               </Link>
             </div>
 
@@ -206,3 +206,4 @@ export default function Navbar() {
     </>
   );
 }
+

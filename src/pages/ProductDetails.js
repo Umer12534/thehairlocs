@@ -10,6 +10,13 @@ import { faMinus, faPlus, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/ui/button/Button";
 import { useCart } from "../contaxt/CartContaxt";
 import CartNotification from "../components/ui/cartNotification/CartNotification";
+import ProductDetailsSkeleton from "../components/ui/productDetailsSkeleton/ProductDetailsSkeleton";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/navigation";
+import "swiper/css/thumbs";
 
 function ProductDetails({ openCartSidebar }) {
   const { id } = useParams();
@@ -19,7 +26,7 @@ function ProductDetails({ openCartSidebar }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(0);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationProduct, setNotificationProduct] = useState(null);
@@ -115,80 +122,6 @@ function ProductDetails({ openCartSidebar }) {
     navigate("/cart");
   };
 
-  // Skeleton Loader Component
-  const ProductSkeleton = () => (
-    <>
-      <div className="product-wrapper">
-        {/* Left - Images Skeleton */}
-        <div className="image-left">
-          <div className="main-img skeleton-img skeleton-animation"></div>
-          <div className="thumbs">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="thumb skeleton-thumb skeleton-animation"></div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right - Product Info Skeleton */}
-        <div className="right">
-          <div className="skeleton-title skeleton-animation"></div>
-          <div className="skeleton-rating skeleton-animation"></div>
-          
-          <div className="price-section">
-            <div className="skeleton-price skeleton-animation"></div>
-            <div className="skeleton-original-price skeleton-animation"></div>
-          </div>
-
-          <div className="skeleton-description skeleton-animation"></div>
-          <div className="skeleton-description skeleton-animation" style={{ width: '80%' }}></div>
-          <div className="skeleton-description skeleton-animation" style={{ width: '60%' }}></div>
-
-          {/* Selection Box Skeleton */}
-          <div className="selection-box">
-            <div className="size-box">
-              <div className="skeleton-label skeleton-animation"></div>
-              <div className="size">
-                {[1, 2, 3].map((item) => (
-                  <div key={item} className="skeleton-size-btn skeleton-animation"></div>
-                ))}
-              </div>
-            </div>
-
-            <div className="quantity-box">
-              <div className="skeleton-label skeleton-animation"></div>
-              <div className="qty-box skeleton-qty-box skeleton-animation"></div>
-            </div>
-          </div>
-
-          <div className="skeleton-button skeleton-animation"></div>
-        </div>
-      </div>
-
-      {/* Details Accordion Skeleton */}
-      <div className="questions">
-        {[1, 2, 3, 4].map((item) => (
-          <div key={item} className="skeleton-accordion skeleton-animation">
-            <div className="skeleton-accordion-title"></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Related Products Skeleton */}
-      <section className="related-section">
-        <div className="skeleton-section-title skeleton-animation"></div>
-        <div className="related-container">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="related-card skeleton-card">
-              <div className="image-div skeleton-img skeleton-animation"></div>
-              <div className="skeleton-product-title skeleton-animation"></div>
-              <div className="skeleton-product-price skeleton-animation"></div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </>
-  );
-
   // Error State Component
   const ErrorState = () => (
     <div className="error-state">
@@ -202,7 +135,7 @@ function ProductDetails({ openCartSidebar }) {
     </div>
   );
 
-  if (loading) return <ProductSkeleton />;
+  if (loading) return <ProductDetailsSkeleton />;
   if (!product) return <ErrorState />;
 
   return (
@@ -210,27 +143,48 @@ function ProductDetails({ openCartSidebar }) {
       <div className="product-wrapper">
         {/* Left - Images */}
         <div className="image-left">
-          <div className="main-img">
-            {productImages.length > 0 && (
-              <img
-                src={productImages[Math.min(activeImage, productImages.length - 1)]}
-                alt={product.name}
-              />
-            )}
-          </div>
-          <div className="thumbs">
-            {productImages.map((img, index) => (
-              <button
-                key={index}
-                className={`thumb ${activeImage === index ? "active" : ""}`}
-                onClick={() => setActiveImage(index)}
-                type="button"
-                aria-label={`View image ${index + 1}`}
+          {productImages.length > 0 ? (
+            <>
+              <Swiper
+                style={{
+                  "--swiper-navigation-color": "#9f0808",
+                  "--swiper-pagination-color": "#7e0c0c",
+                }}
+                spaceBetween={10}
+                navigation
+                thumbs={{
+                  swiper:
+                    thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+                }}
+                modules={[FreeMode, Navigation, Thumbs]}
+                className="product-main-swiper"
               >
-                <img src={img} alt={`${product.name} - View ${index + 1}`} />
-              </button>
-            ))}
-          </div>
+                {productImages.map((img, index) => (
+                  <SwiperSlide key={`main-${index}`}>
+                    <img src={img} alt={`${product.name} ${index + 1}`} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+
+              <Swiper
+                onSwiper={setThumbsSwiper}
+                spaceBetween={10}
+                slidesPerView={4}
+                freeMode
+                watchSlidesProgress
+                modules={[FreeMode, Navigation, Thumbs]}
+                className="product-thumbs-swiper"
+              >
+                {productImages.map((img, index) => (
+                  <SwiperSlide key={`thumb-${index}`}>
+                    <img src={img} alt={`${product.name} thumbnail ${index + 1}`} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </>
+          ) : (
+            <div className="main-img empty-image">No image available</div>
+          )}
         </div>
 
         {/* Right - Product Info */}
@@ -395,3 +349,4 @@ function ProductDetails({ openCartSidebar }) {
 }
 
 export default ProductDetails;
+

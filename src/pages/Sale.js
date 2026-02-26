@@ -8,7 +8,6 @@ import FilterBar from "../components/ui/filterbar/FilterBar";
 import FilterSidebar from "../components/ui/filtersidebar/FilterSidebar";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Skeleton from "@mui/material/Skeleton";
 
 import "../styles/Global.css";
 
@@ -64,7 +63,7 @@ function Sale() {
     getProducts();
   }, []);
 
-  // ✅ Sorting
+  //  Sorting
   useEffect(() => {
     let sorted = [...products];
 
@@ -146,30 +145,6 @@ function Sale() {
     saleProducts.length / PRODUCTS_PER_PAGE
   );
 
-  // ✅ Skeleton Loader Component
-  const ProductSkeleton = () => (
-    <div className="product-skeleton-card">
-      <Skeleton variant="rectangular" width="100%" height={200} animation="wave" />
-      <div className="skeleton-content">
-        <Skeleton variant="text" width="80%" height={30} animation="wave" />
-        <Skeleton variant="text" width="60%" height={20} animation="wave" />
-        <Skeleton variant="text" width="40%" height={25} animation="wave" />
-        <div className="skeleton-price">
-          <Skeleton variant="text" width="30%" height={30} animation="wave" />
-          <Skeleton variant="text" width="20%" height={20} animation="wave" />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderSkeletons = () => {
-    const skeletons = [];
-    for (let i = 0; i < PRODUCTS_PER_PAGE; i++) {
-      skeletons.push(<ProductSkeleton key={i} />);
-    }
-    return skeletons;
-  };
-
   return (
     <>
       <Pageheader
@@ -178,33 +153,30 @@ function Sale() {
         image="/assets/images/sale/saleheader.jpg"
       />
 
-      <FilterBar
-        toggleSidebar={toggleSidebar}
-        layoutSwitch={layoutSwitch}
-        setSortOption={setSortOption}
-        products={saleProducts}
-      />
+        <FilterBar
+          toggleSidebar={toggleSidebar}
+          layoutSwitch={layoutSwitch}
+          setSortOption={setSortOption}
+          products={saleProducts}
+          loading={loading}
+        />
 
       <div className="page-content-filterbar-sidebar">
         <div className={`filtersidebar ${isSidebarActive ? "active" : ""}`}>
           <FilterSidebar
             toggleSidebar={toggleSidebar}
             setFilter={setFilter}
+            loading={loading}
           />
         </div>
 
-        {loading ? (
-          <div className={`products-section layout-${isLayout}`}>
-            {renderSkeletons()}
-          </div>
-        ) : (
-          <ProductsSection
-            layout={isLayout}
-            page={page}
-            productsPerPage={PRODUCTS_PER_PAGE}
-            sortedFilteredProducts={saleProducts}
-          />
-        )}
+        <ProductsSection
+          layout={isLayout}
+          page={page}
+          productsPerPage={PRODUCTS_PER_PAGE}
+          sortedFilteredProducts={saleProducts}
+          loading={loading}
+        />
       </div>
 
       {!loading && saleProducts.length > 0 && (
