@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../config/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+  where,
+} from "firebase/firestore";
 import "../styles/ProductDetails.css";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
@@ -17,6 +25,8 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import QuestionAnswer from "../components/sections/questionAnswer/QuestionAnswer";
+import ProductCard from "../components/ui/ProductCard/ProductCard";
 
 function ProductDetails({ openCartSidebar }) {
   const { id } = useParams();
@@ -30,6 +40,8 @@ function ProductDetails({ openCartSidebar }) {
   const [selectedSize, setSelectedSize] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [notificationProduct, setNotificationProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
 
   // Fetch product from Firestore by ID
   useEffect(() => {
@@ -64,6 +76,60 @@ function ProductDetails({ openCartSidebar }) {
 
     if (id) getProductById();
   }, [id]);
+
+  useEffect(() => {
+    const getRelatedProducts = async () => {
+      if (!product?.category || !id) {
+        setRelatedProducts([]);
+        return;
+      }
+
+      try {
+        setRelatedLoading(true);
+
+        const productsRef = collection(db, "products");
+        const sameCategoryQuery = query(
+          productsRef,
+          where("category", "==", product.category),
+          limit(10)
+        );
+        const sameCategorySnapshot = await getDocs(sameCategoryQuery);
+
+        let matchedProducts = sameCategorySnapshot.docs
+          .map((docSnapshot) => ({ id: docSnapshot.id, ...docSnapshot.data() }))
+          .filter((item) => item.id !== id);
+
+        // Fallback for category case differences in existing documents.
+        if (matchedProducts.length < 3) {
+          const normalizedCategory = String(product.category).trim().toLowerCase();
+          const allSnapshot = await getDocs(productsRef);
+          const fallbackMatches = allSnapshot.docs
+            .map((docSnapshot) => ({ id: docSnapshot.id, ...docSnapshot.data() }))
+            .filter((item) => item.id !== id)
+            .filter(
+              (item) =>
+                typeof item.category === "string" &&
+                item.category.trim().toLowerCase() === normalizedCategory
+            );
+
+          const uniqueById = new Map();
+          [...matchedProducts, ...fallbackMatches].forEach((item) =>
+            uniqueById.set(item.id, item)
+          );
+          matchedProducts = Array.from(uniqueById.values());
+        }
+
+        setRelatedProducts(matchedProducts.slice(0, 3));
+      } catch (err) {
+        console.error(err);
+        setRelatedProducts([]);
+      } finally {
+        setRelatedLoading(false);
+      }
+    };
+
+    getRelatedProducts();
+  }, [product, id]);
 
   // Get price data based on selected size
   const sizeData = selectedSize ? product?.sizes?.[selectedSize] : null;
@@ -294,45 +360,33 @@ function ProductDetails({ openCartSidebar }) {
 
       {/* Product Details Accordion */}
       <div className="questions">
-        <details>
-          <summary>
-            Product Description <span className="arrow">⌄</span>
-          </summary>
-          <p>{product.description}</p>
-        </details>
-        <details>
-          <summary>
-            Return Policy <span className="arrow">⌄</span>
-          </summary>
-          <p>We offer a 30-day return policy for unused and unopened products.</p>
-        </details>
-        <details>
-          <summary>
-            Shipping Information <span className="arrow">⌄</span>
-          </summary>
-          <p>Orders are processed within 1–2 business days and delivered in 5–7 working days.</p>
-        </details>
-        <details>
-          <summary>
-            Care Instructions <span className="arrow">⌄</span>
-          </summary>
-          <p>Store in a cool, dry place. Avoid direct sunlight and moisture.</p>
-        </details>
-      </div>
+        <div className="faqs-section">
+          <h2>Products Questions</h2>
+          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+        </div>
+        <h2>Shipping Questions</h2>
+          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+        </div>
 
       {/* Related Products */}
       <section className="related-section">
         <h2>Related Products</h2>
         <div className="related-container">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="related-card">
-              <div className="image-div">
-                <img src="/assets/images/sale-product (5).jpg" alt="Related product" />
-              </div>
-              <h3>Premium Loc Extensions</h3>
-              <p>Rs. 2,999</p>
-            </div>
-          ))}
+          {relatedLoading ? (
+            <p className="related-empty">Loading related products...</p>
+          ) : relatedProducts.length > 0 ? (
+            relatedProducts.map((relatedProduct) => (
+              <ProductCard
+                key={relatedProduct.id}
+                {...relatedProduct}
+                openCartSidebar={openCartSidebar}
+              />
+            ))
+          ) : (
+            <p className="related-empty">No related products found.</p>
+          )}
         </div>
       </section>
 
