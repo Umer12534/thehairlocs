@@ -105,21 +105,39 @@ function ProductCard({
   return (
     <>
       <div className="product-card">
-        {/* Badges */}
-        <div className="product-badges">
-          {badges.map((badge, index) => (
-            <span 
-              key={index} 
-              className={`product-badge product-badge--${badge.type} product-badge--${badge.position}`}
-            >
-              {badge.text}
-            </span>
-          ))}
-        </div>
-
         <div className="productCard-div">
           <Link to={`/Product/${id}`}>
             <div className="product-card__image-wrapper">
+              {/* Badges */}
+              {badges.length > 0 && (
+                <div className="product-badges">
+                  <div className="product-badges__left">
+                    {badges
+                      .filter((badge) => badge.position === "left")
+                      .map((badge, index) => (
+                        <span
+                          key={`left-${index}`}
+                          className={`product-badge product-badge--${badge.type} product-badge--left`}
+                        >
+                          {badge.text}
+                        </span>
+                      ))}
+                  </div>
+                  <div className="product-badges__right">
+                    {badges
+                      .filter((badge) => badge.position === "right")
+                      .map((badge, index) => (
+                        <span
+                          key={`right-${index}`}
+                          className={`product-badge product-badge--${badge.type} product-badge--right`}
+                        >
+                          {badge.text}
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              )}
+
               <img src={images?.[0]} alt={name} className="product-card__image" />
               {/* Overlay */}
               <div className="product-card__overlay">

@@ -2,10 +2,9 @@ import React from 'react'
 import './CartSidebar.css'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faPlus, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import Button from '../../ui/button/Button'
 import { useCart } from '../../../contaxt/CartContaxt'
-import { useFavorites } from '../../../contaxt/FavoritesContext'
 
 /* ---------------- CART ITEM ---------------- */
 function CartItem({
@@ -78,7 +77,6 @@ function CartSidebar({ isCartOpen, closeCart }) {
     clearCart
   } = useCart();
 
-  const { getFavoritesCount } = useFavorites();
   const totalPrice = calculateTotal();
 
   return (
@@ -89,10 +87,6 @@ function CartSidebar({ isCartOpen, closeCart }) {
         <div className="cart-header-text">
           Your Cart ({cartItems.length} items)
         </div>
-        <Link to="/favorites" className="favorites-link" onClick={closeCart}>
-          <FontAwesomeIcon icon={faHeart} />
-          <span className="favorites-count">{getFavoritesCount()}</span>
-        </Link>
       </div>
 
       {/* Body */}

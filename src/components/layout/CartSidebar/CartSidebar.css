@@ -36,32 +36,6 @@
   font-weight: bold;
 }
 
-.favorites-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 15px;
-  background-color: #fac6ae;
-  border-radius: 20px;
-  text-decoration: none;
-  color: #000;
-  transition: background-color 0.3s ease;
-  position: relative;
-}
-
-.favorites-link:hover {
-  background-color: #f2a68c;
-}
-
-.favorites-link svg {
-  font-size: 18px;
-}
-
-.favorites-count {
-  font-size: 14px;
-  font-weight: 600;
-}
-
 .close-btn {
   cursor: pointer;
   display: flex;
