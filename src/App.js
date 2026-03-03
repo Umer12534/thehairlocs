@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { CartProvider } from "./contaxt/CartContaxt";
+import { FavoritesProvider } from "./contaxt/FavoritesContext";
 
 import MainLayout from "./components/layout/MainLayout";
 import AuthLayout from "./components/layout/AuthLayout";
@@ -15,6 +16,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Sale from "./pages/Sale";
 import About from "./pages/About";
 import Checkout from "./pages/Checkout";
+import Favorites from "./pages/Favorites";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Faqs from "./pages/Faqs";
 import ShippingPolicy from "./pages/ShippingPolicy";
@@ -71,19 +73,21 @@ function RequireAdmin({ children }) {
 function App() {
   return (
     <CartProvider>
-      <Router>
-        <Routes>
-          {/*  Pages With Navbar & Footer */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/sale" element={<Sale />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/cart" element={<Cart />} />
+      <FavoritesProvider>
+        <Router>
+          <Routes>
+            {/*  Pages With Navbar & Footer */}
+            <Route element={<MainLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/sale" element={<Sale />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/favorites" element={<Favorites />} />
 
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/faqs" element={<Faqs />} />
@@ -128,6 +132,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      </FavoritesProvider>
     </CartProvider>
   );
 }

@@ -74,6 +74,19 @@
   font-size: 13px;
   border: none;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card__like--active {
+  background-color: #f2a68c;
+}
+
+.product-card__like--active svg {
+  color: #d9534f;
+}
+
+.product-card__like-count {
+  font-weight: 600;
 }
 .product-card__add-btn {
   display: flex;

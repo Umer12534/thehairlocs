@@ -155,6 +155,9 @@ export default function Navbar() {
                     <button type="button" onClick={() => handleAccountMenuNavigate("/account/profile")}>
                       Profile
                     </button>
+                    <button type="button" onClick={() => handleAccountMenuNavigate("/favorites")}>
+                      Favorites
+                    </button>
                     {isAdmin && (
                       <button type="button" onClick={() => handleAccountMenuNavigate("/admin/dashboard")}>
                         Admin Panel

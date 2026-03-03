@@ -4,6 +4,7 @@ import "./ProductCard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "../../../contaxt/CartContaxt";
+import { useFavorites } from "../../../contaxt/FavoritesContext";
 import Overlay from "../overlay/OverLay";
 import CartSiderbar from "../../layout/CartSidebar/CartSidebar";
 
@@ -24,8 +25,9 @@ function ProductCard({
   openCartSidebar,
 }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const { addToCart } = useCart();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const isLiked = isFavorite(id);
 
   // Extract prices and stock from sizes
   const sizeEntries = Object.entries(sizes);
@@ -65,7 +67,21 @@ function ProductCard({
   const handleLike = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
+    
+    if (isLiked) {
+      removeFromFavorites(id);
+    } else {
+      addToFavorites({
+        id,
+        name,
+        images,
+        price: salePrice ?? originalPrice,
+        sizes,
+        sale,
+        category,
+        rating
+      });
+    }
   };
 
   // Badge logic (SALE, NEW, OUT OF STOCK)
