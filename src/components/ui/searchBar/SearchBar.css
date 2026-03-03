@@ -91,6 +91,17 @@
   color: #000;
 }
 
+@media (max-width: 768px) {
+  .searchbar-container {
+    max-width: 700px;
+    min-height: 48px;
+  }
+
+  .search-bar-wraper input {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 640px) {
   .searchbar-container {
     min-height: 46px;
@@ -107,5 +118,31 @@
   .search-clear-btn {
     width: 28px;
     height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchbar-container {
+    min-height: 44px;
+    padding: 0 8px;
+  }
+
+  .search-bar-wraper input {
+    font-size: 14px;
+    padding: 6px 2px;
+  }
+
+  .search-bar-wraper input::placeholder {
+    font-size: 13px;
+  }
+
+  .search-icon-btn,
+  .search-clear-btn {
+    width: 26px;
+    height: 26px;
+  }
+
+  .search-bar-wraper svg {
+    font-size: 14px;
   }
 }
