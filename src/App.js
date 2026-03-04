@@ -16,6 +16,7 @@ import ProductDetails from "./pages/ProductDetails";
 import Sale from "./pages/Sale";
 import About from "./pages/About";
 import Checkout from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSuccess";
 import Favorites from "./pages/Favorites";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Faqs from "./pages/Faqs";
@@ -87,6 +88,7 @@ function App() {
               <Route path="/sale" element={<Sale />} />
               <Route path="/about" element={<About />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success/:orderId" element={<OrderSuccess />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/user/orders" element={<UserOrders />} />

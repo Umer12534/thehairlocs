@@ -81,7 +81,6 @@ export default function AdminOrders() {
     <section className="admin-orders-page">
       <div className="admin-orders-header">
         <h1>Admin Orders</h1>
-        <p>View, filter, and manage customer orders in real time.</p>
       </div>
 
       <OrderSummaryCards summary={summary} />

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contaxt/CartContaxt';
+import { db, auth } from '../config/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import '../styles/Checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
@@ -28,17 +30,18 @@ const Checkout = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderCompleted, setOrderCompleted] = useState(false);
 
   const shippingCost = 199;
   const subtotal = calculateTotal();
   const total = subtotal + shippingCost;
 
   useEffect(() => {
-    // Redirect if cart is empty
-    if (cartItems.length === 0) {
+    // Redirect if cart is empty (but not if order was just completed)
+    if (cartItems.length === 0 && !orderCompleted) {
       navigate('/cart');
     }
-  }, [cartItems.length, navigate]);
+  }, [cartItems.length, navigate, orderCompleted]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -98,12 +101,43 @@ const Checkout = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Get current user ID (if logged in, otherwise use 'guest')
+      const userId = auth.currentUser?.uid || 'guest';
       
-      // Save order
-      const order = {
-        id: Date.now(),
+      // Prepare order data according to schema
+      const orderData = {
+        userId: userId,
+        customerName: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        shippingAddress: `${formData.address}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.postalCode || ''}, ${formData.country}`,
+        items: cartItems.map(item => ({
+          productId: item.id || '',
+          title: item.title || item.name || '',
+          price: typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0,
+          quantity: item.qty || 1,
+          size: item.size || '',
+          image: item.image || item.images?.[0] || ''
+        })),
+        totalAmount: total,
+        shippingCost: shippingCost,
+        subtotal: subtotal,
+        paymentMethod: formData.paymentMethod === 'cod' ? 'COD' : 'Card',
+        paymentStatus: formData.paymentMethod === 'cod' ? 'Unpaid' : 'Paid',
+        orderStatus: 'Pending',
+        shippingMethod: formData.shippingMethod,
+        createdAt: serverTimestamp()
+      };
+      
+      // Save order to Firebase
+      const ordersRef = collection(db, 'orders');
+      const docRef = await addDoc(ordersRef, orderData);
+      
+      console.log('Order saved with ID:', docRef.id);
+      
+      // Also save to localStorage for backward compatibility
+      const localOrder = {
+        id: docRef.id,
         date: new Date().toISOString(),
         customer: {
           email: formData.email,
@@ -120,25 +154,22 @@ const Checkout = () => {
         },
         payment: formData.paymentMethod,
         subtotal,
-        shipping: shippingCost,
+        shippingCost,
         total
       };
       
-      // Save to localStorage
       const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-      orders.push(order);
+      orders.push(localOrder);
       localStorage.setItem('orders', JSON.stringify(orders));
+      
+      // Set order completed flag before clearing cart
+      setOrderCompleted(true);
       
       // Clear cart
       clearCart();
       
       // Navigate to confirmation
-      navigate('/order-confirmed', { 
-        state: { 
-          orderId: order.id,
-          orderTotal: total
-        } 
-      });
+      navigate(`/order-success/${docRef.id}`);
       
     } catch (error) {
       console.error('Order submission failed:', error);
