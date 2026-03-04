@@ -25,7 +25,7 @@ import RefundPolicy from "./pages/RefundPolicy";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp"
 // import AccountLayout from "./components/layout/AccountLayout";
-import Orders from "./pages/Orders";
+import UserOrders from "./user/userPages/UserOrders";
 import AccountDetails from "./pages/AccountDetails";
 import AccountSettings from "./pages/AccountSettings";
 import Cart from "./pages/Cart";
@@ -39,6 +39,7 @@ import { auth } from "./config/firebase";
 import { resolveAndSyncUserRole } from "./utils/userRole";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
+import AdminOrders from "./admin/adminPages/AdminOrders";
 
 function RequireAdmin({ children }) {
   const [isChecking, setIsChecking] = useState(true);
@@ -88,6 +89,8 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route path="/user/orders" element={<UserOrders />} />
+              <Route path="/account/orders" element={<UserOrders />} />
 
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/faqs" element={<Faqs />} />
@@ -122,7 +125,7 @@ function App() {
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/mange-products" element={<MangeProducts />} /> 
             <Route path="/admin/addproducts" element={<AddProduct />} /> 
-            <Route path="/admin/orders" element={<Orders />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/settings" element={<Settings />} />
             <Route path="/admin/mange-categories" element={<MangeCategories />} />
