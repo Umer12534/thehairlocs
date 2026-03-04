@@ -43,10 +43,10 @@ function FilterSidebar({toggleSidebar, setFilter}) {
     Serums: false,
   });
 
-  const [price, setPrice] = useState({ min: 0, max: 5000 });
+  const [price, setPrice] = useState({ min: 0, max: 10000 });
 
   const [availability, setAvailability] = useState({
-    inStock: true,
+    inStock: false,
     outOfStock: false,
   });
 
@@ -87,29 +87,36 @@ function FilterSidebar({toggleSidebar, setFilter}) {
   };
 
   const clearFilters = () => {
-    setCategories({
+    const clearedCategories = {
       moisturizers: false,
-      oils: false,
+      Oils: false,
       shampoos: false,
       conditioners: false,
       styling: false,
-    });
-    setPrice({ min: 0, max: 5000 });
-    setAvailability({ inStock: true, outOfStock: false });
-    setHairType({
+      Serums: false,
+    };
+    const clearedPrice = { min: 0, max: 10000 };
+    const clearedAvailability = { inStock: false, outOfStock: false };
+    const clearedHairType = {
       dry: false,
       oily: false,
       damaged: false,
       curly: false,
       straight: false,
-    });
-    const filters = {
-      categories,
-      price,
-      availability,
-      hairType,
     };
-    setFilter(filters);
+
+    setCategories(clearedCategories);
+    setPrice(clearedPrice);
+    setAvailability(clearedAvailability);
+    setHairType(clearedHairType);
+
+    // Pass the cleared values to setFilter
+    setFilter({
+      categories: clearedCategories,
+      price: clearedPrice,
+      availability: clearedAvailability,
+      hairType: clearedHairType,
+    });
   };
 
   return (

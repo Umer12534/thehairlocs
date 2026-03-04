@@ -19,9 +19,23 @@ function Sale() {
   const [loading, setLoading] = useState(true);
 
   const [filter, setFilter] = useState({
-    categories: {},
-    price: { min: null, max: null },
+    categories: {
+      moisturizers: false,
+      Oils: false,
+      shampoos: false,
+      conditioners: false,
+      styling: false,
+      Serums: false,
+    },
+    price: { min: 0, max: 10000 },
     availability: { inStock: false, outOfStock: false },
+    hairType: {
+      dry: false,
+      oily: false,
+      damaged: false,
+      curly: false,
+      straight: false,
+    },
   });
 
   const [page, setPage] = useState(1);
@@ -50,9 +64,14 @@ function Sale() {
           id: doc.id,
         }));
 
-        setProducts(fetchedProducts);
-        setSortedProducts(fetchedProducts);
-        setFilteredProducts(fetchedProducts);
+        // Filter only sale products from the start
+        const saleOnlyProducts = fetchedProducts.filter(
+          (product) => product.sale?.isOnSale === true
+        );
+
+        setProducts(saleOnlyProducts);
+        setSortedProducts(saleOnlyProducts);
+        setFilteredProducts(saleOnlyProducts);
       } catch (error) {
         console.log(error);
       } finally {
@@ -96,6 +115,11 @@ function Sale() {
 
   // ✅ Filtering
   useEffect(() => {
+    if (loading || !sortedProducts.length) {
+      setFilteredProducts([]);
+      return;
+    }
+
     let filtered = [...sortedProducts];
 
     // CATEGORY FILTER
@@ -104,16 +128,22 @@ function Sale() {
     );
 
     if (activeCategories.length > 0) {
-      filtered = filtered.filter((product) =>
-        activeCategories.includes(product.category?.toLowerCase())
-      );
+      filtered = filtered.filter((product) => {
+        if (!product.category) return false;
+        const productCategory = product.category.toLowerCase();
+        return activeCategories.some(
+          category => category.toLowerCase() === productCategory
+        );
+      });
     }
 
     // PRICE FILTER
     if (filter.price) {
       filtered = filtered.filter((product) => {
+        if (!product.sizes) return false;
+        
         const minPrice = Math.min(
-          ...Object.values(product.sizes || {}).map((s) => s.price)
+          ...Object.values(product.sizes).map((s) => s.price)
         );
 
         const minOk =
@@ -126,20 +156,46 @@ function Sale() {
     }
 
     // AVAILABILITY FILTER
-    if (filter.availability?.inStock) {
-      filtered = filtered.filter((product) =>
-        Object.values(product.sizes || {}).some((s) => s.stock > 0)
-      );
+    if (filter.availability) {
+      const { inStock, outOfStock } = filter.availability;
+
+      if (inStock && !outOfStock) {
+        // Show only products that have at least one size with stock > 0
+        filtered = filtered.filter((product) => {
+          if (!product.sizes) return false;
+          return Object.values(product.sizes).some((s) => s.stock > 0);
+        });
+      } else if (!inStock && outOfStock) {
+        // Show only products where all sizes have stock === 0
+        filtered = filtered.filter((product) => {
+          if (!product.sizes) return true; // No sizes means out of stock
+          return Object.values(product.sizes).every((s) => s.stock === 0);
+        });
+      }
+      // If both are checked or both are unchecked, show all products
+    }
+
+    // HAIR TYPE FILTER
+    if (filter.hairType) {
+      const activeHairTypes = Object.entries(filter.hairType)
+        .filter(([key, value]) => value)
+        .map(([key]) => key);
+
+      if (activeHairTypes.length > 0) {
+        filtered = filtered.filter(product =>
+          Array.isArray(product.hairType)
+            ? product.hairType.some(type => activeHairTypes.includes(type))
+            : activeHairTypes.includes(product.hairType)
+        );
+      }
     }
 
     setFilteredProducts(filtered);
     setPage(1);
-  }, [filter, sortedProducts]);
+  }, [filter, sortedProducts, loading]);
 
-  // ✅ Only Sale Products
-  const saleProducts = filteredProducts.filter(
-    (product) => product.sale?.isOnSale === true
-  );
+  // ✅ Only Sale Products (already filtered at fetch)
+  const saleProducts = filteredProducts;
 
   const totalPages = Math.ceil(
     saleProducts.length / PRODUCTS_PER_PAGE

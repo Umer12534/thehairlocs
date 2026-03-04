@@ -37,6 +37,7 @@
 .filter-group {
   padding: 10px 5px;
   border-bottom: 1px solid #eee;
+  overflow: hidden;
 }
 
 .filter-group h4 {

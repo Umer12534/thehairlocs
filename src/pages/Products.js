@@ -52,8 +52,8 @@ function Products() {
       Serums: false,
     },
     price: {
-      min: null,
-      max: null,
+      min: 0,
+      max: 10000,
     },
     availability: {
       inStock: false,
@@ -201,10 +201,19 @@ function Products() {
       const { inStock, outOfStock } = filter.availability;
 
       if (inStock && !outOfStock) {
-        filtered = filtered.filter(p => p.inStock === true);
+        // Show only products that have at least one size with stock > 0
+        filtered = filtered.filter(product => {
+          if (!product.sizes) return false;
+          return Object.values(product.sizes).some(size => size.stock > 0);
+        });
       } else if (!inStock && outOfStock) {
-        filtered = filtered.filter(p => p.inStock === false);
+        // Show only products where all sizes have stock === 0
+        filtered = filtered.filter(product => {
+          if (!product.sizes) return true; // No sizes means out of stock
+          return Object.values(product.sizes).every(size => size.stock === 0);
+        });
       }
+      // If both are checked or both are unchecked, show all products
     }
 
     // HAIR TYPE FILTER
