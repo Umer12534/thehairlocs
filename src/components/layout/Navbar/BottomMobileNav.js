@@ -6,6 +6,7 @@ import {
   faCartShopping
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import "./Navbar.css";
 
 const BottomMobileNav = ({ onCartOpen, isCartOpen }) => {
   return (

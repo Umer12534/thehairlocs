@@ -421,10 +421,15 @@
         display: flex;
     }
 
+    /* Hide bottom nav when cart is open on 430px screens */
+    body:has(.cart-sidebar.active) .mobile-bottom-nav {
+        display: none !important;
+    }
+
     body {
         padding-bottom: 60px;
     }
-}   
+}
 
 @media (max-width: 320px) {
     .sale-banner p{
