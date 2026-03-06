@@ -347,6 +347,7 @@ function ProductDetails({ openCartSidebar }) {
             }
             size="lg"
             fullWidth
+            variant="primary"
             onClick={handleAddToCart}
             disabled={!selectedSize}
             title={!selectedSize ? "Please select a size first" : "Add to cart"}

@@ -5,6 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import '../styles/OrderSuccess.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import Button from '../components/ui/button/Button';
 
 const OrderSuccess = () => {
   const { orderId } = useParams();
@@ -217,15 +218,13 @@ const OrderSuccess = () => {
 
         {/* Action Buttons */}
         <div className="action-buttons-success">
-          <Link to="/" className="btn btn-primary">
+          <Button position='left' variant="primary" onClick={() => navigate('/')}>
             Back to Home
-          </Link>
-          <Link to="/products" className="btn btn-outline">
+          </Button>
+          <Button position='right' variant="primary" onClick={() => navigate('/products')}>
             Continue Shopping
-          </Link>
-          {/* <Link to="/my-orders" className="btn btn-outline">
-            View My Orders
-          </Link> */}
+          </Button>
+
         </div>
 
         {/* Additional Info */}

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Button = ({
   children,
   onClick,
-  to = null,              // 👈 NEW
+  to = null,             
   type = "button",
   variant = "primary",
   size = "md",
