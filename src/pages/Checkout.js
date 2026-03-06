@@ -3,14 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contaxt/CartContaxt';
 import { db, auth } from '../config/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import '../styles/Checkout.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import {
+  faLock, faTruck, faBolt, faCreditCard,
+  faMoneyBillWave, faChevronRight, faTag, faShieldAlt
+} from '@fortawesome/free-solid-svg-icons';
+import '../styles/Checkout.css';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, calculateTotal, clearCart } = useCart();
-  
+
   const [formData, setFormData] = useState({
     email: '',
     phone: '',
@@ -25,88 +28,54 @@ const Checkout = () => {
     paymentMethod: 'cod',
     billingAddress: 'same',
     subscribeNewsletter: true,
-    saveInformation: false
+    saveInformation: false,
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false);
+  const [activeStep, setActiveStep] = useState(1);
 
-  const shippingCost = 199;
+  const shippingRates = { express: 199, standard: 99, free: 0 };
+  const shippingCost = shippingRates[formData.shippingMethod];
   const subtotal = calculateTotal();
   const total = subtotal + shippingCost;
 
   useEffect(() => {
-    // Redirect if cart is empty (but not if order was just completed)
-    if (cartItems.length === 0 && !orderCompleted) {
-      navigate('/cart');
-    }
+    if (cartItems.length === 0 && !orderCompleted) navigate('/cart');
   }, [cartItems.length, navigate, orderCompleted]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' || type === 'radio' ? checked : value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
-    }
-    
-    if (!formData.firstName) {
-      newErrors.firstName = 'First name is required';
-    }
-    
-    if (!formData.lastName) {
-      newErrors.lastName = 'Last name is required';
-    }
-    
-    if (!formData.address) {
-      newErrors.address = 'Address is required';
-    }
-    
-    if (!formData.city) {
-      newErrors.city = 'City is required';
-    }
-    
+    if (!formData.email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.phone) newErrors.phone = 'Phone number is required';
+    if (!formData.firstName) newErrors.firstName = 'First name is required';
+    if (!formData.lastName) newErrors.lastName = 'Last name is required';
+    if (!formData.address) newErrors.address = 'Address is required';
+    if (!formData.city) newErrors.city = 'City is required';
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    
     setIsSubmitting(true);
-    
     try {
-      // Get current user ID (if logged in, otherwise use 'guest')
       const userId = auth.currentUser?.uid || 'guest';
-      
-      // Prepare order data according to schema
       const orderData = {
-        userId: userId,
+        userId,
         customerName: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone,
@@ -117,60 +86,35 @@ const Checkout = () => {
           price: typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0,
           quantity: item.qty || 1,
           size: item.size || '',
-          image: item.image || item.images?.[0] || ''
+          image: item.image || item.images?.[0] || '',
         })),
-        totalAmount: total,
-        shippingCost: shippingCost,
-        subtotal: subtotal,
+        totalAmount: total, shippingCost, subtotal,
         paymentMethod: formData.paymentMethod === 'cod' ? 'COD' : 'Card',
         paymentStatus: formData.paymentMethod === 'cod' ? 'Unpaid' : 'Paid',
         orderStatus: 'Pending',
         shippingMethod: formData.shippingMethod,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       };
-      
-      // Save order to Firebase
       const ordersRef = collection(db, 'orders');
       const docRef = await addDoc(ordersRef, orderData);
-      
-      console.log('Order saved with ID:', docRef.id);
-      
-      // Also save to localStorage for backward compatibility
       const localOrder = {
-        id: docRef.id,
-        date: new Date().toISOString(),
+        id: docRef.id, date: new Date().toISOString(),
         customer: {
-          email: formData.email,
-          phone: formData.phone,
+          email: formData.email, phone: formData.phone,
           name: `${formData.firstName} ${formData.lastName}`,
           address: `${formData.address}, ${formData.city}, ${formData.country}`,
-          apartment: formData.apartment,
-          postalCode: formData.postalCode
+          apartment: formData.apartment, postalCode: formData.postalCode,
         },
         items: cartItems,
-        shipping: {
-          method: formData.shippingMethod,
-          cost: shippingCost
-        },
-        payment: formData.paymentMethod,
-        subtotal,
-        shippingCost,
-        total
+        shipping: { method: formData.shippingMethod, cost: shippingCost },
+        payment: formData.paymentMethod, subtotal, shippingCost, total,
       };
-      
       const orders = JSON.parse(localStorage.getItem('orders') || '[]');
       orders.push(localOrder);
       localStorage.setItem('orders', JSON.stringify(orders));
-      
-      // Set order completed flag before clearing cart
       setOrderCompleted(true);
-      
-      // Clear cart
       clearCart();
-      
-      // Navigate to confirmation
       navigate(`/order-success/${docRef.id}`);
-      
     } catch (error) {
       console.error('Order submission failed:', error);
       alert('There was an error processing your order. Please try again.');
@@ -181,378 +125,336 @@ const Checkout = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="empty-cart-checkout">
-        <h2>Your cart is empty</h2>
-        <p>Add some items to your cart before checking out.</p>
-        <Link to="/products" className="btn-primary">
-          Continue Shopping
-        </Link>
+      <div className="co-empty-state">
+        <div className="co-empty-icon">🛍️</div>
+        <h2 className="co-empty-title">Your cart is empty</h2>
+        <p className="co-empty-text">Add some items to your cart before checking out.</p>
+        <Link to="/products" className="co-shop-btn">Continue Shopping</Link>
       </div>
     );
   }
 
-  return (
-    <main className="main-contant">
-      <div className="checkout-container">
-        {/* Checkout Form */}
-        <section className="checkout-form">
-          <h1>Checkout</h1>
-          
-          <form onSubmit={handleSubmit}>
-            {/* Contact Section */}
-            <div className="section">
-              <div className="section-header">
-                <h2>Contact</h2>
-                <Link to="/login">Sign in</Link>
-              </div>
-              
-              <div className="section-input">
-                <div className="input-group">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={errors.email ? 'error' : ''}
-                  />
-                  {errors.email && <span className="error-message">{errors.email}</span>}
-                </div>
-                
-                <div className="input-group">
-                  <label htmlFor="phone">Phone</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="Phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={errors.phone ? 'error' : ''}
-                  />
-                  {errors.phone && <span className="error-message">{errors.phone}</span>}
-                </div>
-              </div>
+  const shippingOptions = [
+    { value: 'express',  icon: faBolt,  label: 'Express Delivery',  sub: '3–4 business days',   price: 199, badge: 'FASTEST' },
+    { value: 'standard', icon: faTruck, label: 'Standard Delivery', sub: '7–10 business days',  price: 99,  badge: null },
+    { value: 'free',     icon: faTag,   label: 'Free Shipping',     sub: '14–18 business days', price: 0,   badge: 'FREE' },
+  ];
 
-              <label className="checkbox">
-                <input
-                  type="checkbox"
-                  name="subscribeNewsletter"
-                  checked={formData.subscribeNewsletter}
-                  onChange={handleChange}
-                />
-                <span>Email me with news and offers</span>
+  return (
+    <main className="co-main">
+
+      {/* TOP BAR */}
+      <div className="co-topbar">
+        
+        <div className="co-steps">
+          {['Contact', 'Delivery', 'Payment'].map((step, i) => (
+            <React.Fragment key={step}>
+              <span className={`co-step${activeStep >= i + 1 ? ' active' : ''}`}>
+                <span className="co-step-num">{i + 1}</span>
+                {step}
+              </span>
+              {i < 2 && <FontAwesomeIcon icon={faChevronRight} className="co-step-arrow" />}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="co-topbar-spacer" />
+      </div>
+
+      <div className="co-layout">
+
+        {/* FORM COLUMN */}
+        <section className="co-form-col">
+          <form onSubmit={handleSubmit} noValidate>
+
+            {/* 01 CONTACT */}
+            <div className="co-card" onClick={() => setActiveStep(1)}>
+              <div className="co-card-header">
+                <span className="co-card-num">01</span>
+                <h2 className="co-card-title">Contact Information</h2>
+                <Link to="/login" className="co-sign-link">Sign in</Link>
+              </div>
+              <div className="co-field-row">
+                <div className="co-field">
+                  <label className="co-label">Email address</label>
+                  <input className={`co-input${errors.email ? ' co-input--err' : ''}`}
+                    type="email" name="email" placeholder="you@example.com"
+                    value={formData.email} onChange={handleChange} />
+                  {errors.email && <span className="co-err-msg">{errors.email}</span>}
+                </div>
+                <div className="co-field">
+                  <label className="co-label">Phone number</label>
+                  <input className={`co-input${errors.phone ? ' co-input--err' : ''}`}
+                    type="tel" name="phone" placeholder="+92 300 0000000"
+                    value={formData.phone} onChange={handleChange} />
+                  {errors.phone && <span className="co-err-msg">{errors.phone}</span>}
+                </div>
+              </div>
+              <label className="co-checkbox">
+                <input type="checkbox" name="subscribeNewsletter"
+                  checked={formData.subscribeNewsletter} onChange={handleChange} />
+                <span className="co-checkbox-box" />
+                <span>Keep me updated with news and exclusive offers</span>
               </label>
             </div>
 
-            {/* Delivery Section */}
-            <div className="section">
-              <h2>Delivery</h2>
-
-              <div className="input-group">
-                <label htmlFor="country">Country/Region</label>
-                <select 
-                  id="country"
-                  name="country"
-                  className="country-select"
-                  value={formData.country}
-                  onChange={handleChange}
-                >
-                  <option value="Pakistan">Pakistan</option>
-                  <option value="India">India</option>
-                  <option value="United States">United States</option>
-                  <option value="United Kingdom">United Kingdom</option>
+            {/* 02 DELIVERY */}
+            <div className="co-card" onClick={() => setActiveStep(2)}>
+              <div className="co-card-header">
+                <span className="co-card-num">02</span>
+                <h2 className="co-card-title">Delivery Address</h2>
+              </div>
+              <div className="co-field">
+                <label className="co-label">Country / Region</label>
+                <select className="co-input co-select" name="country"
+                  value={formData.country} onChange={handleChange}>
+                  <option>Pakistan</option>
+                  <option>India</option>
+                  <option>United States</option>
+                  <option>United Kingdom</option>
                 </select>
               </div>
-
-              <div className="row">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First name"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className={errors.firstName ? 'error' : ''}
-                  />
-                  {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+              <div className="co-field-row">
+                <div className="co-field">
+                  <label className="co-label">First name</label>
+                  <input className={`co-input${errors.firstName ? ' co-input--err' : ''}`}
+                    type="text" name="firstName" placeholder="John"
+                    value={formData.firstName} onChange={handleChange} />
+                  {errors.firstName && <span className="co-err-msg">{errors.firstName}</span>}
                 </div>
-                
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last name"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className={errors.lastName ? 'error' : ''}
-                  />
-                  {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+                <div className="co-field">
+                  <label className="co-label">Last name</label>
+                  <input className={`co-input${errors.lastName ? ' co-input--err' : ''}`}
+                    type="text" name="lastName" placeholder="Doe"
+                    value={formData.lastName} onChange={handleChange} />
+                  {errors.lastName && <span className="co-err-msg">{errors.lastName}</span>}
                 </div>
               </div>
-              
-              <div className="col">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    className={errors.address ? 'error' : ''}
-                  />
-                  {errors.address && <span className="error-message">{errors.address}</span>}
+              <div className="co-field">
+                <label className="co-label">Street address</label>
+                <input className={`co-input${errors.address ? ' co-input--err' : ''}`}
+                  type="text" name="address" placeholder="123 Main Street"
+                  value={formData.address} onChange={handleChange} />
+                {errors.address && <span className="co-err-msg">{errors.address}</span>}
+              </div>
+              <div className="co-field">
+                <label className="co-label">Apartment, suite, etc. <span className="co-optional">(optional)</span></label>
+                <input className="co-input" type="text" name="apartment"
+                  placeholder="Apt 4B" value={formData.apartment} onChange={handleChange} />
+              </div>
+              <div className="co-field-row">
+                <div className="co-field">
+                  <label className="co-label">City</label>
+                  <input className={`co-input${errors.city ? ' co-input--err' : ''}`}
+                    type="text" name="city" placeholder="Lahore"
+                    value={formData.city} onChange={handleChange} />
+                  {errors.city && <span className="co-err-msg">{errors.city}</span>}
                 </div>
-                
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="apartment"
-                    placeholder="Apartment, suite, etc. (optional)"
-                    value={formData.apartment}
-                    onChange={handleChange}
-                  />
+                <div className="co-field">
+                  <label className="co-label">Postal code <span className="co-optional">(optional)</span></label>
+                  <input className="co-input" type="text" name="postalCode"
+                    placeholder="54000" value={formData.postalCode} onChange={handleChange} />
                 </div>
               </div>
-
-              <div className="row">
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    value={formData.city}
-                    onChange={handleChange}
-                    className={errors.city ? 'error' : ''}
-                  />
-                  {errors.city && <span className="error-message">{errors.city}</span>}
-                </div>
-                
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="postalCode"
-                    placeholder="Postal code (optional)"
-                    value={formData.postalCode}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              <div className="input-group">
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={`phone-nmuber ${errors.phone ? 'error' : ''}`}
-                />
-                {errors.phone && <span className="error-message">{errors.phone}</span>}
-              </div>
-
-              <label className="checkbox">
-                <input
-                  type="checkbox"
-                  name="saveInformation"
-                  checked={formData.saveInformation}
-                  onChange={handleChange}
-                />
-                Save this information for next time
+              <label className="co-checkbox">
+                <input type="checkbox" name="saveInformation"
+                  checked={formData.saveInformation} onChange={handleChange} />
+                <span className="co-checkbox-box" />
+                <span>Save this information for next time</span>
               </label>
             </div>
 
-            {/* Shipping Section */}
-            <div className="section">
-              <h2>Shipping method</h2>
-
-              <label className="boxed-option">
-                <input
-                  type="radio"
-                  name="shippingMethod"
-                  value="express"
-                  checked={formData.shippingMethod === 'express'}
-                  onChange={handleChange}
-                  hidden
-                />
-                <div className={`option-content ${formData.shippingMethod === 'express' ? 'active' : ''}`}>
-                  <div>
-                    <strong>Express Delivery</strong>
-                    <p>3-4 Day's Delivery Time</p>
-                  </div>
-                  <strong>Rs 199.00</strong>
-                </div>
-              </label>
-              
-              <label className="boxed-option">
-                <input
-                  type="radio"
-                  name="shippingMethod"
-                  value="standard"
-                  checked={formData.shippingMethod === 'standard'}
-                  onChange={handleChange}
-                  hidden
-                />
-                <div className={`option-content ${formData.shippingMethod === 'standard' ? 'active' : ''}`}>
-                  <div>
-                    <strong>Standard Delivery</strong>
-                    <p>7-10 Day's Delivery Time</p>
-                  </div>
-                  <strong>Rs 99.00</strong>
-                </div>
-              </label>
+            {/* 03 SHIPPING METHOD */}
+            <div className="co-card">
+              <div className="co-card-header">
+                <span className="co-card-num">03</span>
+                <h2 className="co-card-title">Shipping Method</h2>
+              </div>
+              <div className="co-ship-grid">
+                {shippingOptions.map(opt => (
+                  <label key={opt.value}
+                    className={`co-ship-card${formData.shippingMethod === opt.value ? ' selected' : ''}`}>
+                    <input type="radio" name="shippingMethod" value={opt.value}
+                      checked={formData.shippingMethod === opt.value}
+                      onChange={handleChange} hidden />
+                    <div className="co-ship-icon">
+                      <FontAwesomeIcon icon={opt.icon} />
+                    </div>
+                    <div className="co-ship-info">
+                      <div className="co-ship-top">
+                        <strong>{opt.label}</strong>
+                        {opt.badge && <span className="co-ship-badge">{opt.badge}</span>}
+                      </div>
+                      <span className="co-ship-sub">{opt.sub}</span>
+                    </div>
+                    <div className="co-ship-price">
+                      {opt.price === 0
+                        ? <span className="co-free-label">Free</span>
+                        : `Rs ${opt.price}`}
+                    </div>
+                    <div className="co-radio-dot" />
+                  </label>
+                ))}
+              </div>
             </div>
 
-            {/* Payment Section */}
-            <div className="section">
-              <h2>Payment</h2>
-              <p className="muted">All transactions are secure and encrypted.</p>
+            {/* 04 PAYMENT */}
+            <div className="co-card" onClick={() => setActiveStep(3)}>
+              <div className="co-card-header">
+                <span className="co-card-num">04</span>
+                <h2 className="co-card-title">Payment Method</h2>
+                <span className="co-secure-tag">
+                  <FontAwesomeIcon icon={faShieldAlt} /> Secure
+                </span>
+              </div>
+              <p className="co-sub-note">All transactions are 256-bit SSL encrypted.</p>
+              <div className="co-pay-grid">
+                <label className={`co-pay-card${formData.paymentMethod === 'cod' ? ' selected' : ''}`}>
+                  <input type="radio" name="paymentMethod" value="cod"
+                    checked={formData.paymentMethod === 'cod'} onChange={handleChange} hidden />
+                  <div className="co-pay-icon co-pay-icon--cod">
+                    <FontAwesomeIcon icon={faMoneyBillWave} />
+                  </div>
+                  <div className="co-pay-info">
+                    <strong>Cash on Delivery</strong>
+                    <span>Pay when you receive</span>
+                  </div>
+                  <div className="co-radio-dot" />
+                </label>
+                <label className={`co-pay-card${formData.paymentMethod === 'card' ? ' selected' : ''}`}>
+                  <input type="radio" name="paymentMethod" value="card"
+                    checked={formData.paymentMethod === 'card'} onChange={handleChange} hidden />
+                  <div className="co-pay-icon co-pay-icon--card">
+                    <FontAwesomeIcon icon={faCreditCard} />
+                  </div>
+                  <div className="co-pay-info">
+                    <strong>Credit / Debit Card</strong>
+                    <span>Visa, Mastercard, AMEX</span>
+                  </div>
+                  <div className="co-radio-dot" />
+                </label>
+              </div>
 
-              <label className="boxed-option">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="cod"
-                  checked={formData.paymentMethod === 'cod'}
-                  onChange={handleChange}
-                  hidden
-                />
-                <div className={`option-content ${formData.paymentMethod === 'cod' ? 'active' : ''}`}>
-                  Cash on Delivery (COD)
-                </div>
-              </label>
-              
-              <label className="boxed-option">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="card"
-                  checked={formData.paymentMethod === 'card'}
-                  onChange={handleChange}
-                  hidden
-                />
-                <div className={`option-content ${formData.paymentMethod === 'card' ? 'active' : ''}`}>
-                  Credit/Debit Card
-                </div>
-              </label>
-              
               {formData.paymentMethod === 'card' && (
-                <div className="card-details">
-                  <div className="input-group">
-                    <label>Card Number</label>
-                    <input type="text" placeholder="1234 5678 9012 3456" />
+                <div className="co-card-fields">
+                  <div className="co-field">
+                    <label className="co-label">Card number</label>
+                    <input className="co-input" type="text" placeholder="1234  5678  9012  3456" />
                   </div>
-                  <div className="row">
-                    <div className="input-group">
-                      <label>Expiry Date</label>
-                      <input type="text" placeholder="MM/YY" />
+                  <div className="co-field-row">
+                    <div className="co-field">
+                      <label className="co-label">Expiry date</label>
+                      <input className="co-input" type="text" placeholder="MM / YY" />
                     </div>
-                    <div className="input-group">
-                      <label>CVV</label>
-                      <input type="text" placeholder="123" />
+                    <div className="co-field">
+                      <label className="co-label">CVV</label>
+                      <input className="co-input" type="text" placeholder="•••" />
                     </div>
                   </div>
+                  <div className="co-field">
+                    <label className="co-label">Name on card</label>
+                    <input className="co-input" type="text" placeholder="John Doe" />
+                  </div>
+                </div>
+              )}
+
+              {formData.paymentMethod === 'cod' && (
+                <div className="co-cod-note">
+                  <FontAwesomeIcon icon={faMoneyBillWave} />
+                  <span>Please keep exact change ready. Our delivery partner will collect payment upon delivery.</span>
                 </div>
               )}
             </div>
 
-            {/* Billing Section */}
-            <div className="section">
-              <h2>Billing address</h2>
-
-              <div className="billing-address">
-                <label className="radio">
-                  <input
-                    type="radio"
-                    name="billingAddress"
-                    value="same"
-                    checked={formData.billingAddress === 'same'}
-                    onChange={handleChange}
-                  />
-                  Same as shipping address
-                </label>
-
-                <label className="radio">
-                  <input
-                    type="radio"
-                    name="billingAddress"
-                    value="different"
-                    checked={formData.billingAddress === 'different'}
-                    onChange={handleChange}
-                  />
-                  Use a different billing address
-                </label>
+            {/* 05 BILLING ADDRESS */}
+            <div className="co-card">
+              <div className="co-card-header">
+                <span className="co-card-num">05</span>
+                <h2 className="co-card-title">Billing Address</h2>
+              </div>
+              <div className="co-billing-opts">
+                {[
+                  { value: 'same',      label: 'Same as shipping address' },
+                  { value: 'different', label: 'Use a different billing address' },
+                ].map(opt => (
+                  <label key={opt.value}
+                    className={`co-billing-opt${formData.billingAddress === opt.value ? ' selected' : ''}`}>
+                    <input type="radio" name="billingAddress" value={opt.value}
+                      checked={formData.billingAddress === opt.value}
+                      onChange={handleChange} hidden />
+                    <div className="co-radio-dot" />
+                    <span>{opt.label}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
-            <div className="complete-order-btn">
-              <button 
-                type="submit" 
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Processing...' : `Complete order - Rs ${total.toLocaleString('en-PK')}`}
-              </button>
+            {/* SUBMIT */}
+            <button type="submit" disabled={isSubmitting} className="co-submit-btn">
+              {isSubmitting ? (
+                <span className="co-spinner" />
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faLock} />
+                  <span>Place Order · Rs {total.toLocaleString('en-PK')}</span>
+                </>
+              )}
+            </button>
+
+            <div className="co-footer-links">
+              {['FAQs', 'Privacy Policy', 'Shipping Policy', 'Refund Policy'].map(l => (
+                <Link key={l} to={`/${l.toLowerCase().replace(/ /g, '-')}`}>{l}</Link>
+              ))}
             </div>
+
           </form>
-          
-          <div className="footer-links">
-            <ul>
-              <li><Link to="/faqs">F.A.Qs</Link></li>
-              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
-              <li><Link to="/shipping-policy">Shipping Policy</Link></li>
-              <li><Link to="/refund-policy">Refund Policy</Link></li>
-            </ul>
-          </div>
         </section>
 
-        {/* Cart Summary */}
-        <aside className="cart-summary">
-          <div className="summary-header">
-            <h2>Order Summary</h2>
-            <Link to="/cart" className="edit-cart">Edit cart</Link>
-          </div>
-          
-          <div className="cart-items-list">
-            {cartItems.map((item) => (
-              <div key={`${item.id}-${item.size}`} className="cart-item-summary">
-                <div className="item-image-container">
-                  <img src={item.image} alt={item.title} />
-                  <span className="item-quantity">{item.qty}</span>
+        {/* SUMMARY COLUMN */}
+        <aside className="co-summary-col">
+          <div className="co-summary-inner">
+            <div className="co-summary-hd">
+              <h2>Order Summary</h2>
+              <Link to="/cart" className="co-edit-cart">Edit cart</Link>
+            </div>
+            <div className="co-items-list">
+              {cartItems.map((item) => (
+                <div key={`${item.id}-${item.size}`} className="co-item">
+                  <div className="co-item-img-wrap">
+                    <img src={item.image} alt={item.title} />
+                    <span className="co-item-qty">{item.qty}</span>
+                  </div>
+                  <div className="co-item-details">
+                    <p className="co-item-name">{item.title}</p>
+                    {item.size && <p className="co-item-meta">Size: {item.size}</p>}
+                  </div>
+                  <p className="co-item-price">{item.price}</p>
                 </div>
-                <div className="item-details">
-                  <h4>{item.title}</h4>
-                  {item.size && <p className="item-size">Size: {item.size}</p>}
-                  <p className="item-price">{item.price}</p>
-                </div>
+              ))}
+            </div>
+            <div className="co-totals">
+              <div className="co-total-row">
+                <span>Subtotal</span>
+                <span>Rs {subtotal.toLocaleString('en-PK')}</span>
               </div>
-            ))}
-          </div>
-
-          <div className="order-totals">
-            <div className="total-row">
-              <span>Subtotal</span>
-              <span>Rs {subtotal.toLocaleString('en-PK')}</span>
+              <div className="co-total-row">
+                <span>Shipping</span>
+                <span className={shippingCost === 0 ? 'co-free-label' : ''}>
+                  {shippingCost === 0 ? 'Free' : `Rs ${shippingCost.toLocaleString('en-PK')}`}
+                </span>
+              </div>
+              <div className="co-total-row co-grand">
+                <span>Total</span>
+                <span>Rs {total.toLocaleString('en-PK')}</span>
+              </div>
             </div>
-            <div className="total-row">
-              <span>Shipping</span>
-              <span>Rs {shippingCost.toLocaleString('en-PK')}</span>
+            <div className="co-trust">
+              <div className="co-trust-item"><FontAwesomeIcon icon={faLock} /><span>256-bit SSL encrypted</span></div>
+              <div className="co-trust-item"><FontAwesomeIcon icon={faTruck} /><span>Free returns within 30 days</span></div>
+              <div className="co-trust-item"><FontAwesomeIcon icon={faShieldAlt} /><span>Buyer protection guaranteed</span></div>
             </div>
-            <div className="total-row grand-total">
-              <span>Total</span>
-              <span>Rs {total.toLocaleString('en-PK')}</span>
-            </div>
-          </div>
-
-          <div className="payment-security">
-            <div className="security-badge">
-              <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
-              <span>Secure Payment</span>
-            </div>
-            <p className="muted">Your payment information is encrypted and secure.</p>
           </div>
         </aside>
+
       </div>
     </main>
   );

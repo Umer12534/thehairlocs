@@ -87,21 +87,23 @@ function App() {
               <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/sale" element={<Sale />} />
               <Route path="/about" element={<About />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+
               <Route path="/cart" element={<Cart />} />
               <Route path="/favorites" element={<Favorites />} />
               <Route path="/user/orders" element={<UserOrders />} />
               <Route path="/account/orders" element={<UserOrders />} />
 
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/faqs" element={<Faqs />} />
-            <Route path="/shipping-policy" element={<ShippingPolicy />} />
-            <Route path="/refund-policy" element={<RefundPolicy />} />
-            <Route path="/add" element={<Add />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/faqs" element={<Faqs />} />
+              <Route path="/shipping-policy" element={<ShippingPolicy />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
+              <Route path="/add" element={<Add />} />
 
-          </Route>
-
+            </Route>
+            <Route>
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+            </Route>
           {/* Auth Pages */}
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
