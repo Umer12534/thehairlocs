@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
 
 const CartContext = createContext();
+const CART_STORAGE_KEY = 'cart';
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -12,13 +16,77 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+
+      if (!user) {
+        const guestCart = localStorage.getItem(CART_STORAGE_KEY);
+        setCartItems(guestCart ? JSON.parse(guestCart) : []);
+        setIsAuthReady(true);
+        return;
+      }
+
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const snapshot = await getDoc(userRef);
+        const firebaseCart = snapshot.exists() ? snapshot.data()?.cartItems : undefined;
+        const localCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]');
+
+        if (Array.isArray(firebaseCart)) {
+          setCartItems(firebaseCart);
+        } else {
+          setCartItems(localCart);
+          await setDoc(
+            userRef,
+            {
+              cartItems: localCart,
+              updatedAt: serverTimestamp()
+            },
+            { merge: true }
+          );
+        }
+      } catch (error) {
+        console.error('Error loading cart from Firebase:', error);
+      } finally {
+        setIsAuthReady(true);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthReady) return;
+
+    const persistCart = async () => {
+      if (!currentUser) {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+        return;
+      }
+
+      try {
+        await setDoc(
+          doc(db, 'users', currentUser.uid),
+          {
+            cartItems,
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        console.error('Error saving cart to Firebase:', error);
+      }
+    };
+
+    persistCart();
+  }, [cartItems, currentUser, isAuthReady]);
 
   /*TOTAL PRICE (FIXED) */
   const calculateTotal = () => {

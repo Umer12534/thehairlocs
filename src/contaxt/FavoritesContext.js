@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
 
 const FavoritesContext = createContext();
 
@@ -26,19 +29,90 @@ export const FavoritesProvider = ({
       return [];
     }
   });
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
-  // Save to localStorage with error handling
+  // Load favorites from localStorage (guest) or Firebase (logged-in)
   useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(favorites));
-      setLastUpdated(new Date());
-    } catch (error) {
-      console.error('Error saving favorites to localStorage:', error);
-      // You could trigger a notification here
-    }
-  }, [favorites, storageKey]);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+
+      if (!user) {
+        try {
+          const guestFavorites = localStorage.getItem(storageKey);
+          setFavorites(guestFavorites ? JSON.parse(guestFavorites) : []);
+        } catch (error) {
+          console.error('Error loading favorites from localStorage:', error);
+          setFavorites([]);
+        } finally {
+          setIsAuthReady(true);
+        }
+        return;
+      }
+
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const snapshot = await getDoc(userRef);
+        const firebaseFavorites = snapshot.exists() ? snapshot.data()?.favorites : undefined;
+        const localFavorites = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+        if (Array.isArray(firebaseFavorites)) {
+          setFavorites(firebaseFavorites);
+        } else {
+          setFavorites(localFavorites);
+          await setDoc(
+            userRef,
+            {
+              favorites: localFavorites,
+              updatedAt: serverTimestamp()
+            },
+            { merge: true }
+          );
+        }
+      } catch (error) {
+        console.error('Error loading favorites from Firebase:', error);
+      } finally {
+        setIsAuthReady(true);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [storageKey]);
+
+  // Save to localStorage (guest) or Firebase (logged-in)
+  useEffect(() => {
+    if (!isAuthReady) return;
+
+    const persistFavorites = async () => {
+      if (!currentUser) {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(favorites));
+          setLastUpdated(new Date());
+        } catch (error) {
+          console.error('Error saving favorites to localStorage:', error);
+        }
+        return;
+      }
+
+      try {
+        await setDoc(
+          doc(db, 'users', currentUser.uid),
+          {
+            favorites,
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+        setLastUpdated(new Date());
+      } catch (error) {
+        console.error('Error saving favorites to Firebase:', error);
+      }
+    };
+
+    persistFavorites();
+  }, [favorites, storageKey, currentUser, isAuthReady]);
 
   // Add to favorites with validation and limit
   const addToFavorites = useCallback((product) => {
