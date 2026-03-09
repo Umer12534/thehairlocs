@@ -2,7 +2,6 @@
 
 ![TheHairLocs](https://img.shields.io/badge/version-1.0.0-blue)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ## 🌐 Live Website
 
