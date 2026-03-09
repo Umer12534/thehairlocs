@@ -25,13 +25,13 @@ function ProductCard({
   openCartSidebar,
 }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { addToCart } = useCart();
+  const { addToCart, getFirstAvailableSize } = useCart();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const isLiked = isFavorite(id);
 
   // Extract prices and stock from sizes
   const sizeEntries = Object.entries(sizes);
-  const defaultSize = sizeEntries[0]?.[0]; // e.g. "50ml"
+  const defaultSize = getFirstAvailableSize(sizes);
 
   const prices = sizeEntries.map(([_, value]) => value.price);
   const originalPrice = Math.min(...prices);
@@ -44,14 +44,13 @@ function ProductCard({
     : null;
 
   const handleQuickAdd = () => {
-    if (totalStock <= 0) return; // prevent adding out of stock
-
     addToCart(
       {
         id,
         name,
         image: images[0],
         price: salePrice ?? originalPrice,
+        sizes,
       },
       defaultSize,
       1
@@ -157,7 +156,6 @@ function ProductCard({
             <button
               className="product-card__add-btn"
               onClick={handleQuickAdd}
-              disabled={totalStock === 0} // disable button if out of stock
             >
               <FontAwesomeIcon icon={faPlus} />
             </button>

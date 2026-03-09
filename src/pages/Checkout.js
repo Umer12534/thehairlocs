@@ -12,7 +12,8 @@ import '../styles/Checkout.css';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cartItems, calculateTotal, clearCart } = useCart();
+  const { cartItems, calculateTotal, getCheckoutItems, clearPurchasedItems } = useCart();
+  const checkoutItems = getCheckoutItems();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -38,12 +39,12 @@ const Checkout = () => {
 
   const shippingRates = { express: 199, standard: 99, free: 0 };
   const shippingCost = shippingRates[formData.shippingMethod];
-  const subtotal = calculateTotal();
-  const total = subtotal + shippingCost;
+  const subtotal = calculateTotal(true);
+  const total = checkoutItems.length > 0 ? subtotal + shippingCost : 0;
 
   useEffect(() => {
-    if (cartItems.length === 0 && !orderCompleted) navigate('/cart');
-  }, [cartItems.length, navigate, orderCompleted]);
+    if ((cartItems.length === 0 || checkoutItems.length === 0) && !orderCompleted) navigate('/cart');
+  }, [cartItems.length, checkoutItems.length, navigate, orderCompleted]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -65,6 +66,11 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (checkoutItems.length === 0) {
+      navigate('/cart');
+      return;
+    }
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -80,7 +86,7 @@ const Checkout = () => {
         email: formData.email,
         phone: formData.phone,
         shippingAddress: `${formData.address}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.postalCode || ''}, ${formData.country}`,
-        items: cartItems.map(item => ({
+        items: checkoutItems.map(item => ({
           productId: item.id || '',
           title: item.title || item.name || '',
           price: typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0,
@@ -105,7 +111,7 @@ const Checkout = () => {
           address: `${formData.address}, ${formData.city}, ${formData.country}`,
           apartment: formData.apartment, postalCode: formData.postalCode,
         },
-        items: cartItems,
+        items: checkoutItems,
         shipping: { method: formData.shippingMethod, cost: shippingCost },
         payment: formData.paymentMethod, subtotal, shippingCost, total,
       };
@@ -113,7 +119,7 @@ const Checkout = () => {
       orders.push(localOrder);
       localStorage.setItem('orders', JSON.stringify(orders));
       setOrderCompleted(true);
-      clearCart();
+      clearPurchasedItems();
       navigate(`/order-success/${docRef.id}`);
     } catch (error) {
       console.error('Order submission failed:', error);
@@ -123,13 +129,13 @@ const Checkout = () => {
     }
   };
 
-  if (cartItems.length === 0) {
+  if (cartItems.length === 0 || checkoutItems.length === 0) {
     return (
       <div className="co-empty-state">
         <div className="co-empty-icon">🛍️</div>
-        <h2 className="co-empty-title">Your cart is empty</h2>
-        <p className="co-empty-text">Add some items to your cart before checking out.</p>
-        <Link to="/products" className="co-shop-btn">Continue Shopping</Link>
+        <h2 className="co-empty-title">No eligible items selected</h2>
+        <p className="co-empty-text">Select at least one in-stock cart item before checking out.</p>
+        <Link to="/cart" className="co-shop-btn">Back to Cart</Link>
       </div>
     );
   }
@@ -417,7 +423,7 @@ const Checkout = () => {
               <Link to="/cart" className="co-edit-cart">Edit cart</Link>
             </div>
             <div className="co-items-list">
-              {cartItems.map((item) => (
+              {checkoutItems.map((item) => (
                 <div key={`${item.id}-${item.size}`} className="co-item">
                   <div className="co-item-img-wrap">
                     <img src={item.image} alt={item.title} />
@@ -427,7 +433,7 @@ const Checkout = () => {
                     <p className="co-item-name">{item.title}</p>
                     {item.size && <p className="co-item-meta">Size: {item.size}</p>}
                   </div>
-                  <p className="co-item-price">{item.price}</p>
+                  <p className="co-item-price">Rs {Number(item.price).toLocaleString('en-PK')}</p>
                 </div>
               ))}
             </div>

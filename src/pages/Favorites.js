@@ -9,11 +9,10 @@ import './Favorites.css';
 
 function Favorites() {
   const { favorites, removeFromFavorites, clearFavorites } = useFavorites();
-  const { addToCart } = useCart();
+  const { addToCart, getFirstAvailableSize } = useCart();
 
   const handleAddToCart = (product) => {
-    const sizeEntries = Object.entries(product.sizes || {});
-    const defaultSize = sizeEntries[0]?.[0];
+    const defaultSize = getFirstAvailableSize(product.sizes || {});
     
     addToCart(
       {
@@ -21,6 +20,7 @@ function Favorites() {
         name: product.name,
         image: product.image,
         price: product.price,
+        sizes: product.sizes || {},
       },
       defaultSize,
       1

@@ -31,7 +31,7 @@ import ProductCard from "../components/ui/ProductCard/ProductCard";
 function ProductDetails({ openCartSidebar }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, getFirstAvailableSize, isSizeOutOfStock } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,17 +53,7 @@ function ProductDetails({ openCartSidebar }) {
         if (docSnap.exists()) {
           const productData = { id: docSnap.id, ...docSnap.data() };
           setProduct(productData);
-
-          // Set default size to "50ml" if available
-          if (productData.sizes && productData.sizes["50ml"]) {
-            setSelectedSize("50ml");
-          } else {
-            // If 50ml not available, pick the first available size
-            const firstSize = productData.sizes
-              ? Object.keys(productData.sizes)[0]
-              : "";
-            setSelectedSize(firstSize);
-          }
+          setSelectedSize(getFirstAvailableSize(productData.sizes));
         } else {
           console.log("Product not found");
         }
@@ -119,7 +109,7 @@ function ProductDetails({ openCartSidebar }) {
           matchedProducts = Array.from(uniqueById.values());
         }
 
-        setRelatedProducts(matchedProducts.slice(0, 3));
+        setRelatedProducts(matchedProducts.slice(0, 5));
       } catch (err) {
         console.error(err);
         setRelatedProducts([]);
@@ -135,6 +125,7 @@ function ProductDetails({ openCartSidebar }) {
   const sizeData = selectedSize ? product?.sizes?.[selectedSize] : null;
   const displayPrice = sizeData?.salePrice ?? sizeData?.price ?? null;
   const originalPrice = sizeData?.salePrice ? sizeData.price : null;
+  const selectedSizeOutOfStock = isSizeOutOfStock(product?.sizes, selectedSize);
   const productImages = Array.isArray(product?.images)
     ? product.images
     : Array.isArray(product?.image)
@@ -158,6 +149,7 @@ function ProductDetails({ openCartSidebar }) {
         name: product.name,
         image: productImages[0] || "",
         price: displayPrice ?? 0,
+        sizes: product.sizes || {},
       },
       selectedSize,
       quantity
@@ -296,19 +288,34 @@ function ProductDetails({ openCartSidebar }) {
             <div className="size-box">
               <label>Size</label>
               <div className="size">
+
+
                 {product.sizes &&
-                  Object.keys(product.sizes).map((size) => (
-                    <Button
-                      key={size}
-                      size="sm"
-                      margianbuttom={0}
-                      variant={selectedSize === size ? "primary" : "outline"}
-                      onClick={() => setSelectedSize(size)}
-                      type="button"
-                    >
-                      {size}
-                    </Button>
-                  ))}
+                  Object.keys(product.sizes).map((size) => {
+                    const isDisabled = isSizeOutOfStock(product.sizes, size);
+
+                    return (
+                      <span
+                        key={size}
+                        title={isDisabled ? "Out of Stock" : ""}
+                        className={isDisabled ? "size-tooltip-wrapper" : ""}
+                      >
+                        <Button
+                          size="sm"
+                          marginbottom={0}
+                          variant={selectedSize === size ? "primary" : "outline"}
+                          onClick={() => setSelectedSize(size)}
+                          type="button"
+                          disabled={isDisabled}
+                          className={isDisabled ? "size-option-disabled" : ""}
+                        >
+                          {size}
+                        </Button>
+                      </span>
+                    );
+                  })}
+
+
               </div>
             </div>
 
@@ -356,6 +363,9 @@ function ProductDetails({ openCartSidebar }) {
           {!selectedSize && (
             <p className="size-warning">Please select a size to add to cart</p>
           )}
+          {selectedSize && selectedSizeOutOfStock && (
+            <p className="size-warning">This size is out of stock and cannot be selected for checkout.</p>
+          )}
         </div>
       </div>
 
@@ -365,11 +375,13 @@ function ProductDetails({ openCartSidebar }) {
           <h2>Products Questions</h2>
           <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
           <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+          
+          <h2>Shipping Questions</h2>
+            <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
+            <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
         </div>
-        <h2>Shipping Questions</h2>
-          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
-          <QuestionAnswer question={"Question Lorem ipsum dolor sit amet."} answer={"answer Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora ea delectus laboriosam sequi distinctio repellat expedita voluptas. Voluptatibus, omnis id!"}/>
-        </div>
+        
+      </div>
 
       {/* Related Products */}
       <section className="related-section">

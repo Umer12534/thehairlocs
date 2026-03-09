@@ -104,25 +104,25 @@ const OrderSuccess = () => {
         <div className="info-card">
           <h2>Order Information</h2>
           <div className="order-info-grid">
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Order ID</span>
               <span className="info-value">#{order.id}</span>
             </div>
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Order Date</span>
               <span className="info-value">{formatDate(order.createdAt)}</span>
             </div>
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Payment Method</span>
               <span className="info-value">{order.paymentMethod}</span>
             </div>
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Payment Status</span>
               <span className={`status-badge ${order.paymentStatus.toLowerCase()}`}>
                 {order.paymentStatus}
               </span>
             </div>
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Order Status</span>
               <span 
                 className="status-badge" 
@@ -131,7 +131,7 @@ const OrderSuccess = () => {
                 {order.orderStatus}
               </span>
             </div>
-            <div className="info-item">
+            <div className="order-info-item">
               <span className="info-label">Total Amount</span>
               <span className="info-value total-amount">
                 Rs {order.totalAmount?.toLocaleString('en-PK')}

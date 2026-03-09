@@ -1,36 +1,40 @@
-import React from 'react'
-import './CartSidebar.css'
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
-import Button from '../../ui/button/Button'
-import { useCart } from '../../../contaxt/CartContaxt'
+import React from 'react';
+import './CartSidebar.css';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import Button from '../../ui/button/Button';
+import { useCart } from '../../../contaxt/CartContaxt';
 
-/* ---------------- CART ITEM ---------------- */
 function CartItem({
-  id,
-  image,
-  title,
-  price,
-  qty,
-  size,
+  item,
   onRemove,
   onUpdateQuantity,
+  onToggleSelection,
   onClose,
+  isOutOfStock,
 }) {
+  const { id, image, title, price, qty, size, selected } = item;
+
   const handleQuantityChange = (newQty) => {
-    if (newQty < 1) return;
+    if (newQty < 1 || isOutOfStock) return;
     onUpdateQuantity(id, size, newQty);
   };
 
-  const handleRemove = () => {
-    onRemove(id, size);
-  };
-
   return (
-    <div className="item">
+    <div className={`item${isOutOfStock ? ' item--disabled' : ''}`}>
+      <label className="sidebar-checkbox">
+        <input
+          type="checkbox"
+          checked={selected}
+          disabled={isOutOfStock}
+          onChange={(e) => onToggleSelection(id, size, e.target.checked)}
+        />
+        <span />
+      </label>
+
       <div className="item-container">
-        <Link to={`/product/${id}`} onClick={() => {onClose();}}>
+        <Link to={`/product/${id}`} onClick={() => { onClose(); }}>
           <img src={image} alt={title} />
         </Link>
 
@@ -38,7 +42,7 @@ function CartItem({
           <h4>{title}</h4>
 
           <div className="product-detail">
-            <p>Rs. {price}</p>
+            <p>Rs. {Number(price).toLocaleString('en-PK')}</p>
             {size && (
               <div className="size-div">
                 <p>Size: {size}</p>
@@ -46,50 +50,55 @@ function CartItem({
             )}
           </div>
 
+          {isOutOfStock && <p className="sidebar-stock-note">Out of stock</p>}
+
           <div className="qty-controls">
-            <button onClick={() => handleQuantityChange(qty - 1)}>
+            <button onClick={() => handleQuantityChange(qty - 1)} disabled={isOutOfStock}>
               <FontAwesomeIcon icon={faMinus} />
             </button>
 
             <span>{qty}</span>
 
-            <button onClick={() => handleQuantityChange(qty + 1)}>
+            <button onClick={() => handleQuantityChange(qty + 1)} disabled={isOutOfStock}>
               <FontAwesomeIcon icon={faPlus} />
             </button>
           </div>
         </div>
       </div>
 
-      <button className="remove-item" onClick={handleRemove}>
+      <button className="remove-item" onClick={() => onRemove(id, size)}>
         <FontAwesomeIcon icon={faTrash} />
       </button>
     </div>
   );
 }
 
-/* ---------------- CART SIDEBAR ---------------- */
 function CartSidebar({ isCartOpen, closeCart }) {
   const {
     cartItems,
     removeFromCart,
     updateQuantity,
     calculateTotal,
-    clearCart
+    clearCart,
+    toggleItemSelection,
+    toggleAllSelections,
+    getCheckoutItems,
+    isSizeOutOfStock
   } = useCart();
 
-  const totalPrice = calculateTotal();
+  const eligibleItems = cartItems.filter((item) => !isSizeOutOfStock(item.sizes, item.size));
+  const selectedCount = getCheckoutItems().length;
+  const totalPrice = calculateTotal(true);
+  const allEligibleSelected = eligibleItems.length > 0 && eligibleItems.every((item) => item.selected);
 
   return (
     <div className={`cart-sidebar ${isCartOpen ? 'active' : ''}`}>
-      
-      {/* Header */}
       <div className="cart-header">
         <div className="cart-header-text">
           Your Cart ({cartItems.length} items)
         </div>
       </div>
 
-      {/* Body */}
       <div className="cart-items">
         {cartItems.length === 0 ? (
           <div className="empty-cart">
@@ -100,13 +109,28 @@ function CartSidebar({ isCartOpen, closeCart }) {
           </div>
         ) : (
           <>
-            {cartItems.map(item => (
+            <div className="sidebar-toolbar">
+              <label className="sidebar-select-all">
+                <input
+                  type="checkbox"
+                  checked={allEligibleSelected}
+                  disabled={eligibleItems.length === 0}
+                  onChange={(e) => toggleAllSelections(e.target.checked)}
+                />
+                <span>Select available</span>
+              </label>
+              <span className="sidebar-selection-count">{selectedCount} selected</span>
+            </div>
+
+            {cartItems.map((item) => (
               <CartItem
                 key={`${item.id}-${item.size}`}
-                {...item}
+                item={item}
                 onRemove={removeFromCart}
                 onUpdateQuantity={updateQuantity}
+                onToggleSelection={toggleItemSelection}
                 onClose={closeCart}
+                isOutOfStock={isSizeOutOfStock(item.sizes, item.size)}
               />
             ))}
 
@@ -119,23 +143,29 @@ function CartSidebar({ isCartOpen, closeCart }) {
         )}
       </div>
 
-      {/* Footer */}
       {cartItems.length > 0 && (
         <div className="cart-footer">
           <div className="cart-des">
             <p>
-              <span>Total: </span>
-              <span>Rs. {totalPrice.toLocaleString()}</span>
+              <span>Selected Total:</span>
+              <span>Rs. {totalPrice.toLocaleString('en-PK')}</span>
             </p>
-            <p>Tax and Shipping not included</p>
+            <p>Only selected in-stock products will be checked out.</p>
           </div>
 
           <Link
             to="/checkout"
-            className="checkout-btn"
-            onClick={closeCart}
+            className={`checkout-btn${selectedCount === 0 ? ' checkout-btn--disabled' : ''}`}
+            onClick={(e) => {
+              if (selectedCount === 0) {
+                e.preventDefault();
+                return;
+              }
+
+              closeCart();
+            }}
           >
-            Proceed to Checkout
+            Checkout Selected
           </Link>
         </div>
       )}
