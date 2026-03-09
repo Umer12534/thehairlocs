@@ -2,7 +2,6 @@
 
 ![TheHairLocs](https://img.shields.io/badge/version-1.0.0-blue)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB)
-![License](https://img.shields.io/badge/license-MIT-green)
 
 ## 🌐 Live Website
 
@@ -300,8 +299,8 @@ Access the admin panel at `/admin/dashboard` (requires admin role)
 | Detail | Information |
 |--------|-------------|
 | **Location** | Gujrat, Punjab, Pakistan |
-| **Phone** | 0333-3333333 |
-| **Email** | hairlocs@gmail.com |
+| **Phone** | 0327-6317391 |
+| **Email** | hsyedumer12534@gmail.com@gmail.com |
 | **Website** | https://myhairloc.netlify.app/ |
 
 ### Social Media
