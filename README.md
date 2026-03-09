@@ -300,8 +300,8 @@ Access the admin panel at `/admin/dashboard` (requires admin role)
 | Detail | Information |
 |--------|-------------|
 | **Location** | Gujrat, Punjab, Pakistan |
-| **Phone** | 0333-3333333 |
-| **Email** | hairlocs@gmail.com |
+| **Phone** | 0327-6317391 |
+| **Email** | hsyedumer12534@gmail.com@gmail.com |
 | **Website** | https://myhairloc.netlify.app/ |
 
 ### Social Media
