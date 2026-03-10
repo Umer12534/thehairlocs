@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import Button from "../../ui/button/Button";
 
 const OverlayForm = ({
     title,
@@ -53,12 +54,13 @@ const OverlayForm = ({
             ))}
 
             <div className="overlay-actions">
-                <button type="submit" disabled={loading}>
-                {loading ? "Saving..." : submitText}
-                </button>
-                <button type="button" className="btn-cancel" onClick={onClose}>
-                Cancel
-                </button>
+                <Button type="submit" disabled={loading} marginbottom={0} margintop={0}fullWidth >
+                    {loading ? "Saving..." : submitText}
+                </Button>
+                <Button type="button" variant="secondary" onClick={onClose}  marginbottom={0} margintop={0} fullWidth >
+                    Cancel
+                </Button>
+                
             </div>
             </form>
         </div>
