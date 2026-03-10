@@ -108,6 +108,10 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("revenue");
   const [orderChartData, setOrderChartData] = useState([]);
 
+  // ADDED: state to hold monthly chart data
+  const [orderChartDataMonthly, setOrderChartDataMonthly] = useState([]);
+  // END ADDED
+
   useEffect(() => {
     const loadDashboard = async () => {
       try {
@@ -137,24 +141,20 @@ const Dashboard = () => {
 
         setProducts(productData);
 
+        // ── EXISTING: build daily chart data (groups orders by day of week) ──
         const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const dayCounts = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
 
         orderData.forEach((order) => {
           const raw = order.createdAt;
           let date = null;
-
           if (raw?.toDate) {
-            // Firestore Timestamp object
             date = raw.toDate();
           } else if (raw?.seconds) {
-            // Firestore Timestamp stored as plain object { seconds, nanoseconds }
             date = new Date(raw.seconds * 1000);
           } else if (raw) {
-            // ISO string or any other format
             date = new Date(raw);
           }
-
           if (date && !isNaN(date.getTime())) {
             const dayName = dayLabels[date.getDay()];
             dayCounts[dayName] += 1;
@@ -167,8 +167,42 @@ const Dashboard = () => {
         }));
 
         setOrderChartData(chartOrders);
+        // ── END EXISTING daily chart data ──
 
-        // Category grouping
+        // ADDED: build monthly chart data (groups orders by month Jan-Dec)
+        const monthLabels = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ];
+        const monthCounts = {
+          Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
+          Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0,
+        };
+
+        orderData.forEach((order) => {
+          const raw = order.createdAt;
+          let date = null;
+          if (raw?.toDate) {
+            date = raw.toDate();
+          } else if (raw?.seconds) {
+            date = new Date(raw.seconds * 1000);
+          } else if (raw) {
+            date = new Date(raw);
+          }
+          if (date && !isNaN(date.getTime())) {
+            const monthName = monthLabels[date.getMonth()];
+            monthCounts[monthName] += 1;
+          }
+        });
+
+        const chartOrdersMonthly = monthLabels.map((month) => ({
+          month,   // <-- key is "month", used as dataKey in monthly BarChart
+          orders: monthCounts[month],
+        }));
+
+        setOrderChartDataMonthly(chartOrdersMonthly);
+        // END ADDED monthly chart data
+
         const catMap = {};
         productData.forEach((product) => {
           const categoryName = product.category || "Uncategorized";
@@ -178,7 +212,6 @@ const Dashboard = () => {
           Object.entries(catMap).map(([name, value]) => ({ name, value }))
         );
 
-        // Low stock items
         const lowStock = productData
           .flatMap((product) => {
             const sizes = product.sizes || {};
@@ -198,7 +231,6 @@ const Dashboard = () => {
 
         setLowStockItems(lowStock);
 
-        // Order stats
         const deliveredOrders = orderData.filter(
           (order) => order.orderStatus === "Delivered"
         );
@@ -210,7 +242,6 @@ const Dashboard = () => {
           0
         );
 
-        // Stock totals
         const totalStock = productData.reduce((sum, product) => {
           const sizes = product.sizes || {};
           return (
@@ -512,6 +543,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
+              {/* [DAILY CHART START] — comment out this block to use monthly */}
               <BarChart data={orderChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
                 <XAxis
@@ -535,6 +567,38 @@ const Dashboard = () => {
                 />
                 <Bar dataKey="orders" fill="#2c3e50" radius={[10, 10, 0, 0]} />
               </BarChart>
+              {/* [DAILY CHART END] */}
+
+              {/*
+                [MONTHLY CHART START] — uncomment this block to use monthly
+
+                <BarChart data={orderChartDataMonthly}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fill: "#718096", fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fill: "#718096", fontSize: 12 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#ffffff",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 12,
+                      color: "#2c3e50",
+                    }}
+                  />
+                  <Bar dataKey="orders" fill="#3498db" radius={[10, 10, 0, 0]} />
+                </BarChart>
+
+                [MONTHLY CHART END]
+              */}
+
             </ResponsiveContainer>
           )}
         </div>
