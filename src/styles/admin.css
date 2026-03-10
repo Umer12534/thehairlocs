@@ -382,10 +382,18 @@
 }
 
 /* Action Buttons */
+.action-cell {
+  vertical-align: middle;
+  text-align: center;
+  width: 100px;
+}
+
 .action-buttons {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-edit,
@@ -399,9 +407,10 @@
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-width: 80px;
   justify-content: center;
+  gap: 6px;
+  min-width: 90px;
+  width: 100%;
 }
 
 .btn-edit {
@@ -411,7 +420,8 @@
 
 .btn-edit:hover {
   background: #2980b9;
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -421,7 +431,8 @@
 
 .btn-delete:hover {
   background: #c0392b;
-  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+  transform: translateY(-1px);
 }
 
 /* No Data */

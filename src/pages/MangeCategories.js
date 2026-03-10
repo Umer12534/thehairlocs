@@ -278,21 +278,25 @@ const ManageCategories = () => {
 
                     <td>{cat.name}</td>
                     <td>{cat.description || "-"}</td>
-                    <td>
-                      <button
-                        className="btn-edit"
-                        onClick={() => handleOpenEdit(cat)}
-                        title="Edit"
-                      >
-                        <FontAwesomeIcon icon={faPen} />
-                      </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(cat.id)}
-                        title="Delete"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
+                    <td className="action-cell">
+                      <div className="action-buttons">
+                        <button
+                          className="btn-edit"
+                          onClick={() => handleOpenEdit(cat)}
+                          title="Edit"
+                        >
+                          <FontAwesomeIcon icon={faPen} />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          className="btn-delete"
+                          onClick={() => handleDelete(cat.id)}
+                          title="Delete"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                          <span>Delete</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
