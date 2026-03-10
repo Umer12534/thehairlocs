@@ -46,16 +46,6 @@ const MOCK_REVENUE = [
   { month: "Mar", revenue: 185000 },
 ];
 
-const MOCK_ORDERS = [
-  { day: "Mon", orders: 14 },
-  { day: "Tue", orders: 22 },
-  { day: "Wed", orders: 18 },
-  { day: "Thu", orders: 31 },
-  { day: "Fri", orders: 27 },
-  { day: "Sat", orders: 40 },
-  { day: "Sun", orders: 19 },
-];
-
 const CATEGORY_COLORS = ["#3498db", "#2ecc71", "#e67e22", "#2c3e50", "#e74c3c"];
 const LOW_STOCK_THRESHOLD = 5;
 
@@ -116,6 +106,7 @@ const Dashboard = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [lowStockItems, setLowStockItems] = useState([]);
   const [activeTab, setActiveTab] = useState("revenue");
+  const [orderChartData, setOrderChartData] = useState([]);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -133,10 +124,12 @@ const Dashboard = () => {
           ...doc.data(),
           id: doc.id,
         }));
+
         const orderData = ordersSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
+
         const userData = usersSnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
@@ -144,22 +137,51 @@ const Dashboard = () => {
 
         setProducts(productData);
 
+        const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayCounts = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
+
+        orderData.forEach((order) => {
+          const raw = order.createdAt;
+          let date = null;
+
+          if (raw?.toDate) {
+            // Firestore Timestamp object
+            date = raw.toDate();
+          } else if (raw?.seconds) {
+            // Firestore Timestamp stored as plain object { seconds, nanoseconds }
+            date = new Date(raw.seconds * 1000);
+          } else if (raw) {
+            // ISO string or any other format
+            date = new Date(raw);
+          }
+
+          if (date && !isNaN(date.getTime())) {
+            const dayName = dayLabels[date.getDay()];
+            dayCounts[dayName] += 1;
+          }
+        });
+
+        const chartOrders = dayLabels.map((day) => ({
+          day,
+          orders: dayCounts[day],
+        }));
+
+        setOrderChartData(chartOrders);
+
+        // Category grouping
         const catMap = {};
         productData.forEach((product) => {
           const categoryName = product.category || "Uncategorized";
           catMap[categoryName] = (catMap[categoryName] || 0) + 1;
         });
         setCategoryData(
-          Object.entries(catMap).map(([name, value]) => ({
-            name,
-            value,
-          }))
+          Object.entries(catMap).map(([name, value]) => ({ name, value }))
         );
 
+        // Low stock items
         const lowStock = productData
           .flatMap((product) => {
             const sizes = product.sizes || {};
-
             return Object.entries(sizes)
               .filter(([, sizeData]) => {
                 const stock = sizeData?.stock || 0;
@@ -176,12 +198,19 @@ const Dashboard = () => {
 
         setLowStockItems(lowStock);
 
-        const deliveredOrders = orderData.filter((order) => order.orderStatus === "Delivered");
-        const pendingOrders = orderData.filter((order) => order.orderStatus === "Pending");
+        // Order stats
+        const deliveredOrders = orderData.filter(
+          (order) => order.orderStatus === "Delivered"
+        );
+        const pendingOrders = orderData.filter(
+          (order) => order.orderStatus === "Pending"
+        );
         const totalRevenue = deliveredOrders.reduce(
           (sum, order) => sum + Number(order.totalAmount || 0),
           0
         );
+
+        // Stock totals
         const totalStock = productData.reduce((sum, product) => {
           const sizes = product.sizes || {};
           return (
@@ -223,7 +252,6 @@ const Dashboard = () => {
             (sum, sizeData) => sum + Number(sizeData?.stock || 0),
             0
           );
-
           return { ...product, totalStock };
         })
         .sort((first, second) => second.totalStock - first.totalStock)
@@ -484,7 +512,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={MOCK_ORDERS}>
+              <BarChart data={orderChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
                 <XAxis
                   dataKey="day"
@@ -544,7 +572,11 @@ const Dashboard = () => {
                     color: "#2c3e50",
                   }}
                 />
-                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12, color: "#718096" }} />
+                <Legend
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: 12, color: "#718096" }}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -603,7 +635,9 @@ const Dashboard = () => {
                         }`}
                       >
                         <FontAwesomeIcon
-                          icon={product.totalStock > 5 ? faCircleCheck : faExclamationTriangle}
+                          icon={
+                            product.totalStock > 5 ? faCircleCheck : faExclamationTriangle
+                          }
                         />
                         {product.totalStock > 20
                           ? "In Stock"
@@ -622,10 +656,10 @@ const Dashboard = () => {
         <div className="alerts-card">
           <div className="chart-card-header">
             <h3>
-                <FontAwesomeIcon
-                  icon={faExclamationTriangle}
-                  style={{ color: "#e67e22", marginRight: 6 }}
-                />
+              <FontAwesomeIcon
+                icon={faExclamationTriangle}
+                style={{ color: "#e67e22", marginRight: 6 }}
+              />
               Low Stock Alerts
             </h3>
             <span className="alert-count">{lowStockItems.length}</span>
