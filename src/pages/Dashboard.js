@@ -37,14 +37,8 @@ import { db } from "../config/firebase";
 import "../styles/admin.css";
 import "../styles/Dashboard.css";
 
-const MOCK_REVENUE = [
-  { month: "Oct", revenue: 42000 },
-  { month: "Nov", revenue: 58000 },
-  { month: "Dec", revenue: 95000 },
-  { month: "Jan", revenue: 67000 },
-  { month: "Feb", revenue: 78000 },
-  { month: "Mar", revenue: 185000 },
-];
+// MOCK_REVENUE removed — replaced by real Firestore revenueChartData
+// const MOCK_REVENUE = [ ... ];
 
 const CATEGORY_COLORS = ["#3498db", "#2ecc71", "#e67e22", "#2c3e50", "#e74c3c"];
 const LOW_STOCK_THRESHOLD = 5;
@@ -106,11 +100,13 @@ const Dashboard = () => {
   const [categoryData, setCategoryData] = useState([]);
   const [lowStockItems, setLowStockItems] = useState([]);
   const [activeTab, setActiveTab] = useState("revenue");
-  const [orderChartData, setOrderChartData] = useState([]);
 
-  // ADDED: state to hold monthly chart data
+  // REMOVED: orderChartData (daily) — no longer needed
+  // KEPT: monthly order bar chart state
   const [orderChartDataMonthly, setOrderChartDataMonthly] = useState([]);
-  // END ADDED
+
+  // Real monthly revenue line chart state
+  const [revenueChartData, setRevenueChartData] = useState([]);
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -141,39 +137,16 @@ const Dashboard = () => {
 
         setProducts(productData);
 
-        // ── EXISTING: build daily chart data (groups orders by day of week) ──
-        const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        const dayCounts = { Sun: 0, Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0 };
-
-        orderData.forEach((order) => {
-          const raw = order.createdAt;
-          let date = null;
-          if (raw?.toDate) {
-            date = raw.toDate();
-          } else if (raw?.seconds) {
-            date = new Date(raw.seconds * 1000);
-          } else if (raw) {
-            date = new Date(raw);
-          }
-          if (date && !isNaN(date.getTime())) {
-            const dayName = dayLabels[date.getDay()];
-            dayCounts[dayName] += 1;
-          }
-        });
-
-        const chartOrders = dayLabels.map((day) => ({
-          day,
-          orders: dayCounts[day],
-        }));
-
-        setOrderChartData(chartOrders);
-        // ── END EXISTING daily chart data ──
-
-        // ADDED: build monthly chart data (groups orders by month Jan-Dec)
+        // Shared month labels used by both charts below
         const monthLabels = [
           "Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
         ];
+
+        // REMOVED: daily order chart data (dayLabels, dayCounts, setOrderChartData)
+
+        // ── Monthly order bar chart data ──────────────────────────────────────
+        // Groups all orders by the month of their createdAt date.
         const monthCounts = {
           Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
           Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0,
@@ -195,13 +168,41 @@ const Dashboard = () => {
           }
         });
 
-        const chartOrdersMonthly = monthLabels.map((month) => ({
-          month,   // <-- key is "month", used as dataKey in monthly BarChart
-          orders: monthCounts[month],
-        }));
+        setOrderChartDataMonthly(
+          monthLabels.map((month) => ({ month, orders: monthCounts[month] }))
+        );
+        // ── End monthly order bar chart data ──────────────────────────────────
 
-        setOrderChartDataMonthly(chartOrdersMonthly);
-        // END ADDED monthly chart data
+        // ── Monthly revenue line chart data ───────────────────────────────────
+        // Only counts Delivered orders towards revenue, grouped by month.
+        // If your revenue field is named differently, change "order.totalAmount" below.
+        const monthRevenue = {
+          Jan: 0, Feb: 0, Mar: 0, Apr: 0, May: 0, Jun: 0,
+          Jul: 0, Aug: 0, Sep: 0, Oct: 0, Nov: 0, Dec: 0,
+        };
+
+        orderData.forEach((order) => {
+          if (order.orderStatus !== "Delivered") return;
+
+          const raw = order.createdAt;
+          let date = null;
+          if (raw?.toDate) {
+            date = raw.toDate();
+          } else if (raw?.seconds) {
+            date = new Date(raw.seconds * 1000);
+          } else if (raw) {
+            date = new Date(raw);
+          }
+          if (date && !isNaN(date.getTime())) {
+            const monthName = monthLabels[date.getMonth()];
+            monthRevenue[monthName] += Number(order.totalAmount || 0);
+          }
+        });
+
+        setRevenueChartData(
+          monthLabels.map((month) => ({ month, revenue: monthRevenue[month] }))
+        );
+        // ── End monthly revenue line chart data ───────────────────────────────
 
         const catMap = {};
         productData.forEach((product) => {
@@ -507,8 +508,9 @@ const Dashboard = () => {
           {loading ? (
             <div className="chart-skeleton skeleton" />
           ) : activeTab === "revenue" ? (
+            // Revenue line chart — real monthly data from Firestore (Delivered orders only)
             <ResponsiveContainer width="100%" height={260}>
-              <LineChart data={MOCK_REVENUE}>
+              <LineChart data={revenueChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
                 <XAxis
                   dataKey="month"
@@ -542,12 +544,12 @@ const Dashboard = () => {
               </LineChart>
             </ResponsiveContainer>
           ) : (
+            // Orders bar chart — monthly data from Firestore (all orders grouped by month)
             <ResponsiveContainer width="100%" height={260}>
-              {/* [DAILY CHART START] — comment out this block to use monthly */}
-              <BarChart data={orderChartData}>
+              <BarChart data={orderChartDataMonthly}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
                 <XAxis
-                  dataKey="day"
+                  dataKey="month"
                   tick={{ fill: "#718096", fontSize: 12 }}
                   axisLine={false}
                   tickLine={false}
@@ -565,40 +567,8 @@ const Dashboard = () => {
                     color: "#2c3e50",
                   }}
                 />
-                <Bar dataKey="orders" fill="#2c3e50" radius={[10, 10, 0, 0]} />
+                <Bar dataKey="orders" fill="#3498db" radius={[10, 10, 0, 0]} />
               </BarChart>
-              {/* [DAILY CHART END] */}
-
-              {/*
-                [MONTHLY CHART START] — uncomment this block to use monthly
-
-                <BarChart data={orderChartDataMonthly}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(52, 152, 219, 0.12)" />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fill: "#718096", fontSize: 12 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    tick={{ fill: "#718096", fontSize: 12 }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#ffffff",
-                      border: "1px solid #e2e8f0",
-                      borderRadius: 12,
-                      color: "#2c3e50",
-                    }}
-                  />
-                  <Bar dataKey="orders" fill="#3498db" radius={[10, 10, 0, 0]} />
-                </BarChart>
-
-                [MONTHLY CHART END]
-              */}
-
             </ResponsiveContainer>
           )}
         </div>
