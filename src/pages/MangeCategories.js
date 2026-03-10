@@ -6,6 +6,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -15,7 +16,9 @@ import ToastMessage from "../components/ui/toastMessage/ToastMessage";
 import OverlayForm from "../components/sections/overlayForm/OverlayForm";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSearch, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+
+const EMPTY_FORM = { name: "", description: "", image: "" };
 
 const ManageCategories = () => {
   const categoryRef = collection(db, "Category");
@@ -28,17 +31,16 @@ const ManageCategories = () => {
   const [search, setSearch] = useState("");
 
   const [showAdd, setShowAdd] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("success");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    image: "",
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   /* =====================
      FORM FIELDS
@@ -127,12 +129,54 @@ const ManageCategories = () => {
       setToastType("success");
       setToastMessage("Category added successfully");
 
-      setFormData({ name: "", description: "", image: "" });
+      setFormData(EMPTY_FORM);
       setShowAdd(false);
       fetchCategories();
     } catch (error) {
       setToastType("error");
       setToastMessage("Failed to add category");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* =====================
+     OPEN EDIT FORM
+  ===================== */
+  const handleOpenEdit = (cat) => {
+    setEditingId(cat.id);
+    setFormData({
+      name: cat.name || "",
+      description: cat.description || "",
+      image: cat.image || "",
+    });
+    setShowEdit(true);
+  };
+
+  /* =====================
+     EDIT CATEGORY
+  ===================== */
+  const handleEditCategory = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const categoryDoc = doc(db, "Category", editingId);
+      await updateDoc(categoryDoc, {
+        ...formData,
+        updatedAt: serverTimestamp(),
+      });
+
+      setToastType("success");
+      setToastMessage("Category updated successfully");
+
+      setFormData(EMPTY_FORM);
+      setEditingId(null);
+      setShowEdit(false);
+      fetchCategories();
+    } catch (error) {
+      setToastType("error");
+      setToastMessage("Failed to update category");
     } finally {
       setLoading(false);
     }
@@ -158,7 +202,7 @@ const ManageCategories = () => {
       <td><div className="skeleton skeleton-image"></div></td>
       <td><div className="skeleton skeleton-text"></div></td>
       <td><div className="skeleton skeleton-text"></div></td>
-      <td><div className="skeleton skeleton-icon"></div></td>
+      <td><div className="skeleton skeleton-text"></div></td>
     </tr>
   );
 
@@ -186,7 +230,10 @@ const ManageCategories = () => {
 
             <Button
               variant="green"
-              onClick={() => setShowAdd(true)}
+              onClick={() => {
+                setFormData(EMPTY_FORM);
+                setShowAdd(true);
+              }}
               margintop={0}
               marginbottom={0}
             >
@@ -233,8 +280,16 @@ const ManageCategories = () => {
                     <td>{cat.description || "-"}</td>
                     <td>
                       <button
+                        className="btn-edit"
+                        onClick={() => handleOpenEdit(cat)}
+                        title="Edit"
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </button>
+                      <button
                         className="btn-delete"
                         onClick={() => handleDelete(cat.id)}
+                        title="Delete"
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
@@ -252,7 +307,7 @@ const ManageCategories = () => {
           </table>
         </div>
 
-        {/* OVERLAY FORM */}
+        {/* ADD OVERLAY FORM */}
         {showAdd && (
           <OverlayForm
             title="Add Category"
@@ -260,9 +315,30 @@ const ManageCategories = () => {
             formData={formData}
             setFormData={setFormData}
             onSubmit={handleAddCategory}
-            onClose={() => setShowAdd(false)}
+            onClose={() => {
+              setShowAdd(false);
+              setFormData(EMPTY_FORM);
+            }}
             loading={loading}
             submitText="Add Category"
+          />
+        )}
+
+        {/* EDIT OVERLAY FORM */}
+        {showEdit && (
+          <OverlayForm
+            title="Edit Category"
+            fields={categoryFields}
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleEditCategory}
+            onClose={() => {
+              setShowEdit(false);
+              setFormData(EMPTY_FORM);
+              setEditingId(null);
+            }}
+            loading={loading}
+            submitText="Save Changes"
           />
         )}
       </div>
