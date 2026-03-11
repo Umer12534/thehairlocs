@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+/* ─────────────────────────────────────────
+   PAGE
+───────────────────────────────────────── */
 .admin-orders-page {
   padding: 24px;
   display: flex;
@@ -16,6 +21,9 @@
   color: #6b7280;
 }
 
+/* ─────────────────────────────────────────
+   SUMMARY CARDS
+───────────────────────────────────────── */
 .order-summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -42,6 +50,9 @@
   font-size: 1.3rem;
 }
 
+/* ─────────────────────────────────────────
+   FILTERS
+───────────────────────────────────────── */
 .order-filters {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -64,6 +75,9 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
 }
 
+/* ─────────────────────────────────────────
+   TABLE
+───────────────────────────────────────── */
 .order-table-wrapper {
   width: 100%;
   overflow-x: auto;
@@ -94,6 +108,9 @@
   color: #475569;
 }
 
+/* ─────────────────────────────────────────
+   STATUS BADGES
+───────────────────────────────────────── */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -128,6 +145,9 @@
   color: #991b1b;
 }
 
+/* ─────────────────────────────────────────
+   TABLE ACTIONS
+───────────────────────────────────────── */
 .table-actions {
   display: flex;
   align-items: center;
@@ -155,91 +175,359 @@
   padding: 24px;
 }
 
+/* ─────────────────────────────────────────
+   ORDER DETAILS MODAL — OVERLAY
+───────────────────────────────────────── */
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modal-slide-up {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
 .order-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(8, 15, 30, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: grid;
   place-items: center;
   z-index: 1000;
   padding: 14px;
+  animation: modal-fade-in 0.18s ease;
 }
 
+/* ─────────────────────────────────────────
+   ORDER DETAILS MODAL — SHELL
+───────────────────────────────────────── */
 .order-modal {
-  width: min(920px, 100%);
-  max-height: 90vh;
+  width: min(860px, 100%);
+  max-height: 92vh;
   overflow: auto;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
+  background: #f8fafc;
+  border-radius: 20px;
+  box-shadow:
+    0 32px 72px rgba(8, 15, 30, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  animation: modal-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
 }
 
+.order-modal::-webkit-scrollbar {
+  width: 5px;
+}
+.order-modal::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 99px;
+}
+
+/* ─────────────────────────────────────────
+   MODAL HEADER
+───────────────────────────────────────── */
 .order-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 16px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 18px 22px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8edf3;
+  border-radius: 20px 20px 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 12px;
 }
 
-.order-modal-header h2 {
+.order-modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-modal-id-badge {
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.order-modal-title {
   margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
 }
 
+.order-modal-date {
+  margin: 3px 0 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.order-modal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────
+   MODAL STATUS BADGE (header variant)
+───────────────────────────────────────── */
+.modal-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: capitalize;
+}
+
+.modal-status-badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.modal-status-badge.pending    { background: #fef9ec; color: #b45309; }
+.modal-status-badge.pending::before    { background: #f59e0b; }
+
+.modal-status-badge.processing { background: #eff6ff; color: #1d4ed8; }
+.modal-status-badge.processing::before { background: #3b82f6; }
+
+.modal-status-badge.shipped    { background: #f5f3ff; color: #6d28d9; }
+.modal-status-badge.shipped::before    { background: #8b5cf6; }
+
+.modal-status-badge.delivered  { background: #f0fdf4; color: #166534; }
+.modal-status-badge.delivered::before  { background: #22c55e; }
+
+.modal-status-badge.cancelled  { background: #fff1f2; color: #9f1239; }
+.modal-status-badge.cancelled::before  { background: #f43f5e; }
+
+/* ─────────────────────────────────────────
+   CLOSE BUTTON
+───────────────────────────────────────── */
 .close-btn {
-  border: none;
-  background: #e2e8f0;
-  color: #1e293b;
-  border-radius: 8px;
-  padding: 7px 12px;
-  cursor: pointer;
-}
-
-.order-modal-content {
-  padding: 16px;
-  display: grid;
-  gap: 16px;
-}
-
-.order-modal-content section {
   border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px;
   background: #f8fafc;
+  color: #64748b;
+  border-radius: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s;
 }
 
-.order-modal-content h3 {
-  margin: 0 0 10px;
+.close-btn:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
 }
 
-.order-modal-content p {
-  margin: 6px 0;
+/* ─────────────────────────────────────────
+   MODAL BODY
+───────────────────────────────────────── */
+.order-modal-content {
+  padding: 18px 22px;
+  display: grid;
+  gap: 14px;
 }
 
+/* two-up grid for customer + payment */
+.order-modal-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ─────────────────────────────────────────
+   SECTION CARDS
+───────────────────────────────────────── */
+.order-modal-section {
+  background: #ffffff;
+  border: 1px solid #e8edf3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.order-modal-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafbfc;
+}
+
+.order-modal-section-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.order-modal-section-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.order-modal-section-body {
+  padding: 4px 16px 12px;
+}
+
+/* ─────────────────────────────────────────
+   INFO ROWS
+───────────────────────────────────────── */
+.order-modal-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.order-modal-info-row:last-child {
+  border-bottom: none;
+}
+
+.order-modal-info-label {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+
+.order-modal-info-value {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+  text-align: right;
+}
+
+.order-modal-total-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ─────────────────────────────────────────
+   PRODUCT LIST
+───────────────────────────────────────── */
 .modal-products {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .modal-product {
   display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 10px;
+  grid-template-columns: 56px 1fr auto;
+  gap: 12px;
   align-items: center;
-  border: 1px solid #e2e8f0;
+  padding: 10px;
   border-radius: 10px;
-  padding: 8px;
-  background: #fff;
+  border: 1px solid #f1f5f9;
+  background: #ffffff;
+  transition: background 0.15s;
+}
+
+.modal-product:hover {
+  background: #f8fafc;
 }
 
 .modal-product img {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   object-fit: cover;
   border-radius: 8px;
-  background: #f3f4f6;
+  background: #f1f5f9;
+  flex-shrink: 0;
 }
 
+.modal-product-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.modal-product-meta {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.modal-product-subtotal {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────
+   ORDER TOTAL FOOTER
+───────────────────────────────────────── */
+.modal-order-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px dashed #e2e8f0;
+}
+
+.modal-order-total-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.modal-order-total-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 5px 14px;
+  border-radius: 8px;
+}
+
+.modal-empty-products {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  padding: 18px 0;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
 @media (max-width: 1024px) {
   .order-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -250,6 +538,28 @@
   }
 }
 
+@media (max-width: 680px) {
+  .order-modal-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-modal-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .modal-product {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .modal-product-subtotal {
+    grid-column: 1 / -1;
+    text-align: right;
+    padding-top: 4px;
+    border-top: 1px dashed #f1f5f9;
+  }
+}
+
 @media (max-width: 640px) {
   .admin-orders-page {
     padding: 14px;
@@ -257,5 +567,9 @@
 
   .order-summary-grid {
     grid-template-columns: 1fr;
+  }
+
+  .order-modal-content {
+    padding: 14px 14px;
   }
 }
