@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import {
   collection,
@@ -21,6 +22,7 @@ import { faPlus, faSearch, faTrash, faPen } from "@fortawesome/free-solid-svg-ic
 const EMPTY_FORM = { name: "", description: "", image: "" };
 
 const ManageCategories = () => {
+  const navigate = useNavigate();
   const categoryRef = collection(db, "Category");
 
   /* =====================
@@ -261,7 +263,17 @@ const ManageCategories = () => {
                 [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
               ) : filteredCategories.length ? (
                 filteredCategories.map((cat, i) => (
-                  <tr key={cat.id}>
+                  <tr 
+                    key={cat.id} 
+                    onClick={() => {
+                      if(window.innerWidth < 768){
+                        navigate(`/admin/mange-categories/${encodeURIComponent(cat.name)}`)
+                      }
+                    }}
+                    onDoubleClick={() => navigate(`/admin/mange-categories/${encodeURIComponent(cat.name)}`)}
+                    style={{ cursor: "pointer" }}
+                    title="Double-click to view products in this category"
+                  >
                     <td>{i + 1}</td>
 
                     <td>

@@ -34,6 +34,7 @@ import AdminLayout from "./components/layout/AdminLayout";
 import Dashboard from "./pages/Dashboard";
 import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
+import CategoryProducts from "./pages/CategoryProducts";
 import AddProduct from "./pages/AddProduct";
 import Add from "./pages/add";
 import { auth } from "./config/firebase";
@@ -133,6 +134,7 @@ function App() {
             <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/settings" element={<Settings />} />
             <Route path="/admin/mange-categories" element={<MangeCategories />} />
+            <Route path="/admin/mange-categories/:categoryName" element={<CategoryProducts />} />
 
             {/* <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} /> */}

@@ -157,13 +157,9 @@
 
 .view-cart-btn:hover {
   background: #15803d;
-  transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(22, 163, 74, 0.35);
 }
 
-.view-cart-btn:active {
-  transform: translateY(0);
-}
 
 /* Progress bar */
 .cart-notification::after {
