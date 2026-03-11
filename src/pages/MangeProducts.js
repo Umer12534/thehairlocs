@@ -11,6 +11,7 @@ import {
   faSearch, 
   faEdit, 
   faTrash,
+  faPen,
 } from "@fortawesome/free-solid-svg-icons";
 import ToastMessage from "../components/ui/toastMessage/ToastMessage";
 import EditProduct from "./EditProduct"
@@ -265,13 +266,15 @@ const ManageProducts = () => {
                           setSelectedProductId(product.id);
                           setShowEditForm(true);
                         }}>
-                          <FontAwesomeIcon icon={faEdit} />
+                          <FontAwesomeIcon icon={faPen} />
+                          <span>Edit</span>
                         </button>
                         <button
                           className="btn-delete"
                           onClick={() => handleDelete(product.id)}
                         >
                           <FontAwesomeIcon icon={faTrash} />
+                          <span>Delete</span>
                         </button>
                       </div>
                     </td>

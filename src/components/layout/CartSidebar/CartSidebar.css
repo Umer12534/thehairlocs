@@ -183,7 +183,12 @@
     background-color: transparent;
     border: none;
     font-size: 20px;
-    color: #333;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.remove-item:hover {
+  color: var(--color-danger);
 }
 
 .item-info {
@@ -200,7 +205,7 @@
 .item-info p {
   margin: 0;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary)
 }
 
 .sidebar-stock-note {
@@ -250,6 +255,9 @@
   cursor: not-allowed;
 }
 
+.qty-controls button:focus{
+  outline: none;
+}
 .empty-cart {
   display: flex;
   flex-direction: column;
