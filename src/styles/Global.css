@@ -69,29 +69,29 @@
   text-align: center;
   padding: 60px 20px;
   width: 100%;
-  background: #fff;
+  background: var(--color-bg-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--color-shadow);
   margin: 20px;
 }
 
 .empty-state h3,
 .error-state h3 {
-  color: #333;
+  color: var(--color-text-primary);
   margin-bottom: 10px;
   font-size: 24px;
 }
 
 .empty-state p,
 .error-state p {
-  color: #666;
+  color: var(--color-text-secondary);
   margin-bottom: 20px;
   font-size: 16px;
 }
 
 .retry-button {
-  background: #007bff;
-  color: white;
+  background: var(--color-secondary);
+  color: var(--color-text-light);
   border: none;
   padding: 10px 20px;
   border-radius: 4px;
@@ -100,7 +100,7 @@
 }
 
 .retry-button:hover {
-  background: #0056b3;
+  background: var(--color-secondary-light);
 }
 
 /* Skeleton Loading Styles */

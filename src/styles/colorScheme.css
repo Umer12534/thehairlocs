@@ -1,0 +1,145 @@
+/* ========================================
+   THE HAIR LOCS - COLOR SCHEME
+   ======================================== */
+
+/* CSS Variables - Use these throughout the project */
+:root {
+  /* Primary Brand Colors - Peach/Coral */
+  --color-primary: #fac6ae;
+  --color-primary-dark: #f2a68c;
+  --color-primary-light: #f6c7b6;
+
+  /* Secondary/Accent Colors */
+  --color-secondary: #5b3df5;
+  --color-secondary-light: #4f6df5;
+  
+  /* Background Colors */
+  --color-bg-primary: #fef3ea;
+  --color-bg-secondary: #f6f6f6;
+  --color-bg-surface: #ffffff;
+  --color-bg-hover: #f8f8f8;
+
+  /* Text Colors */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-muted: #888888;
+  --color-text-light: #ffffff;
+
+  /* Border Colors */
+  --color-border: #dddddd;
+  --color-border-light: #eeeeee;
+  --color-border-dark: #cccccc;
+
+  /* Status Colors */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-danger: #d9534f;
+
+  /* Status Backgrounds */
+  --color-success-bg: #dcfce7;
+  --color-warning-bg: #fef3c7;
+  --color-error-bg: #fee2e2;
+  --color-danger-bg: #ffebee;
+
+  /* Specific Use Colors */
+  --color-accent: #fac6ae;
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-shadow-dark: rgba(0, 0, 0, 0.2);
+
+  /* Transparent */
+  --color-transparent: transparent;
+}
+
+/* ========================================
+   LEGACY COLOR ALIASES (For backward compatibility)
+   ======================================== */
+   
+/* These map the old color names to new CSS variables */
+.color-fac6ae { color: var(--color-primary); }
+.color-f2a68c { color: var(--color-primary-dark); }
+.color-f6c7b6 { color: var(--color-primary-light); }
+.color-5b3df5 { color: var(--color-secondary); }
+.color-333 { color: var(--color-text-primary); }
+.color-666 { color: var(--color-text-secondary); }
+.color-eee { color: var(--color-border-light); }
+.color-ddd { color: var(--color-border); }
+.color-white { color: var(--color-bg-surface); }
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Background Utilities */
+.bg-primary { background-color: var(--color-primary) !important; }
+.bg-primary-dark { background-color: var(--color-primary-dark) !important; }
+.bg-primary-light { background-color: var(--color-primary-light) !important; }
+.bg-secondary { background-color: var(--color-secondary) !important; }
+.bg-surface { background-color: var(--color-bg-surface) !important; }
+.bg-success { background-color: var(--color-success) !important; }
+.bg-warning { background-color: var(--color-warning) !important; }
+.bg-error { background-color: var(--color-error) !important; }
+
+/* Text Utilities */
+.text-primary { color: var(--color-text-primary) !important; }
+.text-secondary { color: var(--color-text-secondary) !important; }
+.text-muted { color: var(--color-text-muted) !important; }
+.text-light { color: var(--color-text-light) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-error { color: var(--color-error) !important; }
+
+/* Border Utilities */
+.border-primary { border-color: var(--color-primary) !important; }
+.border-secondary { border-color: var(--color-secondary) !important; }
+.border-default { border-color: var(--color-border) !important; }
+
+/* Hover States */
+.hover-primary:hover { 
+  background-color: var(--color-primary-dark) !important; 
+  color: var(--color-text-primary) !important;
+}
+
+/* ========================================
+   COMPONENT-SPECIFIC ALIASES
+   ======================================== */
+
+/* These are reference aliases for component-specific use */
+
+/* Buttons */
+.btn-primary-bg { --btn-bg: var(--color-primary); }
+.btn-primary-hover { --btn-hover: var(--color-primary-dark); }
+.btn-secondary-bg { --btn-bg: var(--color-secondary); }
+.btn-secondary-hover { --btn-hover: var(--color-secondary-light); }
+
+/* Cards */
+.card-bg { --card-bg: var(--color-bg-surface); }
+.card-shadow { --card-shadow: 0 2px 8px var(--color-shadow); }
+.card-border { --card-border: var(--color-border-light); }
+
+/* Forms */
+.input-border { --input-border: var(--color-border); }
+.input-focus { --input-focus: var(--color-secondary); }
+.input-bg { --input-bg: var(--color-bg-surface); }
+
+/* Badges */
+.badge-success { --badge-bg: var(--color-success-bg); color: var(--color-success); }
+.badge-warning { --badge-bg: var(--color-warning-bg); color: var(--color-warning); }
+.badge-error { --badge-bg: var(--color-error-bg); color: var(--color-error); }
+
+/* Navbar */
+.navbar-bg { --navbar-bg: var(--color-bg-surface); }
+.navbar-border { --navbar-border: var(--color-border-light); }
+.navbar-hover { --navbar-hover: var(--color-primary); }
+
+/* Footer */
+.footer-bg { --footer-bg: var(--color-bg-primary); }
+.footer-text { --footer-text: var(--color-text-primary); }
+.footer-link-hover { --footer-link-hover: var(--color-primary-dark); }
+
+/* Sidebar */
+.sidebar-bg { --sidebar-bg: var(--color-bg-surface); }
+.sidebar-hover { --sidebar-hover: var(--color-bg-hover); }
+.sidebar-active { --sidebar-active: var(--color-primary); }
+

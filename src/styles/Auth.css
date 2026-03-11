@@ -1,7 +1,7 @@
 
 .auth-wrapper {
     min-height: 100vh;
-    background: #f6f6f6;
+    background: var(--color-bg-secondary);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,7 +9,7 @@
 }
 
 .auth-card {
-    background: #ffffff;
+    background: var(--color-bg-surface);
     width: 100%;
     max-width: 420px;
     padding: 20px 30px;
@@ -37,7 +37,7 @@
 
 .auth-subtitle {
     font-size: 15px;
-    color: #666;
+    color: var(--color-text-secondary);
     margin-bottom: 20px;
     margin-top: 10px;
 }
@@ -45,8 +45,8 @@
 .shop-btn {
     width: 100%;
     padding: 14px;
-    background: #fac6ae;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-text-light);
     border: none;
     border-radius: 10px;
     font-size: 15px;
@@ -55,7 +55,7 @@
 }
 
 .shop-btn:hover {
-    background: #f2a68c;
+    background: var(--color-primary-dark);
 }
 
 .divider {
@@ -69,33 +69,33 @@
     content: "";
     flex: 1;
     height: 1px;
-    background: #ddd;
+    background: var(--color-border);
 }
 
 .divider span {
     margin: 0 12px;
     font-size: 14px;
-    color: #888;
+    color: var(--color-text-muted);
 }
 
 .auth-input {
     width: 100%;
     padding: 14px;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border);
     margin-bottom: 15px;
     font-size: 14px;
 }
 
 .auth-input:focus {
     outline: none;
-    border-color: #5b3df5;
+    border-color: var(--color-secondary);
 }
 
 .continue-btn {
     width: 100%;
     padding: 14px;
-    background: #f1f1f1;
+    background: var(--color-bg-secondary);
     border: none;
     border-radius: 10px;
     font-size: 15px;
@@ -114,7 +114,7 @@
 }
 
 .switch-auth a {
-    color: #5b3df5;
+    color: var(--color-secondary);
     text-decoration: none;
 }
 
@@ -128,13 +128,13 @@
 }
 
 .auth-footer a {
-    color: #5b3df5;
+    color: var(--color-secondary);
     text-decoration: none;
 }
 
 .auth-error {
-    background-color: #ffe5e5;
-    color: #d8000c;
+    background-color: var(--color-error-bg);
+    color: var(--color-error);
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 12px;

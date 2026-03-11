@@ -14,7 +14,7 @@
 .product-card__image-wrapper {
   position: relative;
   height: 380px;
-  background-color: #fef3ea;
+  background-color: var(--color-bg-primary);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -50,7 +50,7 @@
 .product-card__category {
   font-size: 14px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-text-light);
   letter-spacing: 0.5px;
 }
 
@@ -68,22 +68,22 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  background-color: #fac6ae;
+  background-color: var(--color-primary);
   border-radius: 20px;
   padding: 0 15px;
   font-size: 13px;
   border: none;
   cursor: pointer;
-  color: #333;
+  color: var(--color-text-primary);
   transition: all 0.3s ease;
 }
 
 .product-card__like--active {
-  background-color: #f2a68c;
+  background-color: var(--color-primary-dark);
 }
 
 .product-card__like--active svg {
-  color: #d9534f;
+  color: var(--color-danger);
 }
 
 .product-card__like-count {

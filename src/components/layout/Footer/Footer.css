@@ -3,7 +3,7 @@
 .footer-container {
   width: 100%;
   height: auto;
-  background-color: #fef3ea;
+  background-color: var(--color-bg-primary);
 }
 
 /* Footer top section */
@@ -29,11 +29,11 @@
 
 .footer-card .Link {
   text-decoration: none;
-  color: #333;
+  color: var(--color-text-primary);
 }
 
 .footer-card .Link:hover {
-  color: #f2a68c;
+  color: var(--color-primary-dark);
 }
 
 .footer-logo {
