@@ -36,7 +36,7 @@ import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
 import CategoryProducts from "./pages/CategoryProducts";
 import AddProduct from "./pages/AddProduct";
-import Add from "./pages/add";
+import Add from "./pages/add";                // Temp Add products/categorye
 import { auth } from "./config/firebase";
 import { resolveAndSyncUserRole } from "./utils/userRole";
 import Users from "./pages/Users";
