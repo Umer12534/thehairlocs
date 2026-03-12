@@ -1,26 +1,34 @@
-import { useState } from "react";
+import { useChat } from "../../../contaxt/ChatContext";
 import "./ChatbotToggleButton.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function ChatbotToggleButton() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isChatOpen, openChat, closeChat } = useChat();
+
+    const toggleChat = () => {
+      if (isChatOpen) {
+        closeChat();
+      } else {
+        openChat();
+      }
+    };
 
     return (
         <>
-        <div className={`chat-btn-wrapper ${isOpen ? "open-state" : ""}`}>
+        <div className={`chat-btn-wrapper ${isChatOpen ? "open-state" : ""}`}>
             <button
             className="chat-btn"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? "Close chat" : "Open chat"}
+            onClick={toggleChat}
+            aria-label={isChatOpen ? "Close chat" : "Open chat"}
             >
             <span className="pulse-dot" />
 
             <span className="btn-icon">
-                <FontAwesomeIcon icon={isOpen ? faXmark : faMessage} />
+                <FontAwesomeIcon icon={isChatOpen ? faXmark : faMessage} />
             </span>
 
-            <span className="btn-label">{isOpen ? "Close" : "AI Chat"}</span>
+            <span className="btn-label">{isChatOpen ? "Close" : "AI Chat"}</span>
             </button>
         </div>
         </>
