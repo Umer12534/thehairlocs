@@ -42,6 +42,24 @@ import { resolveAndSyncUserRole } from "./utils/userRole";
 import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import AdminOrders from "./admin/adminPages/AdminOrders";
+import AccountLayout from "./components/layout/AccountLayout";
+
+function RequireAuth({ children }) {
+  const [isChecking, setIsChecking] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+      setIsChecking(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (isChecking) return null;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return children;
+}
 
 function RequireAdmin({ children }) {
   const [isChecking, setIsChecking] = useState(true);
@@ -111,13 +129,17 @@ function App() {
             <Route path="/SignUp" element={<SignUp />} />
           </Route>
 
-          {/* User Account Pages
-          <Route element={<AccountLayout />}>
+          {/* User Account Pages */}
+          <Route element={
+            <RequireAuth>
+              <AccountLayout />
+            </RequireAuth>
+          }>
             <Route path="/account" element={<Navigate to="/account/profile" replace />} />
-            <Route path="/account/orders" element={<Orders />} />
             <Route path="/account/profile" element={<AccountDetails />} />
+            <Route path="/account/orders" element={<UserOrders />} />
             <Route path="/account/settings" element={<AccountSettings />} />
-          </Route> */}
+          </Route>
 
           {/* Admin Panel */}
           <Route
