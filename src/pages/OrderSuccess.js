@@ -45,23 +45,22 @@ const OrderSuccess = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    
-    // Handle Firestore Timestamp
+
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return date.toLocaleDateString('en-US', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   };
 
   const getStatusColor = (status) => {
     const colors = {
-      'Pending': '#f59e0b',
-      'Processing': '#3b82f6',
-      'Shipped': '#8b5cf6',
-      'Delivered': '#22c55e',
-      'Cancelled': '#ef4444'
+      Pending: '#f59e0b',
+      Processing: '#3b82f6',
+      Shipped: '#8b5cf6',
+      Delivered: '#22c55e',
+      Cancelled: '#ef4444',
     };
     return colors[status] || '#6b7280';
   };
@@ -124,8 +123,8 @@ const OrderSuccess = () => {
             </div>
             <div className="order-info-item">
               <span className="info-label">Order Status</span>
-              <span 
-                className="status-badge" 
+              <span
+                className="status-badge"
                 style={{ backgroundColor: getStatusColor(order.orderStatus) }}
               >
                 {order.orderStatus}
@@ -178,8 +177,8 @@ const OrderSuccess = () => {
             {order.items?.map((item, index) => (
               <div key={index} className="product-item">
                 <div className="product-image">
-                  <img 
-                    src={item.image || '/assets/images/products/product_not_found.png'} 
+                  <img
+                    src={item.image || '/assets/images/products/product_not_found.png'}
                     alt={item.title}
                     onError={(e) => {
                       e.target.src = '/assets/images/products/product_not_found.png';
@@ -190,7 +189,7 @@ const OrderSuccess = () => {
                   <h4>{item.title}</h4>
                   {item.size && <span className="product-size">Size: {item.size}</span>}
                   <span className="product-quantity">
-                    Qty: {item.quantity} × Rs {item.price?.toLocaleString('en-PK')}
+                    Qty: {item.quantity} x Rs {item.price?.toLocaleString('en-PK')}
                   </span>
                 </div>
                 <div className="product-subtotal">
@@ -224,13 +223,14 @@ const OrderSuccess = () => {
           <Button position='right' variant="primary" onClick={() => navigate('/products')}>
             Continue Shopping
           </Button>
-
         </div>
 
         {/* Additional Info */}
         <div className="additional-info">
           <p>
-            📧 A confirmation email has been sent to <strong>{order.email}</strong>
+            {order.emailStatus === 'sent'
+              ? <>A confirmation email has been sent to <strong>{order.email}</strong></>
+              : <>Your order was placed successfully. Email confirmation status: <strong>{order.emailStatus || 'unknown'}</strong></>}
           </p>
         </div>
       </div>

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contaxt/CartContaxt';
 import { db, auth } from '../config/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLock, faTruck, faBolt, faCreditCard,
   faMoneyBillWave, faChevronRight, faTag, faShieldAlt
 } from '@fortawesome/free-solid-svg-icons';
+import emailjs from '@emailjs/browser';
 import '../styles/Checkout.css';
 
 const Checkout = () => {
@@ -66,6 +67,19 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+//  Emailjs 
+    const serviceID = 'service_hn6e6h9';
+    const templateID = 'template_plsznf4';
+    const publicKey = 'PSqlY5H6YoXcAjWRQ';
+    
+    const templateParams = {
+      form_name: `${formData.firstName} ${formData.lastName}`,
+      form_email: formData.email,
+      form_phone: formData.phone,
+      message: `New order placed with total amount Rs ${total.toLocaleString('en-PK')}.`,
+      messege: `New order placed with total amount Rs ${total.toLocaleString('en-PK')}.`,
+    };
+
     if (checkoutItems.length === 0) {
       navigate('/cart');
       return;
@@ -99,6 +113,7 @@ const Checkout = () => {
         paymentStatus: formData.paymentMethod === 'cod' ? 'Unpaid' : 'Paid',
         orderStatus: 'Pending',
         shippingMethod: formData.shippingMethod,
+        emailStatus: 'pending',
         createdAt: serverTimestamp(),
       };
       const ordersRef = collection(db, 'orders');
@@ -120,7 +135,27 @@ const Checkout = () => {
       localStorage.setItem('orders', JSON.stringify(orders));
       setOrderCompleted(true);
       clearPurchasedItems();
+
+      try {
+        await emailjs.send(
+          serviceID,
+          templateID,
+          {
+            ...templateParams,
+            order_id: docRef.id,
+          },
+          { publicKey },
+        );
+        await updateDoc(doc(db, 'orders', docRef.id), { emailStatus: 'sent' });
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        await updateDoc(doc(db, 'orders', docRef.id), {
+          emailStatus: 'failed',
+          emailError: emailError?.text || emailError?.message || (navigator.onLine ? 'Network request to EmailJS failed' : 'Browser is offline'),
+        });
+      }
       navigate(`/order-success/${docRef.id}`);
+
     } catch (error) {
       console.error('Order submission failed:', error);
       alert('There was an error processing your order. Please try again.');
