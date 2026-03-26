@@ -164,17 +164,6 @@ const Checkout = () => {
     }
   };
 
-  if (cartItems.length === 0 || checkoutItems.length === 0) {
-    return (
-      <div className="co-empty-state">
-        <div className="co-empty-icon">🛍️</div>
-        <h2 className="co-empty-title">No eligible items selected</h2>
-        <p className="co-empty-text">Select at least one in-stock cart item before checking out.</p>
-        <Link to="/cart" className="co-shop-btn">Back to Cart</Link>
-      </div>
-    );
-  }
-
   const shippingOptions = [
     { value: 'express',  icon: faBolt,  label: 'Express Delivery',  sub: '3–4 business days',   price: 199, badge: 'FASTEST' },
     { value: 'standard', icon: faTruck, label: 'Standard Delivery', sub: '7–10 business days',  price: 99,  badge: null },
