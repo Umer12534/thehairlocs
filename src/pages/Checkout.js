@@ -11,6 +11,11 @@ import {
 import emailjs from '@emailjs/browser';
 import '../styles/Checkout.css';
 
+// ─── EmailJS credentials ────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'service_hn6e6h9';
+const EMAILJS_TEMPLATE_ID = 'template_aqj0qxy';
+const EMAILJS_PUBLIC_KEY  = 'PSqlY5H6YoXcAjWRQ';
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, calculateTotal, getCheckoutItems, clearPurchasedItems } = useCart();
@@ -39,12 +44,14 @@ const Checkout = () => {
   const [activeStep, setActiveStep] = useState(1);
 
   const shippingRates = { express: 199, standard: 99, free: 0 };
-  const shippingCost = shippingRates[formData.shippingMethod];
-  const subtotal = calculateTotal(true);
-  const total = checkoutItems.length > 0 ? subtotal + shippingCost : 0;
+  const shippingCost  = shippingRates[formData.shippingMethod];
+  const subtotal      = calculateTotal(true);
+  const total         = checkoutItems.length > 0 ? subtotal + shippingCost : 0;
 
   useEffect(() => {
-    if ((cartItems.length === 0 || checkoutItems.length === 0) && !orderCompleted) navigate('/cart');
+    if ((cartItems.length === 0 || checkoutItems.length === 0) && !orderCompleted) {
+      navigate('/cart');
+    }
   }, [cartItems.length, checkoutItems.length, navigate, orderCompleted]);
 
   const handleChange = (e) => {
@@ -55,35 +62,57 @@ const Checkout = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.phone) newErrors.phone = 'Phone number is required';
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.address) newErrors.address = 'Address is required';
-    if (!formData.city) newErrors.city = 'City is required';
+    if (!formData.email)                             newErrors.email     = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email))  newErrors.email     = 'Email is invalid';
+    if (!formData.phone)      newErrors.phone     = 'Phone number is required';
+    if (!formData.firstName)  newErrors.firstName = 'First name is required';
+    if (!formData.lastName)   newErrors.lastName  = 'Last name is required';
+    if (!formData.address)    newErrors.address   = 'Address is required';
+    if (!formData.city)       newErrors.city      = 'City is required';
     return newErrors;
   };
 
+  // ─── Build the EmailJS template params
+  // Variable names MUST match your EmailJS template exactly:
+  //   {{email}}              → recipient address (set as "To Email" in template)
+  //   {{order_id}}           → order number
+  //   {{#orders}} loop       → array of items  { name, units, price, item }
+  //   {{cost.shipping}}      → shipping cost string
+  //   {{cost.tax}}           → tax cost string
+  //   {{cost.total}}         → grand total string
+  const buildEmailParams = (orderId) => ({
+    // ── Recipient
+    email: formData.email,                          // → "To Email" field in EmailJS
+
+    // ── Order meta 
+    order_id: orderId,
+    form_name: `${formData.firstName} ${formData.lastName}`,
+    form_phone: formData.phone,
+
+    logo: 'https://yourdomain.com/logo.png',
+    
+    // ── Items loop ({{#orders}} … {{/orders}})
+    orders: checkoutItems.map(item => ({
+      name:  item.title || item.name || 'Product',
+      units: item.qty   || 1,
+      price: `Rs ${Number(item.price).toLocaleString('en-PK')}`,
+      item:  item.image || item.images?.[0] || '',   // thumbnail URL
+    })),
+
+    // ── Cost summary ───────────────────────────────────────────────────────
+    cost: {
+      shipping: shippingCost === 0
+        ? 'Free'
+        : `Rs ${shippingCost.toLocaleString('en-PK')}`,
+      tax:   'Rs 0',
+      total: `Rs ${total.toLocaleString('en-PK')}`,
+    },
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-//  Emailjs 
-    const serviceID = 'service_hn6e6h9';
-    const templateID = 'template_plsznf4';
-    const publicKey = 'PSqlY5H6YoXcAjWRQ';
-    
-    const templateParams = {
-      form_name: `${formData.firstName} ${formData.lastName}`,
-      form_email: formData.email,
-      form_phone: formData.phone,
-      message: `New order placed with total amount Rs ${total.toLocaleString('en-PK')}.`,
-      messege: `New order placed with total amount Rs ${total.toLocaleString('en-PK')}.`,
-    };
 
-    if (checkoutItems.length === 0) {
-      navigate('/cart');
-      return;
-    }
+    if (checkoutItems.length === 0) { navigate('/cart'); return; }
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -91,69 +120,96 @@ const Checkout = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+
     setIsSubmitting(true);
+
     try {
-      const userId = auth.currentUser?.uid || 'guest';
+      // ── 1. Save order to Firestore ────────────────────────────────────────
+      const userId    = auth.currentUser?.uid || 'guest';
       const orderData = {
         userId,
         customerName: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        phone: formData.phone,
-        shippingAddress: `${formData.address}${formData.apartment ? ', ' + formData.apartment : ''}, ${formData.city}, ${formData.postalCode || ''}, ${formData.country}`,
+        email:        formData.email,
+        phone:        formData.phone,
+        shippingAddress: [
+          formData.address,
+          formData.apartment,
+          formData.city,
+          formData.postalCode,
+          formData.country,
+        ].filter(Boolean).join(', '),
         items: checkoutItems.map(item => ({
-          productId: item.id || '',
-          title: item.title || item.name || '',
-          price: typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0,
-          quantity: item.qty || 1,
-          size: item.size || '',
-          image: item.image || item.images?.[0] || '',
+          productId: item.id    || '',
+          title:     item.title || item.name || '',
+          price:     typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0,
+          quantity:  item.qty   || 1,
+          size:      item.size  || '',
+          image:     item.image || item.images?.[0] || '',
         })),
-        totalAmount: total, shippingCost, subtotal,
+        totalAmount:   total,
+        shippingCost,
+        subtotal,
         paymentMethod: formData.paymentMethod === 'cod' ? 'COD' : 'Card',
         paymentStatus: formData.paymentMethod === 'cod' ? 'Unpaid' : 'Paid',
-        orderStatus: 'Pending',
+        orderStatus:   'Pending',
         shippingMethod: formData.shippingMethod,
-        emailStatus: 'pending',
-        createdAt: serverTimestamp(),
+        emailStatus:   'pending',
+        createdAt:     serverTimestamp(),
       };
+
       const ordersRef = collection(db, 'orders');
-      const docRef = await addDoc(ordersRef, orderData);
+      const docRef    = await addDoc(ordersRef, orderData);
+
+      // ── 2. Persist to localStorage ────────────────────────────────────────
       const localOrder = {
-        id: docRef.id, date: new Date().toISOString(),
+        id:   docRef.id,
+        date: new Date().toISOString(),
         customer: {
-          email: formData.email, phone: formData.phone,
-          name: `${formData.firstName} ${formData.lastName}`,
-          address: `${formData.address}, ${formData.city}, ${formData.country}`,
-          apartment: formData.apartment, postalCode: formData.postalCode,
+          email:      formData.email,
+          phone:      formData.phone,
+          name:       `${formData.firstName} ${formData.lastName}`,
+          address:    `${formData.address}, ${formData.city}, ${formData.country}`,
+          apartment:  formData.apartment,
+          postalCode: formData.postalCode,
         },
         items: checkoutItems,
         shipping: { method: formData.shippingMethod, cost: shippingCost },
-        payment: formData.paymentMethod, subtotal, shippingCost, total,
+        payment: formData.paymentMethod,
+        subtotal, shippingCost, total,
       };
-      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-      orders.push(localOrder);
-      localStorage.setItem('orders', JSON.stringify(orders));
+      const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      savedOrders.push(localOrder);
+      localStorage.setItem('orders', JSON.stringify(savedOrders));
+
+      // ── 3. Mark order complete & clear cart ───────────────────────────────
       setOrderCompleted(true);
       clearPurchasedItems();
 
+      // ── 4. Send confirmation email via EmailJS ────────────────────────────
       try {
+        const emailParams = buildEmailParams(docRef.id);
+
         await emailjs.send(
-          serviceID,
-          templateID,
-          {
-            ...templateParams,
-            order_id: docRef.id,
-          },
-          { publicKey },
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          emailParams,
+          { publicKey: EMAILJS_PUBLIC_KEY },   // v3+ syntax
         );
+
         await updateDoc(doc(db, 'orders', docRef.id), { emailStatus: 'sent' });
+
       } catch (emailError) {
-        console.error('Failed to send email:', emailError);
+        console.error('EmailJS error:', emailError);
         await updateDoc(doc(db, 'orders', docRef.id), {
           emailStatus: 'failed',
-          emailError: emailError?.text || emailError?.message || (navigator.onLine ? 'Network request to EmailJS failed' : 'Browser is offline'),
+          emailError:  emailError?.text
+                    || emailError?.message
+                    || (navigator.onLine ? 'EmailJS request failed' : 'Browser is offline'),
         });
+        // We intentionally do NOT re-throw — order is still placed successfully
       }
+
+      // ── 5. Redirect to success page ───────────────────────────────────────
       navigate(`/order-success/${docRef.id}`);
 
     } catch (error) {
@@ -175,7 +231,6 @@ const Checkout = () => {
 
       {/* TOP BAR */}
       <div className="co-topbar">
-        
         <div className="co-steps">
           {['Contact', 'Delivery', 'Payment'].map((step, i) => (
             <React.Fragment key={step}>
@@ -206,16 +261,20 @@ const Checkout = () => {
               <div className="co-field-row">
                 <div className="co-field">
                   <label className="co-label">Email address</label>
-                  <input className={`co-input${errors.email ? ' co-input--err' : ''}`}
+                  <input
+                    className={`co-input${errors.email ? ' co-input--err' : ''}`}
                     type="email" name="email" placeholder="you@example.com"
-                    value={formData.email} onChange={handleChange} />
+                    value={formData.email} onChange={handleChange}
+                  />
                   {errors.email && <span className="co-err-msg">{errors.email}</span>}
                 </div>
                 <div className="co-field">
                   <label className="co-label">Phone number</label>
-                  <input className={`co-input${errors.phone ? ' co-input--err' : ''}`}
+                  <input
+                    className={`co-input${errors.phone ? ' co-input--err' : ''}`}
                     type="tel" name="phone" placeholder="+92 300 0000000"
-                    value={formData.phone} onChange={handleChange} />
+                    value={formData.phone} onChange={handleChange}
+                  />
                   {errors.phone && <span className="co-err-msg">{errors.phone}</span>}
                 </div>
               </div>
@@ -246,41 +305,53 @@ const Checkout = () => {
               <div className="co-field-row">
                 <div className="co-field">
                   <label className="co-label">First name</label>
-                  <input className={`co-input${errors.firstName ? ' co-input--err' : ''}`}
+                  <input
+                    className={`co-input${errors.firstName ? ' co-input--err' : ''}`}
                     type="text" name="firstName" placeholder="John"
-                    value={formData.firstName} onChange={handleChange} />
+                    value={formData.firstName} onChange={handleChange}
+                  />
                   {errors.firstName && <span className="co-err-msg">{errors.firstName}</span>}
                 </div>
                 <div className="co-field">
                   <label className="co-label">Last name</label>
-                  <input className={`co-input${errors.lastName ? ' co-input--err' : ''}`}
+                  <input
+                    className={`co-input${errors.lastName ? ' co-input--err' : ''}`}
                     type="text" name="lastName" placeholder="Doe"
-                    value={formData.lastName} onChange={handleChange} />
+                    value={formData.lastName} onChange={handleChange}
+                  />
                   {errors.lastName && <span className="co-err-msg">{errors.lastName}</span>}
                 </div>
               </div>
               <div className="co-field">
                 <label className="co-label">Street address</label>
-                <input className={`co-input${errors.address ? ' co-input--err' : ''}`}
+                <input
+                  className={`co-input${errors.address ? ' co-input--err' : ''}`}
                   type="text" name="address" placeholder="123 Main Street"
-                  value={formData.address} onChange={handleChange} />
+                  value={formData.address} onChange={handleChange}
+                />
                 {errors.address && <span className="co-err-msg">{errors.address}</span>}
               </div>
               <div className="co-field">
-                <label className="co-label">Apartment, suite, etc. <span className="co-optional">(optional)</span></label>
+                <label className="co-label">
+                  Apartment, suite, etc. <span className="co-optional">(optional)</span>
+                </label>
                 <input className="co-input" type="text" name="apartment"
                   placeholder="Apt 4B" value={formData.apartment} onChange={handleChange} />
               </div>
               <div className="co-field-row">
                 <div className="co-field">
                   <label className="co-label">City</label>
-                  <input className={`co-input${errors.city ? ' co-input--err' : ''}`}
+                  <input
+                    className={`co-input${errors.city ? ' co-input--err' : ''}`}
                     type="text" name="city" placeholder="Lahore"
-                    value={formData.city} onChange={handleChange} />
+                    value={formData.city} onChange={handleChange}
+                  />
                   {errors.city && <span className="co-err-msg">{errors.city}</span>}
                 </div>
                 <div className="co-field">
-                  <label className="co-label">Postal code <span className="co-optional">(optional)</span></label>
+                  <label className="co-label">
+                    Postal code <span className="co-optional">(optional)</span>
+                  </label>
                   <input className="co-input" type="text" name="postalCode"
                     placeholder="54000" value={formData.postalCode} onChange={handleChange} />
                 </div>
