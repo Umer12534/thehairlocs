@@ -90,7 +90,7 @@ function Products() {
 
 
   const [page, setPage] = useState(1);
-  const PRODUCTS_PER_PAGE = 8;
+  const PRODUCTS_PER_PAGE = 12;
   const [isSidebarActive, setIsSidebarActive] = useState(false);
   const [isLayout, setLayout] = useState(3);
     
