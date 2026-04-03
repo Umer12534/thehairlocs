@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { onAuthStateChanged } from "firebase/auth";
 import { CartProvider } from "./contaxt/CartContaxt";
 import { FavoritesProvider } from "./contaxt/FavoritesContext";
-import HairCareChat from "./components/ui/hairCareChat/HairCareChat";
 
 import MainLayout from "./components/layout/MainLayout";
 import AuthLayout from "./components/layout/AuthLayout";
@@ -163,7 +162,6 @@ function App() {
             <Route path="/settings" element={<Settings />} /> */}
           </Route>
         </Routes>
-        <HairCareChat />
       </Router>
       </FavoritesProvider>
     </CartProvider>

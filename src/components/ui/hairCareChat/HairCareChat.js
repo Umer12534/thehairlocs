@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ChatbotToggleButton from "../catbotbutton/ChatbotToggleButton";
 
-// ─── Groq config ──────────────────────────────────────────────────────────────
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY || "";
 const MODEL = "llama-3.3-70b-versatile";
@@ -8,22 +8,31 @@ const MODEL = "llama-3.3-70b-versatile";
 const SYSTEM_PROMPT = `You are a professional hair care assistant for TheHairLocs, a premium hair care e-commerce brand.
 
 Rules:
-- ONLY answer questions related to hair care, hair products, hair types, and scalp health.
+- Only answer questions related to hair care, hair products, hair types, and scalp health.
 - Help users with issues like hair fall, dandruff, dry hair, oily scalp, frizz, split ends, and colour-treated hair.
-- Suggest practical solutions and recommend product types (oils, shampoos, conditioners, serums, masks, etc.).
+- Suggest practical solutions and recommend product types like oils, shampoos, conditioners, serums, and masks.
 - Keep answers concise, friendly, and encouraging.
-- If the question is NOT related to hair, politely respond: "I'm here only for hair care questions. Feel free to ask me anything about hair! 💇"
+- If the question is not related to hair, politely respond: "I'm here only for hair care questions. Feel free to ask me anything about hair!"
 - Never mention competitor brands by name.`;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-const WELCOME = {
+const WELCOME_MESSAGE = {
   role: "assistant",
   content:
-    "Hi! I'm your TheHairLocs hair care assistant 💇‍♀️ Ask me anything about hair care, hair problems, or product recommendations!",
+    "Hi! I'm your TheHairLocs hair care assistant. Ask me anything about hair care, scalp concerns, or product guidance.",
 };
 
+const QUICK_PROMPTS = [
+  "Hair fall remedies",
+  "Best oil for dry hair",
+  "How to fix dandruff",
+];
+
 async function askGroq(messages) {
-  const res = await fetch(GROQ_API_URL, {
+  if (!GROQ_API_KEY) {
+    throw new Error("Missing Groq API key");
+  }
+
+  const response = await fetch(GROQ_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -37,387 +46,550 @@ async function askGroq(messages) {
     }),
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || "API error");
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error?.error?.message || "API error");
   }
 
-  const data = await res.json();
-  return data.choices[0].message.content;
+  const data = await response.json();
+  return data?.choices?.[0]?.message?.content || "Please try again.";
 }
 
-// ─── Icons (inline SVG so no extra dependency) ────────────────────────────────
+const CloseIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.4"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
 const SendIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <line x1="22" y1="2" x2="11" y2="13" />
     <polygon points="22 2 15 22 11 13 2 9 22 2" />
   </svg>
 );
 
-const ChatIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-// ─── Typing indicator ─────────────────────────────────────────────────────────
 const TypingDots = () => (
-  <div style={styles.typingWrap}>
-    {[0, 1, 2].map((i) => (
-      <span key={i} style={{ ...styles.dot, animationDelay: `${i * 0.18}s` }} />
-    ))}
+  <div className="haircare-chat__typing" aria-label="Assistant is typing">
+    <span />
+    <span />
+    <span />
   </div>
 );
 
-// ─── Main component ───────────────────────────────────────────────────────────
 export default function HairCareChat() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([WELCOME]);
+  const [messages, setMessages] = useState([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  // Focus input when opened
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 150);
+    if (!open) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      inputRef.current?.focus();
+    }, 180);
+
+    return () => window.clearTimeout(timer);
   }, [open]);
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
 
-    const userMsg = { role: "user", content: text };
-    const history = [...messages, userMsg];
-    setMessages(history);
+    if (open && window.innerWidth <= 768) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [open]);
+
+  const closeChat = () => {
+    setOpen(false);
+    setError("");
+  };
+
+  const resetChat = () => {
+    setMessages([WELCOME_MESSAGE]);
+    setInput("");
+    setError("");
+  };
+
+  const send = async (presetText) => {
+    const text = (presetText ?? input).trim();
+
+    if (!text || loading) {
+      return;
+    }
+
+    const userMessage = { role: "user", content: text };
+    const nextMessages = [...messages, userMessage];
+
+    setMessages(nextMessages);
     setInput("");
     setError("");
     setLoading(true);
 
     try {
       const reply = await askGroq(
-        history.map(({ role, content }) => ({ role, content }))
+        nextMessages.map(({ role, content }) => ({ role, content }))
       );
-      setMessages([...history, { role: "assistant", content: reply }]);
-    } catch (e) {
-      setError("Something went wrong. Please try again.");
+
+      setMessages([
+        ...nextMessages,
+        {
+          role: "assistant",
+          content: reply,
+        },
+      ]);
+    } catch (requestError) {
+      setError(
+        GROQ_API_KEY
+          ? "Something went wrong while fetching the reply. Please try again."
+          : "Add REACT_APP_GROQ_API_KEY in your .env file to enable the chatbot."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleKey = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    send();
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
       send();
     }
   };
 
   return (
     <>
-      {/* ── Floating toggle button ── */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={styles.fab}
-        aria-label="Open hair care chat"
-        title="Hair Care Assistant"
+      <style>{chatStyles}</style>
+
+      <ChatbotToggleButton
+        isChatOpen={open}
+        onToggle={() => setOpen((value) => !value)}
+      />
+
+      <div
+        className={`haircare-chat__overlay ${open ? "is-active" : ""}`}
+        onClick={closeChat}
+        aria-hidden={!open}
+      />
+
+      <aside
+        className={`haircare-chat__sidebar ${open ? "is-open" : ""}`}
+        aria-hidden={!open}
       >
-        {open ? <CloseIcon /> : <ChatIcon />}
-        {!open && <span style={styles.fabPulse} />}
-      </button>
-
-      {/* ── Chat window ── */}
-      {open && (
-        <div style={styles.window}>
-          {/* Header */}
-          <div style={styles.header}>
-            <div style={styles.headerAvatar}>💇</div>
+        <div className="haircare-chat__header">
+          <div className="haircare-chat__brand">
+            <div className="haircare-chat__avatar">THL</div>
             <div>
-              <div style={styles.headerTitle}>Hair Care Assistant</div>
-              <div style={styles.headerSub}>TheHairLocs • Online</div>
+              <h3>Hair Care Assistant</h3>
+              <p>TheHairLocs support for hair and scalp care</p>
             </div>
-            <button onClick={() => setOpen(false)} style={styles.closeBtn} aria-label="Close chat">
-              <CloseIcon />
-            </button>
           </div>
 
-          {/* Messages */}
-          <div style={styles.body}>
-            {messages.map((msg, i) => (
-              <div key={i} style={{ display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start", marginBottom: 10 }}>
-                {msg.role === "assistant" && <div style={styles.botAvatar}>💇</div>}
-                <div style={msg.role === "user" ? styles.userBubble : styles.botBubble}>
-                  {msg.content}
-                </div>
+          <button
+            type="button"
+            className="haircare-chat__icon-button"
+            onClick={closeChat}
+            aria-label="Close chatbot"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+
+        <div className="haircare-chat__messages">
+          {messages.map((message, index) => (
+            <div
+              key={`${message.role}-${index}`}
+              className={`haircare-chat__message haircare-chat__message--${message.role}`}
+            >
+              <div className="haircare-chat__bubble">{message.content}</div>
+            </div>
+          ))}
+
+          {loading && (
+            <div className="haircare-chat__message haircare-chat__message--assistant">
+              <div className="haircare-chat__bubble">
+                <TypingDots />
               </div>
-            ))}
-
-            {loading && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={styles.botAvatar}>💇</div>
-                <div style={styles.botBubble}><TypingDots /></div>
-              </div>
-            )}
-
-            {error && <div style={styles.errorMsg}>{error}</div>}
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Quick suggestions */}
-          {messages.length === 1 && (
-            <div style={styles.suggestions}>
-              {["Hair fall remedies", "Best oil for dry hair", "How to fix dandruff"].map((s) => (
-                <button key={s} style={styles.chip} onClick={() => { setInput(s); inputRef.current?.focus(); }}>
-                  {s}
-                </button>
-              ))}
             </div>
           )}
 
-          {/* Input */}
-          <div style={styles.inputRow}>
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              placeholder="Ask about hair care…"
-              rows={1}
-              style={styles.textarea}
-              disabled={loading}
-            />
-            <button onClick={send} disabled={!input.trim() || loading} style={styles.sendBtn} aria-label="Send message">
-              <SendIcon />
-            </button>
-          </div>
+          {error && <p className="haircare-chat__error">{error}</p>}
+          <div ref={bottomRef} />
         </div>
-      )}
 
-      {/* ── Keyframe styles injected once ── */}
-      <style>{keyframeCSS}</style>
+        {messages.length === 1 && (
+          <div className="haircare-chat__prompts">
+            {QUICK_PROMPTS.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                className="haircare-chat__prompt"
+                onClick={() => send(prompt)}
+                disabled={loading}
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <form className="haircare-chat__composer" onSubmit={handleSubmit}>
+          <button
+            type="button"
+            className="haircare-chat__clear"
+            onClick={resetChat}
+            disabled={loading}
+          >
+            Clear
+          </button>
+
+          <textarea
+            ref={inputRef}
+            className="haircare-chat__input"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask about hair care..."
+            rows={1}
+            disabled={loading}
+          />
+
+          <button
+            type="submit"
+            className="haircare-chat__send"
+            aria-label="Send message"
+            disabled={!input.trim() || loading}
+          >
+            <SendIcon />
+          </button>
+        </form>
+      </aside>
     </>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-const BRAND = "#8B5E3C";       // warm brown — matches a hair-care brand
-const BRAND_LIGHT = "#f5ede6"; // soft cream
+const chatStyles = `
+  .haircare-chat__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 12, 8, 0.42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    z-index: 1098;
+  }
 
-const styles = {
-  fab: {
-    position: "fixed",
-    bottom: 28,
-    right: 28,
-    width: 58,
-    height: 58,
-    borderRadius: "50%",
-    background: BRAND,
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0 4px 20px rgba(139,94,60,0.45)",
-    zIndex: 9999,
-    transition: "transform 0.2s, box-shadow 0.2s",
-  },
-  fabPulse: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    borderRadius: "50%",
-    border: `2px solid ${BRAND}`,
-    animation: "pulse 2s infinite",
-    pointerEvents: "none",
-  },
-  window: {
-    position: "fixed",
-    bottom: 98,
-    right: 28,
-    width: 360,
-    maxHeight: 560,
-    background: "#fff",
-    borderRadius: 18,
-    boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
-    zIndex: 9998,
-    fontFamily: "'Segoe UI', sans-serif",
-    animation: "slideUp 0.25s ease",
-  },
-  header: {
-    background: BRAND,
-    color: "#fff",
-    padding: "14px 16px",
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-  },
-  headerAvatar: {
-    fontSize: 26,
-    background: "rgba(255,255,255,0.2)",
-    borderRadius: "50%",
-    width: 42,
-    height: 42,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-  },
-  headerTitle: { fontWeight: 700, fontSize: 15, letterSpacing: 0.2 },
-  headerSub: { fontSize: 11.5, opacity: 0.8, marginTop: 1 },
-  closeBtn: {
-    marginLeft: "auto",
-    background: "transparent",
-    border: "none",
-    color: "#fff",
-    cursor: "pointer",
-    padding: 4,
-    opacity: 0.85,
-    display: "flex",
-  },
-  body: {
-    flex: 1,
-    overflowY: "auto",
-    padding: "14px 14px 4px",
-    background: "#faf8f6",
-  },
-  botAvatar: {
-    fontSize: 18,
-    background: BRAND_LIGHT,
-    borderRadius: "50%",
-    width: 32,
-    height: 32,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    marginRight: 8,
-    alignSelf: "flex-end",
-  },
-  botBubble: {
-    background: "#fff",
-    border: `1px solid #e8ddd7`,
-    borderRadius: "18px 18px 18px 4px",
-    padding: "10px 14px",
-    fontSize: 13.5,
-    lineHeight: 1.55,
-    color: "#333",
-    maxWidth: "75%",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-  },
-  userBubble: {
-    background: BRAND,
-    color: "#fff",
-    borderRadius: "18px 18px 4px 18px",
-    padding: "10px 14px",
-    fontSize: 13.5,
-    lineHeight: 1.55,
-    maxWidth: "75%",
-  },
-  typingWrap: {
-    display: "flex",
-    gap: 5,
-    alignItems: "center",
-    padding: "2px 0",
-  },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: BRAND,
-    display: "inline-block",
-    animation: "bounce 0.9s infinite ease-in-out",
-  },
-  errorMsg: {
-    color: "#c0392b",
-    fontSize: 12.5,
-    textAlign: "center",
-    padding: "6px 0",
-  },
-  suggestions: {
-    display: "flex",
-    gap: 6,
-    padding: "8px 12px 4px",
-    flexWrap: "wrap",
-    background: "#faf8f6",
-    borderTop: "1px solid #f0e9e4",
-  },
-  chip: {
-    background: BRAND_LIGHT,
-    border: `1px solid ${BRAND}33`,
-    color: BRAND,
-    borderRadius: 20,
-    padding: "5px 12px",
-    fontSize: 12,
-    cursor: "pointer",
-    fontWeight: 500,
-    transition: "background 0.15s",
-  },
-  inputRow: {
-    display: "flex",
-    alignItems: "flex-end",
-    gap: 8,
-    padding: "10px 12px",
-    borderTop: "1px solid #f0e9e4",
-    background: "#fff",
-  },
-  textarea: {
-    flex: 1,
-    resize: "none",
-    border: "1.5px solid #ddd",
-    borderRadius: 12,
-    padding: "9px 12px",
-    fontSize: 13.5,
-    outline: "none",
-    fontFamily: "inherit",
-    lineHeight: 1.5,
-    color: "#333",
-    background: "#faf8f6",
-    transition: "border-color 0.2s",
-  },
-  sendBtn: {
-    background: BRAND,
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    width: 40,
-    height: 40,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    flexShrink: 0,
-    transition: "opacity 0.2s",
-  },
-};
+  .haircare-chat__overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
 
-const keyframeCSS = `
-@keyframes pulse {
-  0%   { transform: scale(1);   opacity: 0.8; }
-  70%  { transform: scale(1.5); opacity: 0;   }
-  100% { transform: scale(1.5); opacity: 0;   }
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);     }
-}
-@keyframes bounce {
-  0%, 80%, 100% { transform: translateY(0);    }
-  40%           { transform: translateY(-6px); }
-}
+  .haircare-chat__sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(420px, 100vw);
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(circle at top left, rgba(236, 222, 207, 0.85), transparent 34%),
+      linear-gradient(180deg, #fffaf6 0%, #f5eee8 100%);
+    border-left: 1px solid rgba(139, 94, 60, 0.15);
+    box-shadow: -20px 0 55px rgba(48, 29, 15, 0.16);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    z-index: 1100;
+    overflow: hidden;
+  }
+
+  .haircare-chat__sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .haircare-chat__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 20px 18px;
+    background: linear-gradient(135deg, #7a4d2f 0%, #9a6a43 100%);
+    color: #ffffff;
+  }
+
+  .haircare-chat__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .haircare-chat__brand h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .haircare-chat__brand p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .haircare-chat__avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .haircare-chat__icon-button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .haircare-chat__messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 16px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .haircare-chat__message {
+    display: flex;
+  }
+
+  .haircare-chat__message--assistant {
+    justify-content: flex-start;
+  }
+
+  .haircare-chat__message--user {
+    justify-content: flex-end;
+  }
+
+  .haircare-chat__bubble {
+    max-width: 86%;
+    padding: 12px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .haircare-chat__message--assistant .haircare-chat__bubble {
+    background: #ffffff;
+    color: #35261b;
+    border: 1px solid #eaded3;
+    border-bottom-left-radius: 6px;
+    box-shadow: 0 10px 20px rgba(88, 59, 35, 0.06);
+  }
+
+  .haircare-chat__message--user .haircare-chat__bubble {
+    background: linear-gradient(135deg, #8b5e3c 0%, #6d4529 100%);
+    color: #ffffff;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 12px 22px rgba(109, 69, 41, 0.16);
+  }
+
+  .haircare-chat__error {
+    margin: 0;
+    padding: 0 4px;
+    color: #b42318;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .haircare-chat__prompts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 16px 6px;
+  }
+
+  .haircare-chat__prompt {
+    border: 1px solid rgba(139, 94, 60, 0.18);
+    background: rgba(255, 255, 255, 0.86);
+    color: #7a4d2f;
+    border-radius: 999px;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .haircare-chat__composer {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px;
+    align-items: end;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border-top: 1px solid #eaded3;
+    backdrop-filter: blur(10px);
+  }
+
+  .haircare-chat__clear {
+    border: 1px solid #e6d6c8;
+    background: #fffaf6;
+    color: #7a4d2f;
+    border-radius: 999px;
+    padding: 11px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .haircare-chat__input {
+    min-height: 46px;
+    max-height: 120px;
+    resize: none;
+    border: 1px solid #dfcfbf;
+    background: #ffffff;
+    color: #2d2017;
+    border-radius: 18px;
+    padding: 12px 14px;
+    font: inherit;
+    line-height: 1.5;
+    outline: none;
+  }
+
+  .haircare-chat__input:focus {
+    border-color: #8b5e3c;
+    box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.12);
+  }
+
+  .haircare-chat__send {
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #8b5e3c 0%, #6d4529 100%);
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 12px 20px rgba(109, 69, 41, 0.2);
+  }
+
+  .haircare-chat__send:disabled,
+  .haircare-chat__clear:disabled,
+  .haircare-chat__prompt:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .haircare-chat__typing {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .haircare-chat__typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #8b5e3c;
+    animation: haircare-chat-bounce 0.9s infinite ease-in-out;
+  }
+
+  .haircare-chat__typing span:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .haircare-chat__typing span:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes haircare-chat-bounce {
+    0%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .haircare-chat__sidebar {
+      width: 100vw;
+    }
+
+    .haircare-chat__header {
+      padding: 18px 16px 16px;
+    }
+
+    .haircare-chat__messages {
+      padding: 16px 12px 8px;
+    }
+
+    .haircare-chat__composer {
+      grid-template-columns: 1fr auto;
+    }
+
+    .haircare-chat__clear {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+
+    .haircare-chat__bubble {
+      max-width: 92%;
+    }
+  }
 `;

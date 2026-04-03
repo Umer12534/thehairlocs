@@ -3,14 +3,13 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 900;
+  z-index: 1000;
 }
 
 .chat-btn {
   display: flex;
   align-items: center;
-  gap: 0px;
-  /* Collapsed: just a thin sliver — border + pulse dot */
+  gap: 0;
   padding: 14px 6px;
   width: 14px;
   background: var(--color-primary-dark);
@@ -29,10 +28,11 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
 .chat-btn:focus {
   outline: none;
 }
-/* Expanded on hover */
+
 .chat-btn:hover {
   gap: 10px;
   padding: 14px 18px 14px 16px;
@@ -42,10 +42,14 @@
 }
 
 .chat-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, var(--color-primary-dark) 0%, var(--color-primary-dark-light) 100%);
+  background: linear-gradient(
+    160deg,
+    var(--color-primary-dark) 0%,
+    var(--color-primary-dark-light) 100%
+  );
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -58,7 +62,6 @@
   transform: scaleY(0.97);
 }
 
-/* Icon — fixed equal size for both faMessage and faXmark */
 .btn-icon {
   width: 16px;
   height: 16px;
@@ -74,12 +77,12 @@
   rotate: 90deg;
 }
 
-.chat-btn:hover .btn-icon {
+.chat-btn:hover .btn-icon,
+.open-state .btn-icon {
   opacity: 1;
   transform: scale(1);
 }
 
-/* Label */
 .btn-label {
   position: relative;
   z-index: 1;
@@ -90,12 +93,12 @@
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
 }
 
-.chat-btn:hover .btn-label {
+.chat-btn:hover .btn-label,
+.open-state .btn-label {
   opacity: 1;
   transform: translateX(0);
 }
 
-/* Pulse dot */
 .pulse-dot {
   width: 6px;
   height: 6px;
@@ -109,20 +112,60 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.45; transform: scale(0.7); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.7);
+  }
 }
 
-/* Open state */
 .open-state .chat-btn {
+  gap: 10px;
+  padding: 14px 18px 14px 16px;
+  width: auto;
   background: var(--color-text-primary);
 }
 
 .open-state .chat-btn::before {
+  opacity: 1;
   background: linear-gradient(160deg, #333333 0%, #555555 100%);
 }
 
 .open-state .pulse-dot {
   background: #68d391;
   animation: none;
+}
+
+@media (max-width: 768px) {
+  .chat-btn-wrapper {
+    top: auto;
+    bottom: 18px;
+    right: 14px;
+    transform: none;
+  }
+
+  .chat-btn,
+  .open-state .chat-btn {
+    writing-mode: initial;
+    text-orientation: initial;
+    width: auto;
+    border-radius: 999px;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .btn-icon,
+  .btn-label,
+  .chat-btn:hover .btn-icon,
+  .chat-btn:hover .btn-label,
+  .open-state .btn-icon,
+  .open-state .btn-label {
+    opacity: 1;
+    transform: none;
+    rotate: 0deg;
+  }
 }
