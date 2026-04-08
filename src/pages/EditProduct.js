@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { db } from "../config/firebase";
 import {
     collection,
@@ -39,6 +39,7 @@ const EditProductSkeleton = () => {
 
 // Main Function
 const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
+    const categoryRef = useMemo(() => collection(db, "Category"), []);
     
     /*--------------- STATES --------------------*/
 
@@ -129,14 +130,13 @@ const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
         };
 
         fetchProduct();
-    }, [productId]);
+    }, [productId, showToast]);
 
     /* =======================
         FETCH CATEGORIES
     ======================= */
     useEffect(() => {
         const fetchCategories = async () => {
-        const categoryRef = collection(db, "Category");
         const snap = await getDocs(categoryRef);
 
         setCategories(
@@ -148,7 +148,7 @@ const EditProduct = ({ productId, onClose, refetchProducts, showToast }) => {
         };
 
         fetchCategories();
-    }, []);
+    }, [categoryRef]);
 
     /* =======================
         HANDLERS

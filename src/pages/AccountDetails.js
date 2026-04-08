@@ -8,7 +8,7 @@ import { useFavorites } from '../contaxt/FavoritesContext';
 import '../styles/Account.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faUser, faIdCard, faCalendar, faShoppingBag,
+  faUser, faIdCard, faCalendar,
   faEnvelope, faFingerprint, faShield, faClock, faCalendarPlus
 } from '@fortawesome/free-solid-svg-icons';
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import FilterBar from '../components/ui/filterbar/FilterBar';
@@ -17,7 +17,7 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const colectionRef = collection(db, "products");
+  const colectionRef = useMemo(() => collection(db, "products"), []);
   
   useEffect(() =>{
     const getProducts = async () => {
@@ -35,7 +35,7 @@ function Products() {
       }
     }
     getProducts();
-  }, [])
+  }, [colectionRef])
 
 
   const [sortedProducts, setSortedProducts] = useState([]);
@@ -116,9 +116,6 @@ function Products() {
     
     // Copy products array
     let sorted = [...products];
-    // Helper to get the correct price for sorting
-    const getPrice = (product) => product.salePrice ?? product.originalPrice;
-    
     switch (sortOption) {
       case "priceLowHigh":
         sorted.sort((a, b) => getProductPrice(a) - getProductPrice(b));
@@ -255,14 +252,6 @@ function Products() {
     filteredProducts.length / PRODUCTS_PER_PAGE
   );
 
-
-  // Empty state component
-  const EmptyState = () => (
-    <div className="empty-state">
-      <h3>No products found</h3>
-      <p>Try adjusting your filters or search criteria</p>
-    </div>
-  );
 
   // Error state component
   const ErrorState = () => (

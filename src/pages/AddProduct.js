@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { db } from "../config/firebase";
 import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
 
@@ -11,7 +11,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddProduct = ({feathedproducts, onClose, showToast}) => {
     const productsRef = collection(db, "products");
-    const categoryRef = collection(db, "Category");
+    const categoryRef = useMemo(() => collection(db, "Category"), []);
 
     //  Basic fields
     const [name, setName] = useState("");
@@ -34,8 +34,8 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
     const [isFeatured, setIsFeatured] = useState(false);
 
     // Like and rating
-    const [likes, setLikes] = useState(0);
-    const [rating, setRating] = useState(0.0);
+    const [likes] = useState(0);
+    const [rating] = useState(0.0);
 
 
     // UI state
@@ -59,7 +59,7 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
         };
 
         fetchCategories();
-    }, []);
+    }, [categoryRef]);
 
     //  Size handlers
     const handleAddSize = () => {

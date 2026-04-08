@@ -516,7 +516,6 @@ export const FavoritesList = ({
 // Favorites summary component
 export const FavoritesSummary = ({ className, style }) => {
   const { 
-    favorites, 
     getFavoritesCount, 
     getFavoritesTotal,
     getSaleItems 

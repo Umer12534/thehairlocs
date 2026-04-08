@@ -1,7 +1,6 @@
 import React from 'react'
 import './HeroSection.css'
 import { Link } from 'react-router-dom'
-import Button from '../../ui/button/Button'
 
 function HeroSection({title, text, subscribe= false, btnText, btnLink, image, alt, reverse = false, bgimage}) {
     return (
@@ -13,7 +12,7 @@ function HeroSection({title, text, subscribe= false, btnText, btnLink, image, al
                     <p>{text}</p>
                     {!subscribe && <Link to={btnLink} className="hero-btn">{btnText}</Link>}
                     {subscribe && (
-                        <form class="newsletter-form">
+                        <form className="newsletter-form">
                             <input
                                 type="email"
                                 placeholder="Enter your email address"

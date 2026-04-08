@@ -94,7 +94,6 @@ const Dashboard = () => {
     pendingOrders: 0,
     deliveredOrders: 0,
   });
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [categoryData, setCategoryData] = useState([]);
@@ -135,7 +134,6 @@ const Dashboard = () => {
           id: doc.id,
         }));
 
-        setProducts(productData);
 
         // ── Category grouping for pie chart ───────────────────────────────
         const catMap = {};
@@ -280,22 +278,6 @@ const Dashboard = () => {
 
     loadDashboard();
   }, []);
-
-  // topProducts kept for reference but table below now uses categoryStockData
-  const topProducts = useMemo(
-    () =>
-      [...products]
-        .map((product) => {
-          const sizes = product.sizes || {};
-          const totalStock = Object.values(sizes).reduce(
-            (sum, sizeData) => sum + Number(sizeData?.stock || 0), 0
-          );
-          return { ...product, totalStock };
-        })
-        .sort((a, b) => b.totalStock - a.totalStock)
-        .slice(0, 5),
-    [products]
-  );
 
   const statCards = useMemo(
     () => [

@@ -7,14 +7,14 @@ import ScrollingBar from '../components/sections/scrollingBar/ScrollingBar';
 import Heading from '../components/ui/heading/Heading';
 import Button from '../components/ui/button/Button'
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const colectionRef = collection(db, "products");
+  const colectionRef = useMemo(() => collection(db, "products"), []);
 
   useEffect(() =>{
     const getProducts = async () => {
@@ -29,7 +29,7 @@ function Home() {
       
     }
     getProducts();
-  }, [])
+  }, [colectionRef])
 
   const navigate = useNavigate()
   return (

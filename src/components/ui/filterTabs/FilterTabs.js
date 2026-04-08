@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import './FilterTabs.css'
-import { Link } from 'react-router-dom'
 
 function FilterTabs({categories}){
 

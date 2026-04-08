@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import {
@@ -23,7 +23,7 @@ const EMPTY_FORM = { name: "", description: "", image: "" };
 
 const ManageCategories = () => {
   const navigate = useNavigate();
-  const categoryRef = collection(db, "Category");
+  const categoryRef = useMemo(() => collection(db, "Category"), []);
 
   /* =====================
      STATES
@@ -72,7 +72,7 @@ const ManageCategories = () => {
   /* =====================
      FETCH CATEGORIES
   ===================== */
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       setLoadingCategories(true);
 
@@ -89,11 +89,11 @@ const ManageCategories = () => {
     } finally {
       setLoadingCategories(false);
     }
-  };
+  }, [categoryRef]);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   /* =====================
      SEARCH FILTER

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
@@ -9,7 +9,6 @@ import {
   faPlus, 
   faTimes, 
   faSearch, 
-  faEdit, 
   faTrash,
   faPen,
   faArrowLeft,
@@ -30,7 +29,7 @@ const CategoryProducts = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
-  const collectionRef = collection(db, "products");
+  const collectionRef = useMemo(() => collection(db, "products"), []);
 
   const [toast, setToast] = useState({ message: "", type: "success" });
 
@@ -39,7 +38,7 @@ const CategoryProducts = () => {
   };
 
   // Fetch products filtered by category
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const snapshot = await getDocs(collectionRef);
@@ -60,11 +59,11 @@ const CategoryProducts = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [categoryName, collectionRef]);
 
   useEffect(() => {
     fetchProducts();
-  }, [categoryName]);
+  }, [fetchProducts]);
 
   // Search filter
   useEffect(() => {

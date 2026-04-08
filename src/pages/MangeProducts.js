@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "../config/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import "../styles/admin.css";
@@ -9,7 +9,6 @@ import {
   faPlus, 
   faTimes, 
   faSearch, 
-  faEdit, 
   faTrash,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
@@ -27,7 +26,7 @@ const ManageProducts = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
 
 
-  const collectionRef = collection(db, "products");
+  const collectionRef = useMemo(() => collection(db, "products"), []);
 
   const [toast, setToast] = useState({ message: "", type: "success" });
 
@@ -36,7 +35,7 @@ const ManageProducts = () => {
     };
 
   // Fetch products
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const snapshot = await getDocs(collectionRef);
@@ -51,11 +50,11 @@ const ManageProducts = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [collectionRef]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   // Search filter
   useEffect(() => {
@@ -184,10 +183,6 @@ const ManageProducts = () => {
               filteredProducts.map((product, index) => {
                 const sizes = product.sizes || {};
                 const sizeKeys = Object.keys(sizes);
-                const totalProductStock = Object.values(sizes).reduce(
-                  (sum, size) => sum + (size.stock || 0), 0
-                );
-
                 return (
                   <tr key={product.id}>
                     <td>{index + 1}</td>

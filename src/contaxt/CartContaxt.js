@@ -197,7 +197,7 @@ export const CartProvider = ({ children }) => {
     };
 
     syncCartItems();
-  }, [cartSignature]);
+  }, [cartItems, cartSignature]);
 
   /*TOTAL PRICE (FIXED) */
   const calculateTotal = (selectedOnly = false) => {

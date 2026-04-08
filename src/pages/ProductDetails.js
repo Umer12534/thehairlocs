@@ -65,7 +65,7 @@ function ProductDetails({ openCartSidebar }) {
     };
 
     if (id) getProductById();
-  }, [id]);
+  }, [id, getFirstAvailableSize]);
 
   useEffect(() => {
     const getRelatedProducts = async () => {

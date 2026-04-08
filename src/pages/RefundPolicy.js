@@ -1,7 +1,7 @@
 import React from 'react'
 import '../styles/RefundPolicy.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBan, faCheckCircle, faEnvelope, faExchange, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faCheckCircle, faEnvelope, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 const RefundPolicy = () => {
   return (
     <>
@@ -138,7 +138,7 @@ const RefundPolicy = () => {
           <FontAwesomeIcon icon={faEnvelope}/> thehairlocs@gmail.com
         </a>
 
-        <p class="contact-note">
+        <p className="contact-note">
           We typically respond within 24 hours during business days (Monday to
           Friday, 9 AM - 5 PM PST)
         </p>
