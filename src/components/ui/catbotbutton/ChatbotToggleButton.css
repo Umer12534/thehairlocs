@@ -41,6 +41,14 @@
   box-shadow: -5px 0 28px #fac6aeaf;
 }
 
+.preview-state .chat-btn {
+  gap: 10px;
+  padding: 14px 18px 14px 16px;
+  width: auto;
+  background: var(--color-primary-dark);
+  box-shadow: -5px 0 28px #fac6aeaf;
+}
+
 .chat-btn::before {
   content: "";
   position: absolute;
@@ -55,6 +63,10 @@
 }
 
 .chat-btn:hover::before {
+  opacity: 1;
+}
+
+.preview-state .chat-btn::before {
   opacity: 1;
 }
 
@@ -78,6 +90,7 @@
 }
 
 .chat-btn:hover .btn-icon,
+.preview-state .btn-icon,
 .open-state .btn-icon {
   opacity: 1;
   transform: scale(1);
@@ -94,6 +107,7 @@
 }
 
 .chat-btn:hover .btn-label,
+.preview-state .btn-label,
 .open-state .btn-label {
   opacity: 1;
   transform: translateX(0);
@@ -149,6 +163,7 @@
   }
 
   .chat-btn,
+  .preview-state .chat-btn,
   .open-state .chat-btn {
     writing-mode: initial;
     text-orientation: initial;
@@ -162,6 +177,8 @@
   .btn-label,
   .chat-btn:hover .btn-icon,
   .chat-btn:hover .btn-label,
+  .preview-state .btn-icon,
+  .preview-state .btn-label,
   .open-state .btn-icon,
   .open-state .btn-label {
     opacity: 1;
