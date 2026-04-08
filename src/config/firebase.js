@@ -1,7 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getFirestore} from 'firebase/firestore'
-import {getAuth} from "firebase/auth"
+import { getAuth } from "firebase/auth";
+import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB1zY_yZHez42Um8m8V1DoJoDAdtQxwsM4",
@@ -14,7 +13,9 @@ const firebaseConfig = {
   databaseURL: "https://thehairlocs2-default-rtdb.firebaseio.com/"
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+  useFetchStreams: false,
+});
 export const auth = getAuth(app);

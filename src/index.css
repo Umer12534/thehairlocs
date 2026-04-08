@@ -2,17 +2,19 @@
 /* Roboto Custom Font */
 @font-face {
   font-family: "RobotoCustom";
-  src: url("../public/assets/fonts/Roboto-Regular.ttf");
+  src: local("Roboto"), url("../public/assets/fonts/Roboto-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* Poppins Custom Font */
 @font-face {
   font-family: "PoppinsCustom";
-  src: url("../public/assets/fonts/Poppins-Regular.ttf");
+  src: local("Poppins"), url("../public/assets/fonts/Poppins-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 /* ------------------ Global font styles ------------------ */
