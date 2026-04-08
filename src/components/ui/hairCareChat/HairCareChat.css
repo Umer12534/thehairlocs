@@ -1,0 +1,309 @@
+.haircare-chat__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 1098;
+}
+
+.haircare-chat__overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.haircare-chat__sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(420px, 100vw);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at top left, rgba(250, 198, 174, 0.4), transparent 36%),
+    linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-primary) 100%);
+  border-left: 1px solid var(--color-border-light);
+  box-shadow: -20px 0 55px var(--color-shadow-dark);
+  transform: translateX(100%);
+  transition: transform 0.28s ease;
+  z-index: 1100;
+  overflow: hidden;
+}
+
+.haircare-chat__sidebar.is-open {
+  transform: translateX(0);
+}
+
+.haircare-chat__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 22px 20px 18px;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
+  color: var(--color-text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.haircare-chat__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.haircare-chat__brand h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.haircare-chat__brand p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.haircare-chat__avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+}
+
+.haircare-chat__icon-button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.52);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.haircare-chat__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.haircare-chat__message {
+  display: flex;
+}
+
+.haircare-chat__message--assistant {
+  justify-content: flex-start;
+}
+
+.haircare-chat__message--user {
+  justify-content: flex-end;
+}
+
+.haircare-chat__bubble {
+  max-width: 86%;
+  padding: 12px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.haircare-chat__message--assistant .haircare-chat__bubble {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 10px 20px var(--color-shadow);
+}
+
+.haircare-chat__message--user .haircare-chat__bubble {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
+  color: var(--color-text-primary);
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 12px 22px rgba(242, 166, 140, 0.28);
+}
+
+.haircare-chat__error {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--color-error);
+  font-size: 13px;
+  text-align: center;
+}
+
+.haircare-chat__prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px 6px;
+}
+
+.haircare-chat__prompt {
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Composer ── */
+.haircare-chat__composer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 12px 14px;
+  padding: 8px 8px 8px 12px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: 999px;
+  box-shadow: 0 4px 18px var(--color-shadow);
+}
+
+.haircare-chat__clear {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border-light);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background 0.18s, opacity 0.18s;
+}
+
+.haircare-chat__clear:hover:not(:disabled) {
+  background: var(--color-border-light);
+}
+
+.haircare-chat__input {
+  flex: 1;
+  min-height: 24px;
+  max-height: 120px;
+  resize: none;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  padding: 2px 0;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+}
+
+.haircare-chat__input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+.haircare-chat__input:focus, .haircare-chat__clear:focus, .haircare-chat__send:focus{
+  outline: none;
+}
+
+.haircare-chat__send {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s;
+}
+
+.haircare-chat__send:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.haircare-chat__send:disabled,
+.haircare-chat__clear:disabled,
+.haircare-chat__prompt:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Typing indicator ── */
+.haircare-chat__typing {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.haircare-chat__typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-secondary);
+  animation: haircare-chat-bounce 0.9s infinite ease-in-out;
+}
+
+.haircare-chat__typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.haircare-chat__typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes haircare-chat-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-5px); }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .haircare-chat__sidebar {
+    width: 100vw;
+  }
+
+  .haircare-chat__header {
+    padding: 18px 16px 16px;
+  }
+
+  .haircare-chat__messages {
+    padding: 16px 12px 8px;
+  }
+
+  .haircare-chat__composer {
+    margin: 0 8px 12px;
+  }
+
+  .haircare-chat__bubble {
+    max-width: 92%;
+  }
+}
