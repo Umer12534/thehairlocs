@@ -10,10 +10,10 @@ function FilterTabs({categories}){
 
         const section = document.getElementById(category.sectionId);
         if (section) {
-          section.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         }
     };
 
