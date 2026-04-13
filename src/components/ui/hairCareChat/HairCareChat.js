@@ -6,7 +6,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 // const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY || "";
-const GROQ_API_KEY = "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" || "";
+const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY || "";
 const MODEL = "llama-3.3-70b-versatile";
 
 const SYSTEM_PROMPT = `You are a professional hair care assistant for TheHairLocs, a premium hair care e-commerce brand.
