@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contaxt/CartContaxt';
 import { db, auth } from '../config/firebase';
-import { collection, addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, serverTimestamp, updateDoc, runTransaction } from 'firebase/firestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLock, faTruck, faBolt, faCreditCard,
@@ -160,7 +160,33 @@ const Checkout = () => {
       const ordersRef = collection(db, 'orders');
       const docRef    = await addDoc(ordersRef, orderData);
 
-      // ── 2. Persist to localStorage ────────────────────────────────────────
+      // ── 2. Deduct stock for each ordered item ─────────────────────────────
+      await Promise.all(
+        checkoutItems.map(async (item) => {
+          if (!item.id || !item.size) return;
+          const productRef = doc(db, 'products', item.id);
+          try {
+            await runTransaction(db, async (transaction) => {
+              const productSnap = await transaction.get(productRef);
+              if (!productSnap.exists()) return;
+              const sizes = productSnap.data().sizes || {};
+              const sizeData = sizes[item.size];
+              if (!sizeData) return;
+              const currentStock = Number(sizeData.stock) || 0;
+              const ordered      = Number(item.qty) || 1;
+              const newStock     = Math.max(0, currentStock - ordered);
+              transaction.update(productRef, {
+                [`sizes.${item.size}.stock`]: newStock,
+              });
+            });
+          } catch (stockErr) {
+            // Stock deduction failure should not block the order
+            console.error(`Stock deduction failed for product ${item.id}:`, stockErr);
+          }
+        })
+      );
+
+      // ── 3. Persist to localStorage ────────────────────────────────────────
       const localOrder = {
         id:   docRef.id,
         date: new Date().toISOString(),
@@ -181,11 +207,11 @@ const Checkout = () => {
       savedOrders.push(localOrder);
       localStorage.setItem('orders', JSON.stringify(savedOrders));
 
-      // ── 3. Mark order complete & clear cart ───────────────────────────────
+      // ── 4. Mark order complete & clear cart ───────────────────────────────
       setOrderCompleted(true);
       clearPurchasedItems();
 
-      // ── 4. Send confirmation email via EmailJS ────────────────────────────
+      // ── 5. Send confirmation email via EmailJS ────────────────────────────
       try {
         const emailParams = buildEmailParams(docRef.id);
 
@@ -209,7 +235,7 @@ const Checkout = () => {
         // We intentionally do NOT re-throw — order is still placed successfully
       }
 
-      // ── 5. Redirect to success page ───────────────────────────────────────
+      // ── 6. Redirect to success page ───────────────────────────────────────
       navigate(`/order-success/${docRef.id}`);
 
     } catch (error) {

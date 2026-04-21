@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { collection, doc, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, runTransaction, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import ToastMessage from "../../components/ui/toastMessage/ToastMessage";
 import OrderSummaryCards from "./OrderSummaryCards";
@@ -70,6 +70,40 @@ export default function AdminOrders() {
 
   const handleStatusChange = async (orderId, nextStatus) => {
     try {
+      // If cancelling, restore stock for each item in the order
+      if (nextStatus === "Cancelled") {
+        const orderSnap = await getDoc(doc(db, "orders", orderId));
+        if (orderSnap.exists()) {
+          const { items = [], orderStatus: currentStatus } = orderSnap.data();
+
+          // Only restore stock if the order wasn't already cancelled
+          if (currentStatus !== "Cancelled") {
+            await Promise.all(
+              items.map(async (item) => {
+                if (!item.productId || !item.size) return;
+                const productRef = doc(db, "products", item.productId);
+                try {
+                  await runTransaction(db, async (transaction) => {
+                    const productSnap = await transaction.get(productRef);
+                    if (!productSnap.exists()) return;
+                    const sizes = productSnap.data().sizes || {};
+                    const sizeData = sizes[item.size];
+                    if (!sizeData) return;
+                    const currentStock = Number(sizeData.stock) || 0;
+                    const qty          = Number(item.quantity) || 1;
+                    transaction.update(productRef, {
+                      [`sizes.${item.size}.stock`]: currentStock + qty,
+                    });
+                  });
+                } catch (stockErr) {
+                  console.error(`Stock restore failed for product ${item.productId}:`, stockErr);
+                }
+              })
+            );
+          }
+        }
+      }
+
       await updateDoc(doc(db, "orders", orderId), { orderStatus: nextStatus });
       setToast({ type: "success", message: "Order status updated." });
     } catch (error) {
