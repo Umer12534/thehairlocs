@@ -16,10 +16,12 @@ import {
 import ToastMessage from "../components/ui/toastMessage/ToastMessage";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
+import { useDemoAdmin } from "../contaxt/DemoAdminContext";
 
 const CategoryProducts = () => {
   const { categoryName } = useParams();
   const navigate = useNavigate();
+  const isDemo = useDemoAdmin();
   
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
@@ -95,7 +97,8 @@ const CategoryProducts = () => {
 
   // Go back to categories
   const handleGoBack = () => {
-    navigate("/admin/mange-categories");
+    const prefix = isDemo ? "/demo-admin" : "/admin";
+    navigate(`${prefix}/mange-categories`);
   };
 
   return (
@@ -123,10 +126,13 @@ const CategoryProducts = () => {
 
           <Button
             variant="green"
-            onClick={() => setShowAddForm(true)}
+            onClick={() => !isDemo && setShowAddForm(true)}
             margintop={0}
             marginbottom={0}
             position="right"
+            disabled={isDemo}
+            title={isDemo ? "Disabled in demo mode" : ""}
+            style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
           >
             <FontAwesomeIcon icon={faPlus} />
             Add Product
@@ -270,16 +276,26 @@ const CategoryProducts = () => {
 
                     <td>
                       <div className="action-buttons">
-                        <button className="btn-edit" onClick={() => {
-                          setSelectedProductId(product.id);
-                          setShowEditForm(true);
-                        }}>
+                        <button
+                          className="btn-edit"
+                          onClick={() => {
+                            if (isDemo) return;
+                            setSelectedProductId(product.id);
+                            setShowEditForm(true);
+                          }}
+                          disabled={isDemo}
+                          title={isDemo ? "Disabled in demo mode" : "Edit"}
+                          style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
+                        >
                           <FontAwesomeIcon icon={faPen} />
                           <span>Edit</span>
                         </button>
                         <button
                           className="btn-delete"
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() => !isDemo && handleDelete(product.id)}
+                          disabled={isDemo}
+                          title={isDemo ? "Disabled in demo mode" : "Delete"}
+                          style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
                         >
                           <FontAwesomeIcon icon={faTrash} />
                           <span>Delete</span>

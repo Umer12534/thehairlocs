@@ -72,11 +72,6 @@ export default function Navbar() {
 
   // Redirect to login or open account menu
   const handleAccount = () => {
-    if (!currentUser) {
-      navigate("/login");
-      return;
-    }
-
     setIsAccountMenuOpen((prev) => !prev);
   };
 
@@ -150,22 +145,48 @@ export default function Navbar() {
                   {/* {currentUser && <FontAwesomeIcon icon={faChevronDown} className="account-chevron" />} */}
                 </button>
 
-                {currentUser && isAccountMenuOpen && (
+                {isAccountMenuOpen && (
                   <div className="account-dropdown">
-                    <button type="button" onClick={() => handleAccountMenuNavigate("/account/profile")}>
-                      Profile
-                    </button>
-                    <button type="button" onClick={() => handleAccountMenuNavigate("/favorites")}>
-                      Favorites
-                    </button>
-                    {isAdmin && (
-                      <button type="button" onClick={() => handleAccountMenuNavigate("/admin/dashboard")}>
-                        Admin Panel
-                      </button>
+                    {currentUser ? (
+                      <>
+                        {/* Logged-in user buttons */}
+                        <button type="button" onClick={() => handleAccountMenuNavigate("/account/profile")}>
+                          Profile
+                        </button>
+                        <button type="button" onClick={() => handleAccountMenuNavigate("/favorites")}>
+                          Favorites
+                        </button>
+                        <button type="button" onClick={() => handleAccountMenuNavigate("/account/orders")}>
+                          My Orders
+                        </button>
+                        {/* Admin gets real panel; normal user gets demo panel */}
+                        {isAdmin ? (
+                          <button type="button" onClick={() => handleAccountMenuNavigate("/admin/dashboard")}>
+                            Admin Panel
+                          </button>
+                        ) : (
+                          <button type="button" className="demo-admin-btn" onClick={() => handleAccountMenuNavigate("/demo-admin/dashboard")}>
+                            🔍 Demo Admin Panel
+                          </button>
+                        )}
+                        <button type="button" className="dropdown-logout" onClick={handleLogout}>
+                          Log Out
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        {/* Guest buttons */}
+                        <button type="button" onClick={() => handleAccountMenuNavigate("/login")}>
+                          Login
+                        </button>
+                        <button type="button" onClick={() => handleAccountMenuNavigate("/favorites")}>
+                          Favorites
+                        </button>
+                        <button type="button" className="demo-admin-btn" onClick={() => handleAccountMenuNavigate("/demo-admin/dashboard")}>
+                          🔍 Demo Admin Panel
+                        </button>
+                      </>
                     )}
-                    <button type="button" onClick={handleLogout}>
-                      Log Out
-                    </button>
                   </div>
                 )}
               </div>

@@ -18,11 +18,13 @@ import OverlayForm from "../components/sections/overlayForm/OverlayForm";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faSearch, faTrash, faPen } from "@fortawesome/free-solid-svg-icons";
+import { useDemoAdmin } from "../contaxt/DemoAdminContext";
 
 const EMPTY_FORM = { name: "", description: "", image: "" };
 
 const ManageCategories = () => {
   const navigate = useNavigate();
+  const isDemo = useDemoAdmin();
   const categoryRef = useMemo(() => collection(db, "Category"), []);
 
   /* =====================
@@ -233,11 +235,15 @@ const ManageCategories = () => {
             <Button
               variant="green"
               onClick={() => {
+                if (isDemo) return;
                 setFormData(EMPTY_FORM);
                 setShowAdd(true);
               }}
               margintop={0}
               marginbottom={0}
+              disabled={isDemo}
+              title={isDemo ? "Disabled in demo mode" : ""}
+              style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
             >
               <FontAwesomeIcon icon={faPlus} />
               Add Category
@@ -267,10 +273,14 @@ const ManageCategories = () => {
                     key={cat.id} 
                     onClick={() => {
                       if(window.innerWidth < 768){
-                        navigate(`/admin/mange-categories/${encodeURIComponent(cat.name)}`)
+                        const prefix = isDemo ? "/demo-admin" : "/admin";
+                        navigate(`${prefix}/mange-categories/${encodeURIComponent(cat.name)}`)
                       }
                     }}
-                    onDoubleClick={() => navigate(`/admin/mange-categories/${encodeURIComponent(cat.name)}`)}
+                    onDoubleClick={() => {
+                      const prefix = isDemo ? "/demo-admin" : "/admin";
+                      navigate(`${prefix}/mange-categories/${encodeURIComponent(cat.name)}`);
+                    }}
                     style={{ cursor: "pointer" }}
                     title="Double-click to view products in this category"
                   >
@@ -294,16 +304,20 @@ const ManageCategories = () => {
                       <div className="action-buttons">
                         <button
                           className="btn-edit"
-                          onClick={() => handleOpenEdit(cat)}
-                          title="Edit"
+                          onClick={() => !isDemo && handleOpenEdit(cat)}
+                          disabled={isDemo}
+                          title={isDemo ? "Disabled in demo mode" : "Edit"}
+                          style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
                         >
                           <FontAwesomeIcon icon={faPen} />
                           <span>Edit</span>
                         </button>
                         <button
                           className="btn-delete"
-                          onClick={() => handleDelete(cat.id)}
-                          title="Delete"
+                          onClick={() => !isDemo && handleDelete(cat.id)}
+                          disabled={isDemo}
+                          title={isDemo ? "Disabled in demo mode" : "Delete"}
+                          style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
                         >
                           <FontAwesomeIcon icon={faTrash} />
                           <span>Delete</span>

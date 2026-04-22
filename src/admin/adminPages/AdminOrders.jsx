@@ -7,6 +7,7 @@ import OrderFilters from "./OrderFilters";
 import OrderTable from "./OrderTable";
 import OrderDetailsModal from "./OrderDetailsModal";
 import "./AdminOrders.css";
+import { useDemoAdmin } from "../../contaxt/DemoAdminContext";
 
 const ORDER_STATUS_OPTIONS = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
 const PAYMENT_STATUS_OPTIONS = ["Paid", "Unpaid"];
@@ -17,6 +18,7 @@ const normalizeOrder = (snapshotDoc) => ({
 });
 
 export default function AdminOrders() {
+  const isDemo = useDemoAdmin();
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -134,7 +136,8 @@ export default function AdminOrders() {
         orders={filteredOrders}
         statusOptions={ORDER_STATUS_OPTIONS}
         onViewOrder={setSelectedOrder}
-        onStatusChange={handleStatusChange}
+        onStatusChange={isDemo ? () => {} : handleStatusChange}
+        isDemo={isDemo}
       />
 
       <OrderDetailsModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />

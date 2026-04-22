@@ -480,3 +480,27 @@
         padding: 8px;
     }
 }
+
+/* ── Demo Admin Panel button in account dropdown ── */
+.account-dropdown .demo-admin-btn {
+    color: #856404;
+    background-color: #fff8e1;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.account-dropdown .demo-admin-btn:hover {
+    background-color: #fff3cd;
+}
+
+/* ── Logout button in dropdown ── */
+.account-dropdown .dropdown-logout {
+    color: #e53935;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 4px;
+    padding-top: 12px;
+}
+
+.account-dropdown .dropdown-logout:hover {
+    background-color: #fff5f5;
+}

@@ -31,6 +31,7 @@ import AccountDetails from "./pages/AccountDetails";
 import AccountSettings from "./pages/AccountSettings";
 import Cart from "./pages/Cart";
 import AdminLayout from "./components/layout/AdminLayout";
+import DemoAdminLayout from "./components/layout/DemoAdminLayout";
 import Dashboard from "./pages/Dashboard";
 import MangeProducts from "./pages/MangeProducts";
 import MangeCategories from "./pages/MangeCategories";
@@ -160,6 +161,17 @@ function App() {
 
             {/* <Route path="/users" element={<Users />} />
             <Route path="/settings" element={<Settings />} /> */}
+          </Route>
+
+          {/* Demo Admin Panel — read-only, accessible by anyone */}
+          <Route element={<DemoAdminLayout />}>
+            <Route path="/demo-admin/dashboard" element={<Dashboard />} />
+            <Route path="/demo-admin/mange-products" element={<MangeProducts />} />
+            <Route path="/demo-admin/orders" element={<AdminOrders />} />
+            <Route path="/demo-admin/users" element={<Users />} />
+            <Route path="/demo-admin/settings" element={<Settings />} />
+            <Route path="/demo-admin/mange-categories" element={<MangeCategories />} />
+            <Route path="/demo-admin/mange-categories/:categoryName" element={<CategoryProducts />} />
           </Route>
         </Routes>
       </Router>

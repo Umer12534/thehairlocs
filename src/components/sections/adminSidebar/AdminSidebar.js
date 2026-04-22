@@ -5,7 +5,7 @@ import { faBoxOpen, faCog, faShop, faShoppingCart, faSignOutAlt, faTachometerAlt
 import { signOut } from "firebase/auth";
 import { auth } from "../../../config/firebase";
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isDemo = false }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -16,11 +16,17 @@ export default function AdminSidebar() {
         }
     };
 
+    // In demo mode, nav links point to /demo-admin/* instead of /admin/*
+    const prefix = isDemo ? "/demo-admin" : "/admin";
+
     return (
         <aside className="asidebar">
             <div className="sidebar-logo">
                 <img src="/logo192.png" alt="logo" />
                 <h2 className="sidebar-title">Admin Panel</h2>
+                {isDemo && (
+                    <span className="demo-sidebar-badge">👁️ Demo Mode</span>
+                )}
             </div>
 
             <nav className="sidebar-nav">
@@ -29,46 +35,48 @@ export default function AdminSidebar() {
                     <span>Shop</span>
                 </NavLink>
 
-                <NavLink to="/admin/dashboard" end className="sidebar-link">
+                <NavLink to={`${prefix}/dashboard`} end className="sidebar-link">
                     <FontAwesomeIcon icon={faTachometerAlt}/>
                     <span>Dashboard</span>
                 </NavLink>
 
-                <NavLink to="/admin/mange-products" className="sidebar-link">
+                <NavLink to={`${prefix}/mange-products`} className="sidebar-link">
                     <FontAwesomeIcon icon={faBoxOpen}/>
                     <span>Products</span>
                 </NavLink>
 
-                <NavLink to="/admin/orders" className="sidebar-link">
+                <NavLink to={`${prefix}/orders`} className="sidebar-link">
                     <FontAwesomeIcon icon={faShoppingCart}/>
                     <span>Orders</span>
                 </NavLink>
 
-                <NavLink to="/admin/mange-categories" className="sidebar-link">
+                <NavLink to={`${prefix}/mange-categories`} className="sidebar-link">
                     <FontAwesomeIcon icon={faTag}/>
                     <span>Categories</span>
                 </NavLink>
 
-                <NavLink to="/admin/users" className="sidebar-link">
+                <NavLink to={`${prefix}/users`} className="sidebar-link">
                     <FontAwesomeIcon icon={faUser}/>
                     <span>Users</span>
                 </NavLink>
 
-                <NavLink to="/admin/settings" className="sidebar-link">
+                <NavLink to={`${prefix}/settings`} className="sidebar-link">
                     <FontAwesomeIcon icon={faCog}/>
                     <span>Settings</span>
                 </NavLink>
 
-                <button type="button" className="sidebar-link logout-link sidebar-button" onClick={handleLogout}>
-                    <FontAwesomeIcon icon={faSignOutAlt}/>
-                    <span>LogOut</span>
-                </button>
+                {!isDemo && (
+                    <button type="button" className="sidebar-link logout-link sidebar-button" onClick={handleLogout}>
+                        <FontAwesomeIcon icon={faSignOutAlt}/>
+                        <span>LogOut</span>
+                    </button>
+                )}
             </nav>
             
             <div className="sidebar-footer">
                 <div className="user-info">
-                    <FontAwesomeIcon icon={faUserShield}/>
-                    <span>Admin User</span>
+                    <FontAwesomeIcon icon={isDemo ? faUser : faUserShield}/>
+                    <span>{isDemo ? "Demo Viewer" : "Admin User"}</span>
                 </div>
             </div>
         </aside>

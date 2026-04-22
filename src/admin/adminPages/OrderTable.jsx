@@ -22,7 +22,7 @@ const getStatusClassName = (status) => {
   return `status-badge ${statusMap[status] || "pending"}`;
 };
 
-export default function OrderTable({ orders, statusOptions, onViewOrder, onStatusChange }) {
+export default function OrderTable({ orders, statusOptions, onViewOrder, onStatusChange, isDemo = false }) {
   return (
     <div className="order-table-wrapper">
       <table className="order-table">
@@ -53,7 +53,13 @@ export default function OrderTable({ orders, statusOptions, onViewOrder, onStatu
                   <button type="button" className="view-btn" onClick={() => onViewOrder(order)}>
                     View
                   </button>
-                  <select value={order.orderStatus || "Pending"} onChange={(event) => onStatusChange(order.id, event.target.value)}>
+                  <select
+                    value={order.orderStatus || "Pending"}
+                    onChange={(event) => onStatusChange(order.id, event.target.value)}
+                    disabled={isDemo}
+                    title={isDemo ? "Disabled in demo mode" : ""}
+                    style={isDemo ? { opacity: 0.4, cursor: "not-allowed" } : {}}
+                  >
                     {statusOptions.map((status) => (
                       <option key={status} value={status}>
                         {status}
