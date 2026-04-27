@@ -1,4 +1,5 @@
 import React from 'react';
+import {Helmet} from 'react-helmet'
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../contaxt/FavoritesContext';
 import { useCart } from '../contaxt/CartContaxt';
@@ -28,6 +29,18 @@ function Favorites() {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>Favorites | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='View your saved favorite products at My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='favorites, saved products, wishlist, My Hair Locs favorites'
+        />
+      </Helmet>
     <div className="favorites-page">
       <div className="favorites-header">
         <h1>My Favorites</h1>
@@ -85,6 +98,7 @@ function Favorites() {
         </>
       )}
     </div>
+    </>
   );
 }
 

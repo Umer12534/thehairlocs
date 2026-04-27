@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -328,6 +329,18 @@ const Dashboard = () => {
   ];
 
   return (
+    <>
+      <Helmet>
+        <title>Dashboard | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='View store analytics, orders, and performance insights.' 
+        />
+        <meta
+          name='keywords'
+          content='admin dashboard, store analytics, product insights, My Hair Locs admin'
+        />
+      </Helmet>
     <div className="dashboard">
       <div className="dashboard-header">
         <div className="dashboard-hero">
@@ -637,6 +650,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

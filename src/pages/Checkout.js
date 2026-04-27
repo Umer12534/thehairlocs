@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Helmet} from 'react-helmet'
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contaxt/CartContaxt';
 import { db, auth } from '../config/firebase';
@@ -253,6 +254,18 @@ const Checkout = () => {
   ];
 
   return (
+    <>
+      <Helmet>
+        <title>Checkout | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Complete your order securely at My Hair Locs checkout.' 
+        />
+        <meta
+          name='keywords'
+          content='checkout, secure checkout, order payment, My Hair Locs checkout'
+        />
+      </Helmet>
     <main className="co-main">
 
       {/* TOP BAR */}
@@ -584,6 +597,7 @@ const Checkout = () => {
 
       </div>
     </main>
+    </>
   );
 };
 

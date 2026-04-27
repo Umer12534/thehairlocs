@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { db } from "../config/firebase";
 import { collection, addDoc, getDocs, Timestamp } from "firebase/firestore";
 
@@ -167,6 +168,18 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
 
 
     return (
+        <>
+        <Helmet>
+            <title>Add Product | My Hair Locs</title>
+            <meta 
+              name='description' 
+              content='Add a new product to the My Hair Locs store catalog.' 
+            />
+            <meta
+              name='keywords'
+              content='add product, admin product management, My Hair Locs catalog'
+            />
+        </Helmet>
         <div className="admin-page">
         <h1>Add New Product</h1>
 
@@ -346,6 +359,7 @@ const AddProduct = ({feathedproducts, onClose, showToast}) => {
 
         
         </div>
+        </>
     );
 };
 

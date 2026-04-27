@@ -1,10 +1,22 @@
 import React from 'react'
+import {Helmet} from 'react-helmet'
 import '../styles/RefundPolicy.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBan, faCheckCircle, faEnvelope, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 const RefundPolicy = () => {
   return (
     <>
+    <Helmet>
+      <title>Refund Policy | My Hair Locs</title>
+      <meta 
+        name='description' 
+        content='Review the My Hair Locs refund policy and eligibility details.' 
+      />
+      <meta
+        name='keywords'
+        content='refund policy, returns, order refunds, My Hair Locs policy'
+      />
+    </Helmet>
     <div className="refund-container">
       <div className="refund-header">
         <h1>Refund Policy</h1>

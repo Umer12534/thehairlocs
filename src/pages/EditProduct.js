@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { db } from "../config/firebase";
 import {
     collection,
@@ -18,6 +19,18 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 // skeleton Animation
 const EditProductSkeleton = () => {
     return (
+        <>
+        <Helmet>
+            <title>Edit Product | My Hair Locs</title>
+            <meta 
+              name='description' 
+              content='Update product details in the My Hair Locs catalog.' 
+            />
+            <meta
+              name='keywords'
+              content='edit product, update product, admin catalog management, My Hair Locs'
+            />
+        </Helmet>
         <div className="admin-page">
         <div className="skeleton-title skeleton" />
 
@@ -34,6 +47,7 @@ const EditProductSkeleton = () => {
             <div className="skeleton-button skeleton" />
         </div>
         </div>
+        </>
     );
 };
 

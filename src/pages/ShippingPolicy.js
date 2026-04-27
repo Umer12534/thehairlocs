@@ -1,9 +1,21 @@
 import { faCalculator, faClock, faExclamationTriangle, faMapMarker, faShippingFast } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import {Helmet} from 'react-helmet'
 import '../styles/ShippingPolicy.css'
 const ShippingPolicy = () => {
   return (
     <>
+    <Helmet>
+      <title>Shipping Policy | My Hair Locs</title>
+      <meta 
+        name='description' 
+        content='Learn about shipping timelines, delivery details, and policies at My Hair Locs.' 
+      />
+      <meta
+        name='keywords'
+        content='shipping policy, delivery information, shipping times, My Hair Locs shipping'
+      />
+    </Helmet>
     <div className="policy-container">
       <div className="policy-header">
         <h1>Shipping Policy</h1>

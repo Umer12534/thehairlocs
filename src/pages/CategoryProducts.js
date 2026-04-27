@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { useParams, useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
@@ -102,6 +103,18 @@ const CategoryProducts = () => {
   };
 
   return (
+    <>
+      <Helmet>
+        <title>{categoryName} Products | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content={`Manage products in the ${categoryName} category.`} 
+        />
+        <meta
+          name='keywords'
+          content={`${categoryName}, category products, admin category management, My Hair Locs`}
+        />
+      </Helmet>
     <div className="admin-page">
       {/* HEADER */}
       <div className="admin-header">
@@ -358,6 +371,7 @@ const CategoryProducts = () => {
         onClose={() => setToast({ message: "", type: "success" })}
       />
     </div>
+    </>
   );
 };
 

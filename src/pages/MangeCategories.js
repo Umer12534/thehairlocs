@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import {
@@ -215,6 +216,17 @@ const ManageCategories = () => {
   ===================== */
   return (
     <>
+      <Helmet>
+        <title>Manage Categories | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Manage product categories in the My Hair Locs admin panel.' 
+        />
+        <meta
+          name='keywords'
+          content='manage categories, admin categories, product category management, My Hair Locs'
+        />
+      </Helmet>
       <div className="admin-page">
         {/* HEADER */}
         <div className="admin-header">

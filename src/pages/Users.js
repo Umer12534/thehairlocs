@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import "../styles/admin.css";
@@ -87,6 +88,18 @@ const Users = () => {
   }, [searchTerm, users]);
 
   return (
+    <>
+      <Helmet>
+        <title>Users | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='View and manage user accounts in the My Hair Locs admin panel.' 
+        />
+        <meta
+          name='keywords'
+          content='users, customer accounts, admin users, My Hair Locs admin'
+        />
+      </Helmet>
     <div className="admin-page">
       <div className="admin-header">
         <div>
@@ -166,6 +179,7 @@ const Users = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 

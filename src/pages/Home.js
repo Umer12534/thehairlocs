@@ -1,4 +1,5 @@
 import AllCategoriesSection from '../components/sections/allcategoriessection/AllCategoriesSection'
+import {Helmet} from 'react-helmet'
 import Hero from '../components/sections/Hero/Hero'
 import ProductsSection from '../components/sections/ProductsSection/ProductsSection'
 import Banner from '../components/sections/Banner/Banner';
@@ -33,19 +34,32 @@ function Home() {
 
   const navigate = useNavigate()
   return (
-    <main>
-      <Hero />
-      <ScrollingBar/>
-      <Heading heading_text="All Categories" position='center'/>
-      <AllCategoriesSection/>
-      <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center' onClick={()=> navigate("/categories")}/>
-      <Explore /> 
-      <Heading heading_text="Featured Products"/>
-      <ProductsSection ProductsType = "featured" sortedFilteredProducts={products} loading= {loading}/>
-      <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/products")}/>
-      <Banner />
-      <ScrollingBar/>
-    </main>
+    <>
+      <Helmet>
+        <title>Home | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Shop premium hair care products and discover featured collections at My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='My Hair Locs, hair care, loc care, featured products, premium hair products'
+        />
+      </Helmet>
+      <main>
+        <Hero />
+        <ScrollingBar/>
+        <Heading heading_text="All Categories" position='center'/>
+        <AllCategoriesSection/>
+        <Button children="EXPLORE ALL CATEGORIES" size='lg' position='center' onClick={()=> navigate("/categories")}/>
+        <Explore /> 
+        <Heading heading_text="Featured Products"/>
+        <ProductsSection ProductsType = "featured" sortedFilteredProducts={products} loading= {loading}/>
+        <Button children="EXPLORE ALL PRODUCTS" size='lg' position='center' onClick={() => navigate("/products")}/>
+        <Banner />
+        <ScrollingBar/>
+      </main>
+    </>
   )
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Helmet} from 'react-helmet'
 import '../styles/PrivacyPolicy.css'; // We'll create this CSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink } from "react-router-dom";
@@ -15,6 +16,18 @@ import {
 
 const PrivacyPolicy = () => {
   return (
+    <>
+    <Helmet>
+      <title>Privacy Policy | My Hair Locs</title>
+      <meta 
+        name='description' 
+        content='Read the My Hair Locs privacy policy and learn how your information is handled.' 
+      />
+      <meta
+        name='keywords'
+        content='privacy policy, data privacy, customer privacy, My Hair Locs policy'
+      />
+    </Helmet>
     <div className="privacy-container">
       <div className="privacy-header">
         <h1>Privacy Policy</h1>
@@ -178,6 +191,7 @@ const PrivacyPolicy = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

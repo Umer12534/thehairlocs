@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { db } from "../config/firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import "../styles/admin.css";
@@ -89,6 +90,18 @@ const ManageProducts = () => {
 
 
   return (
+    <>
+      <Helmet>
+        <title>Manage Products | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Manage store products in the My Hair Locs admin panel.' 
+        />
+        <meta
+          name='keywords'
+          content='manage products, admin products, product management, My Hair Locs admin'
+        />
+      </Helmet>
     <div className="admin-page">
       {/* HEADER */}
       <div className="admin-header">
@@ -347,6 +360,7 @@ const ManageProducts = () => {
             onClose={() => setToast({ message: "", type: "success" })}
         />
     </div>
+    </>
 
       
   );

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import {Helmet} from 'react-helmet'
 import { useLocation } from 'react-router-dom';
 import Pageheader from '../components/ui/pageheader/Pageheader'
 import FilterBar from '../components/ui/filterbar/FilterBar';
@@ -266,6 +267,17 @@ function Products() {
 
   return (
     <>
+      <Helmet>
+        <title>Products | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Browse all hair care products available at My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='hair care products, shop products, loc care products, My Hair Locs store'
+        />
+      </Helmet>
       <Pageheader 
         title="All Products" 
         des="Discover our premium collection of hair care products" 

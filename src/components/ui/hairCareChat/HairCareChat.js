@@ -9,20 +9,12 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY || "";
 const MODEL = "llama-3.3-70b-versatile";
 
-const SYSTEM_PROMPT = `You are a professional hair care assistant for TheHairLocs, a premium hair care e-commerce brand.
-
-Rules:
-- Only answer questions related to hair care, hair products, hair types, and scalp health.
-- Help users with issues like hair fall, dandruff, dry hair, oily scalp, frizz, split ends, and colour-treated hair.
-- Suggest practical solutions and recommend product types like oils, shampoos, conditioners, serums, and masks.
-- Keep answers concise, friendly, and encouraging.
-- If the question is not related to hair, politely respond: "I'm here only for hair care questions. Feel free to ask me anything about hair!"
-- Never mention competitor brands by name.`;
+const SYSTEM_PROMPT = `You are a helpful and friendly assistant. Answer any question the user asks clearly and concisely.`;
 
 const WELCOME_MESSAGE = {
   role: "assistant",
   content:
-    "Hi! I'm your TheHairLocs hair care assistant. Ask me anything about hair care, scalp concerns, or product guidance.",
+    "Hi! I'm your assistant. Ask me anything — I'm here to help!",
 };
 
 const QUICK_PROMPTS = [

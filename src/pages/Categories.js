@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {Helmet} from 'react-helmet'
 import Pageheader from "../components/ui/pageheader/Pageheader";
 import FilterTabs from "../components/ui/filterTabs/FilterTabs";
 import AllCategoriesSection from "../components/sections/allcategoriessection/AllCategoriesSection";
@@ -47,6 +48,17 @@ const Categories = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Categories | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Browse hair care products by category at My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='hair care categories, product categories, loc care products, My Hair Locs categories'
+        />
+      </Helmet>
       <Pageheader
         title="Categories"
         des="Discover our premium collection of hair care products"

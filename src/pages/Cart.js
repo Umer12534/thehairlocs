@@ -1,4 +1,5 @@
 import React from "react";
+import {Helmet} from 'react-helmet'
 import "../styles/Cart.css";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -98,16 +99,41 @@ function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="cart-empty">
-        <h2>Your Cart is Empty</h2>
-        <Link to="/products" className="btn">
-          Continue Shopping
-        </Link>
-      </div>
+      <>
+        <Helmet>
+          <title>Cart | My Hair Locs</title>
+          <meta 
+            name='description' 
+            content='Review the products in your cart before checkout.' 
+          />
+          <meta
+            name='keywords'
+            content='shopping cart, cart page, checkout preparation, My Hair Locs cart'
+          />
+        </Helmet>
+        <div className="cart-empty">
+          <h2>Your Cart is Empty</h2>
+          <Link to="/products" className="btn">
+            Continue Shopping
+          </Link>
+        </div>
+      </>
     );
   }
 
   return (
+    <>
+      <Helmet>
+        <title>Cart | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Review the products in your cart before checkout.' 
+        />
+        <meta
+          name='keywords'
+          content='shopping cart, cart page, checkout preparation, My Hair Locs cart'
+        />
+      </Helmet>
     <div className="cart-page">
       <h2>Your Shopping Cart</h2>
 
@@ -167,6 +193,7 @@ function Cart() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

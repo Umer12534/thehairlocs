@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import {Helmet} from 'react-helmet'
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { app } from "../config/firebase";
@@ -65,6 +66,18 @@ function Signup() {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>Sign Up | My Hair Locs</title>
+            <meta 
+              name='description' 
+              content='Create a new My Hair Locs account to start shopping.' 
+            />
+            <meta
+              name='keywords'
+              content='sign up, create account, My Hair Locs registration'
+            />
+        </Helmet>
         <div className="auth-wrapper">
         <div className="auth-card">
 
@@ -120,6 +133,7 @@ function Signup() {
             <Link to="/terms">Terms of service</Link>
         </div>
         </div>
+        </>
     );
 }
 

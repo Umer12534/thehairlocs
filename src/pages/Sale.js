@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { db } from "../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
@@ -203,6 +204,17 @@ function Sale() {
 
   return (
     <>
+      <Helmet>
+        <title>Sale | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Shop discounted hair care products and current offers at My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='sale, discounted hair products, special offers, My Hair Locs deals'
+        />
+      </Helmet>
       <Pageheader
         title="Sale"
         des="Up to 50% off on premium products"

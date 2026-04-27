@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Helmet} from 'react-helmet'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
@@ -67,24 +68,62 @@ const OrderSuccess = () => {
 
   if (loading) {
     return (
-      <div className="order-success-loading">
-        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-        <p>Loading order details...</p>
-      </div>
+      <>
+        <Helmet>
+          <title>Order Success | My Hair Locs</title>
+          <meta 
+            name='description' 
+            content='Your order has been placed successfully with My Hair Locs.' 
+          />
+          <meta
+            name='keywords'
+            content='order success, order confirmation, My Hair Locs purchase'
+          />
+        </Helmet>
+        <div className="order-success-loading">
+          <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+          <p>Loading order details...</p>
+        </div>
+      </>
     );
   }
 
   if (error || !order) {
     return (
-      <div className="order-success-error">
-        <h2>Oops!</h2>
-        <p>{error || 'Order not found'}</p>
-        <Link to="/" className="btn btn-primary">Back to Home</Link>
-      </div>
+      <>
+        <Helmet>
+          <title>Order Success | My Hair Locs</title>
+          <meta 
+            name='description' 
+            content='Your order has been placed successfully with My Hair Locs.' 
+          />
+          <meta
+            name='keywords'
+            content='order success, order confirmation, My Hair Locs purchase'
+          />
+        </Helmet>
+        <div className="order-success-error">
+          <h2>Oops!</h2>
+          <p>{error || 'Order not found'}</p>
+          <Link to="/" className="btn btn-primary">Back to Home</Link>
+        </div>
+      </>
     );
   }
 
   return (
+    <>
+    <Helmet>
+      <title>Order Success | My Hair Locs</title>
+      <meta 
+        name='description' 
+        content='Your order has been placed successfully with My Hair Locs.' 
+      />
+      <meta
+        name='keywords'
+        content='order success, order confirmation, My Hair Locs purchase'
+      />
+    </Helmet>
     <div className="order-success-container">
       <div className="order-success-content">
         {/* Success Message */}
@@ -235,6 +274,7 @@ const OrderSuccess = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

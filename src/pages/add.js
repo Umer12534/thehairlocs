@@ -1,4 +1,5 @@
 import React from "react";
+import {Helmet} from 'react-helmet'
 import { collection, writeBatch, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { testCategories } from "../testCategories";
@@ -54,6 +55,17 @@ const Add = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Add Data | My Hair Locs</title>
+        <meta 
+          name='description' 
+          content='Upload sample categories and products for My Hair Locs.' 
+        />
+        <meta
+          name='keywords'
+          content='sample data, upload products, upload categories, My Hair Locs admin'
+        />
+      </Helmet>
       <button onClick={uploadCategories}>
         Upload 5 Test Categories
       </button>

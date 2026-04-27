@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import {Helmet} from 'react-helmet'
 import Button from "../components/ui/button/Button";
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -32,6 +33,18 @@ function Login() {
     };
 
     return (
+        <>
+        <Helmet>
+            <title>Login | My Hair Locs</title>
+            <meta 
+              name='description' 
+              content='Log in to your My Hair Locs account.' 
+            />
+            <meta
+              name='keywords'
+              content='login, sign in, My Hair Locs account login'
+            />
+        </Helmet>
         <div className="auth-wrapper">
         <div className="auth-card">
 
@@ -88,6 +101,7 @@ function Login() {
             <Link to="/terms">Terms of service</Link>
         </div>
         </div>
+        </>
     );
 }
 

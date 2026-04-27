@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {Helmet} from 'react-helmet'
 import { db } from "../config/firebase";
 import {
   collection,
@@ -198,6 +199,17 @@ function ProductDetails({ openCartSidebar }) {
 
   return (
     <>
+      <Helmet>
+        <title>{product ? `${product.name} | My Hair Locs` : 'Product Details | My Hair Locs'}</title>
+        <meta 
+          name='description' 
+          content={product?.description || 'View product details and shop premium hair care items at My Hair Locs.'} 
+        />
+        <meta
+          name='keywords'
+          content={product ? `${product.name}, ${product.category || 'hair care'}, My Hair Locs product` : 'product details, hair care product, My Hair Locs'}
+        />
+      </Helmet>
       <div className="product-wrapper">
         {/* Left - Images */}
         <div className="image-left">
