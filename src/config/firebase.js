@@ -3,14 +3,14 @@ import { getAuth } from "firebase/auth";
 import { initializeFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB1zY_yZHez42Um8m8V1DoJoDAdtQxwsM4",
-  authDomain: "thehairlocs2.firebaseapp.com",
-  projectId: "thehairlocs2",
-  storageBucket: "thehairlocs2.firebasestorage.app",
-  messagingSenderId: "110426222948",
-  appId: "1:110426222948:web:a25a3781d359ce1ac58a71",
-  measurementId: "G-PPZD2PRG3Q",
-  databaseURL: "https://thehairlocs2-default-rtdb.firebaseio.com/"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
 };
 
 export const app = initializeApp(firebaseConfig);
