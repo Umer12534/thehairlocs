@@ -5,7 +5,7 @@
 
 ## 🌐 Live Website
 
-**[TheHairLocs](https://myhairloc.netlify.app/)**
+**[TheHairLocs](https://myhairlocs.netlify.app/)**
 
 A premium e-commerce platform for hair care products, built with React and Firebase. TheHairLocs offers a seamless shopping experience with a wide range of hair care products including oils, shampoos, conditioners, styling products, moisturizers, and serums.
 
@@ -156,6 +156,8 @@ REACT_APP_FIREBASE_PROJECT_ID=your_project_id
 REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 REACT_APP_FIREBASE_APP_ID=your_app_id
+REACT_APP_IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
+REACT_APP_IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
 ```
 
 ---
