@@ -1,6 +1,6 @@
 # TheHairLocs - Premium Hair Care E-Commerce Platform
 
-![TheHairLocs](https://img.shields.io/badge/version-1.0.0-blue)
+![TheHairLocs](https://myhairlocs.netlify.app/)
 ![React](https://img.shields.io/badge/React-19.2.3-61DAFB)
 
 ## 🌐 Live Website
